@@ -22,14 +22,8 @@ class UserTransformer extends BaseClientTransformer
     public function transform(User $model): array
     {
         return [
-            'balance' => $model->store_balance,
-            'cpu' => $model->store_cpu,
-            'memory' => $model->store_memory,
-            'disk' => $model->store_disk,
-            'slots' => $model->store_slots,
-            'ports' => $model->store_ports,
-            'backups' => $model->store_backups,
-            'databases' => $model->store_databases,
+            'balance' => $model->credits,
+            'slots' => $model->server_slots,
         ];
     }
 }

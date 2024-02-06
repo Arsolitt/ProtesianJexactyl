@@ -7,7 +7,6 @@ import { hot } from 'react-hot-loader/root';
 import { history } from '@/components/history';
 import { SiteSettings } from '@/state/settings';
 import IndexRouter from '@/routers/IndexRouter';
-import earnCredits from '@/api/account/earnCredits';
 import { setupInterceptors } from '@/api/interceptors';
 import { StorefrontSettings } from '@/state/storefront';
 import GlobalStylesheet from '@/assets/css/GlobalStylesheet';
@@ -62,13 +61,6 @@ const App = () => {
     if (!store.getState().storefront.data) {
         store.getActions().storefront.setStorefront(StoreConfiguration!);
     }
-
-    function earn() {
-        setTimeout(earn, 61000); // Allow 1 second for time inconsistencies.
-        earnCredits().catch(() => console.error('Failed to add credits'));
-    }
-
-    earn();
 
     return (
         <>

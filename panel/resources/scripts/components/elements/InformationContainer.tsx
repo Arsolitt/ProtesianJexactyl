@@ -34,7 +34,7 @@ export default () => {
     const verify = () => {
         apiVerify().then((data) => {
             if (data.success)
-                addFlash({ type: 'info', key: 'dashboard', message: 'Verification email has been resent.' });
+                addFlash({ type: 'info', key: 'dashboard', message: 'Письмо с подтверждением отправлено.' });
         });
     };
 
@@ -50,23 +50,23 @@ export default () => {
             {/*    </InformationBox>*/}
             {/*)}*/}
             <InformationBox icon={faCoins}>
-                You have <span className={'text-green-600'}>{bal}</span> credits available.
+                Баланс: <span className={'text-green-600'}>{bal}</span>
             </InformationBox>
             <InformationBox icon={faUserLock}>
                 {user.useTotp ? (
                     <>
-                        <span className={'text-green-600'}>2FA is enabled</span> on your account.
+                        2FA <span className={'text-green-600'}>Включена</span>
                     </>
                 ) : (
                     <>
-                        <span className={'text-yellow-600'}>Enable 2FA</span> to secure your account.
+                        2FA <span className={'text-yellow-600'}>Выключена</span>
                     </>
                 )}
             </InformationBox>
             {!user.verified ? (
                 <InformationBox icon={faTimesCircle} iconCss={'text-yellow-500'}>
                     <span onClick={verify} className={'cursor-pointer text-blue-400'}>
-                        Verify your account to get started.
+                        Подтвердите свой аккаунт
                     </span>
                 </InformationBox>
             ) : (
@@ -84,7 +84,7 @@ export default () => {
                             {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
                         </>
                     ) : (
-                        'Unable to get latest activity logs.'
+                        'Невозможно получить журнал активности.'
                     )}
                 </InformationBox>
             )}
