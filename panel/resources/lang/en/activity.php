@@ -22,10 +22,10 @@ return [
     ],
     'oAuth' => [
         'success' => [
-            'discord' => 'Вошёл через Discord',
-            'google' => 'Вошёл через Google',
-            'github' => 'Вошёл через GitHub',
-            'telegram' => 'Вошёл через Telegram',
+            'discord' => 'Logged in with Discord',
+            'google' => 'Logged in with Google',
+            'github' => 'Logged in with GitHub',
+            'telegram' => 'Logged in with Telegram',
         ],
     ],
     'user' => [
