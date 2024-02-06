@@ -92,52 +92,10 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label">CPU Amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:cpu" value="{{ $cpu }}" />
-                                    <p class="text-muted"><small>The amount of CPU that should be given to a user on signup in %.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label">RAM amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:memory" value="{{ $memory }}" />
-                                    <p class="text-muted"><small>The amount of RAM that should be given to a user on signup in MB.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label">Storage Amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:disk" value="{{ $disk }}" />
-                                    <p class="text-muted"><small>The amount of storage that should be given to a user on signup in MB.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
                                 <label class="control-label">Slots Amount</label>
                                 <div>
-                                    <input type="text" class="form-control" name="registration:slot" value="{{ $slot }}" />
+                                    <input type="text" class="form-control" name="registration:slots" value="{{ $slot }}" />
                                     <p class="text-muted"><small>The amount of server slots that should be given to a user on signup.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label">Allocation Amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:port" value="{{ $port }}" />
-                                    <p class="text-muted"><small>The amount of server ports that should be given to a user on signup.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label">Backup Amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:backup" value="{{ $backup }}" />
-                                    <p class="text-muted"><small>The amount of server backups that should be given to a user on signup.</small></p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label class="control-label">Database Amount</label>
-                                <div>
-                                    <input type="text" class="form-control" name="registration:database" value="{{ $database }}" />
-                                    <p class="text-muted"><small>The amount of server databases that should be given to a user on signup.</small></p>
                                 </div>
                             </div>
                         </div>

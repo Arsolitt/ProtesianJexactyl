@@ -43,12 +43,12 @@ class UserCreationService
         }
 
         $this->connection->beginTransaction();
-        if (!isset($data['password']) || empty($data['password'])) {
+        if (empty($data['password'])) {
             $generateResetToken = true;
             $data['password'] = $this->hasher->make(str_random(30));
         }
 
-        /** @var \Jexactyl\Models\User $user */
+        /** @var User $user */
         $user = $this->repository->create(array_merge($data, [
             'uuid' => Uuid::uuid4()->toString(),
         ]), true, true);
@@ -57,7 +57,7 @@ class UserCreationService
             $token = $this->passwordBroker->createToken($user);
         }
 
-        if ($this->settings->get('jexactyl::approvals:enabled') === 'true' && $this->settings->get('jexactyl::approvals:webhook')) {
+        if ($this->settings->get('approvals:enabled') === 'true' && $this->settings->get('approvals:webhook')) {
             $icon = $this->settings->get('settings::app:logo', 'https://avatars.githubusercontent.com/u/91636558');
             $webhook_data = [
                 'username' => $name,

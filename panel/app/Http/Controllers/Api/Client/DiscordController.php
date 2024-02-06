@@ -2,6 +2,7 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client;
 
+use Illuminate\Support\Facades\Log;
 use Jexactyl\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +24,7 @@ class DiscordController extends ClientApiController
     {
         return new JsonResponse([
             'https://discord.com/api/oauth2/authorize?'
-            . 'client_id=' . $this->settings->get('jexactyl::discord:id')
+            . 'client_id=' . $this->settings->get('discord:id')
             . '&redirect_uri=' . route('api:client.account.discord.callback')
             . '&response_type=code&scope=identify%20email%20guilds%20guilds.join&prompt=none',
         ], 200, [], null, false);
@@ -31,7 +32,7 @@ class DiscordController extends ClientApiController
 
     public function unlink(): JsonResponse
     {
-        $user->update(['discord_id' => null]);
+        User::query()->where('id', Auth::user()->id)->update(['discord_id' => null]);
 
         return new JsonResponse([], JsonResponse::HTTP_NO_CONTENT);
     }
@@ -39,8 +40,8 @@ class DiscordController extends ClientApiController
     public function callback(Request $request): RedirectResponse
     {
         $code = Http::asForm()->post('https://discord.com/api/oauth2/token', [
-            'client_id' => $this->settings->get('jexactyl::discord:id'),
-            'client_secret' => $this->settings->get('jexactyl::discord:secret'),
+            'client_id' => $this->settings->get('discord:id'),
+            'client_secret' => $this->settings->get('discord:secret'),
             'grant_type' => 'authorization_code',
             'code' => $request->input('code'),
             'redirect_uri' => route('api:client.account.discord.callback'),

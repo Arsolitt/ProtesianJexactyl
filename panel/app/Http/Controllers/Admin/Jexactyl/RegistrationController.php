@@ -26,20 +26,14 @@ class RegistrationController extends Controller
     public function index(): View
     {
         return view('admin.jexactyl.registration', [
-            'enabled' => $this->settings->get('jexactyl::registration:enabled', false),
-            'verification' => $this->settings->get('jexactyl::registration:verification', false),
+            'enabled' => $this->settings->get('registration:enabled', false),
+            'verification' => $this->settings->get('registration:verification', false),
 
-            'discord_enabled' => $this->settings->get('jexactyl::discord:enabled', false),
-            'discord_id' => $this->settings->get('jexactyl::discord:id', 0),
-            'discord_secret' => $this->settings->get('jexactyl::discord:secret', 0),
+            'discord_enabled' => $this->settings->get('discord:enabled', false),
+            'discord_id' => $this->settings->get('discord:id', 0),
+            'discord_secret' => $this->settings->get('discord:oauth_secret', 0),
 
-            'cpu' => $this->settings->get('jexactyl::registration:cpu', 100),
-            'memory' => $this->settings->get('jexactyl::registration:memory', 1024),
-            'disk' => $this->settings->get('jexactyl::registration:disk', 5120),
-            'slot' => $this->settings->get('jexactyl::registration:slot', 1),
-            'port' => $this->settings->get('jexactyl::registration:port', 1),
-            'backup' => $this->settings->get('jexactyl::registration:backup', 1),
-            'database' => $this->settings->get('jexactyl::registration:database', 0),
+            'slot' => $this->settings->get('registration:slots', 2),
         ]);
     }
 
@@ -52,7 +46,7 @@ class RegistrationController extends Controller
     public function update(RegistrationFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::' . $key, $value);
+            $this->settings->set($key, $value);
         }
 
         $this->alert->success('Jexactyl Registration has been updated.')->flash();

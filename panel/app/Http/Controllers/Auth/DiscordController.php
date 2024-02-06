@@ -2,6 +2,7 @@
 
 namespace Jexactyl\Http\Controllers\Auth;
 
+use Illuminate\Support\Facades\Log;
 use Jexactyl\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -33,7 +34,7 @@ class DiscordController extends Controller
     {
         return new JsonResponse([
             'https://discord.com/api/oauth2/authorize?'
-            . 'client_id=' . $this->settings->get('jexactyl::discord:id')
+            . 'client_id=' . $this->settings->get('discord:id')
             . '&redirect_uri=' . route('auth.discord.callback')
             . '&response_type=code&scope=identify%20email%20guilds%20guilds.join&prompt=none',
         ], 200, [], null, false);
@@ -48,41 +49,38 @@ class DiscordController extends Controller
     public function callback(Request $request)
     {
         $code = Http::asForm()->post('https://discord.com/api/oauth2/token', [
-            'client_id' => $this->settings->get('jexactyl::discord:id'),
-            'client_secret' => $this->settings->get('jexactyl::discord:secret'),
+            'client_id' => $this->settings->get('discord:id'),
+            'client_secret' => $this->settings->get('discord:secret'),
             'grant_type' => 'authorization_code',
             'code' => $request->input('code'),
             'redirect_uri' => route('auth.discord.callback'),
         ]);
 
         if (!$code->ok()) {
-            return;
+            response()->json(['error' => 'invalid_grant'], 401);
         }
 
         $req = json_decode($code->body());
         if (preg_match('(email|guilds|identify|guilds.join)', $req->scope) !== 1) {
-            return;
+            response()->json(['error' => 'invalid_scope'], 401);
         }
 
         $discord = json_decode(Http::withHeaders(['Authorization' => 'Bearer ' . $req->access_token])->asForm()->get('https://discord.com/api/users/@me')->body());
 
         if (User::where('discord_id', $discord->id)->exists()) {
             $user = User::where('discord_id', $discord->id)->first();
-            Auth::loginUsingId($user->id, true);
+        } elseif(User::where('email', $discord->email)->exists()) {
+            $user = User::where('email', $discord->email)->first();
+            $user->update(['discord_id' => $discord->id]);
+        }
+        else {
 
-            return redirect('/');
-        } else {
-            $approved = true;
-
-            if ($this->settings->get('jexactyl::discord:enabled') != 'true') {
-                return;
-            }
-            if ($this->settings->get('jexactyl::approvals:enabled') == 'true') {
-                $approved = false;
+            if (!$this->settings->get('discord:enabled')) {
+                response()->json(['error' => 'invalid_grant'], 401);
             }
 
             $data = [
-                'approved' => $approved,
+                'approved' => !$this->settings->get('approvals:enabled'),
                 'email' => $discord->email,
                 'username' => $discord->username,
                 'discord_id' => $discord->id,
@@ -90,25 +88,19 @@ class DiscordController extends Controller
                 'name_last' => $discord->discriminator,
                 'password' => $this->genString(),
                 'ip' => $request->getClientIp(),
-                'store_cpu' => $this->settings->get('jexactyl::registration:cpu', 0),
-                'store_memory' => $this->settings->get('jexactyl::registration:memory', 0),
-                'store_disk' => $this->settings->get('jexactyl::registration:disk', 0),
-                'store_slots' => $this->settings->get('jexactyl::registration:slot', 0),
-                'store_ports' => $this->settings->get('jexactyl::registration:port', 0),
-                'store_backups' => $this->settings->get('jexactyl::registration:backup', 0),
-                'store_databases' => $this->settings->get('jexactyl::registration:database', 0),
+                'server_slots' => $this->settings->get('registration:slots', 0),
             ];
 
             try {
                 $this->creationService->handle($data);
             } catch (\Exception $e) {
-                return;
+                Log::error($e);
+                response()->json(['error' => 'invalid_grant'], 401);
             }
-            $user = User::where('username', $discord->username)->first();
-            Auth::loginUsingId($user->id, true);
-
-            return redirect('/');
+            $user = User::where('email', $discord->email)->first();
         }
+        Auth::loginUsingId($user->id, true);
+        return redirect('/');
     }
 
     /**

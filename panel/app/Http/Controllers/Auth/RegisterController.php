@@ -28,34 +28,28 @@ class RegisterController extends AbstractLoginController
     {
         $approved = false;
         $verified = false;
-        $prefix = 'jexactyl::registration:';
+        $prefix = 'registration:';
 
-        if ($this->settings->get($prefix . 'enabled') != 'true') {
-            throw new DisplayException('Unable to register user.');
+        if ($this->settings->get('registration:enabled') != 'true') {
+            throw new DisplayException('Регистрация отключена');
         }
 
-        if (!$this->settings->get($prefix . 'verification')) {
+        if (!$this->settings->get('registration:verification')) {
             $verified = true;
         }
 
-        if ($this->settings->get('jexactyl::approvals:enabled') != 'true') {
+        if ($this->settings->get('approvals:enabled') != 'true') {
             $approved = true;
         }
 
         $this->creationService->handle([
             'email' => $request->input('email'),
             'username' => $request->input('user'),
-            'name_first' => 'Jexactyl',
-            'name_last' => 'User',
+            'name_first' => $request->input('user'),
+            'name_last' => $request->input('user'),
             'password' => $request->input('password'),
             'ip' => $request->getClientIp(),
-            'store_cpu' => $this->settings->get($prefix . 'cpu', 0),
-            'store_memory' => $this->settings->get($prefix . 'memory', 0),
-            'store_disk' => $this->settings->get($prefix . 'disk', 0),
-            'store_slots' => $this->settings->get($prefix . 'slot', 0),
-            'store_ports' => $this->settings->get($prefix . 'port', 0),
-            'store_backups' => $this->settings->get($prefix . 'backup', 0),
-            'store_databases' => $this->settings->get($prefix . 'database', 0),
+            'server_slots' => $this->settings->get($prefix . 'slot', 0),
             'approved' => $approved,
             'verified' => $verified,
         ]);

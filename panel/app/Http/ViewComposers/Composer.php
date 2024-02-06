@@ -51,7 +51,7 @@ class Composer
      */
     protected function setting(string $data, int $type)
     {
-        $setting = $this->settings->get('jexactyl::' . $data, false);
+        $setting = $this->settings->get($data, false);
 
         if ($data == 'logo') {
             return $this->settings->get('settings::app:logo', 'https://avatars.githubusercontent.com/u/91636558');
