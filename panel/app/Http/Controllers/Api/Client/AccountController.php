@@ -84,6 +84,7 @@ class AccountController extends ClientApiController
      *
      * @throws \Jexactyl\Exceptions\Model\DataValidationException
      * @throws \Jexactyl\Exceptions\Repository\RecordNotFoundException
+     * @throws \Throwable
      */
     public function updateUsername(UpdateUsernameRequest $request): JsonResponse
     {

@@ -65,7 +65,7 @@ export default () => {
             </InformationBox>
             {!user.verified ? (
                 <InformationBox icon={faTimesCircle} iconCss={'text-yellow-500'}>
-                    <span onClick={verify} className={'cursor-pointer text-blue-400'}>
+                    <span onClick={verify} className={'cursor-pointer text-blue-400 pointer-events-auto'}>
                         Подтвердите свой аккаунт
                     </span>
                 </InformationBox>
