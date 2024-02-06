@@ -20,6 +20,14 @@ return [
             'fail' => 'Не удалось войти в систему по протоколу SFTP',
         ],
     ],
+    'oAuth' => [
+        'success' => [
+            'discord' => 'Вошёл через Discord',
+            'google' => 'Вошёл через Google',
+            'github' => 'Вошёл через GitHub',
+            'telegram' => 'Вошёл через Telegram',
+        ],
+    ],
     'user' => [
         'account' => [
             'email-changed' => 'Изменена электронная почта с :old на :new',

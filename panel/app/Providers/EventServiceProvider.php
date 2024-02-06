@@ -2,6 +2,8 @@
 
 namespace Jexactyl\Providers;
 
+use Jexactyl\Events\Auth\OAuthLogin;
+use Jexactyl\Listeners\Auth\OAuthLoginListener;
 use Jexactyl\Models\User;
 use Jexactyl\Models\Server;
 use Jexactyl\Models\Subuser;
@@ -22,6 +24,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         ServerInstalledEvent::class => [ServerInstalledNotification::class],
+        OAuthLogin::class => [OAuthLoginListener::class],
     ];
 
     protected $subscribe = [

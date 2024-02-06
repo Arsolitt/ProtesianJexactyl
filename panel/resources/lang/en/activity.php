@@ -20,6 +20,14 @@ return [
             'fail' => 'Failed SFTP log in',
         ],
     ],
+    'oAuth' => [
+        'success' => [
+            'discord' => 'Вошёл через Discord',
+            'google' => 'Вошёл через Google',
+            'github' => 'Вошёл через GitHub',
+            'telegram' => 'Вошёл через Telegram',
+        ],
+    ],
     'user' => [
         'account' => [
             'email-changed' => 'Changed email from :old to :new',

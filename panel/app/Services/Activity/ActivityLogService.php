@@ -2,6 +2,7 @@
 
 namespace Jexactyl\Services\Activity;
 
+use Couchbase\LookupGetFullSpec;
 use Illuminate\Support\Arr;
 use Webmozart\Assert\Assert;
 use Jexactyl\Models\ActivityLog;
@@ -101,10 +102,11 @@ class ActivityLogService
     /**
      * Sets a custom property on the activity log instance.
      *
-     * @param string|array $key
-     * @param mixed $value
+     * @param array|string $key
+     * @param mixed|null $value
+     * @return ActivityLogService
      */
-    public function property($key, $value = null): self
+    public function property(array|string $key, mixed $value = null): self
     {
         $properties = $this->getActivity()->properties;
         $this->activity->properties = is_array($key)
@@ -146,7 +148,6 @@ class ActivityLogService
                 /* @noinspection PhpUnhandledExceptionInspection */
                 throw $exception;
             }
-
             Log::error($exception);
         }
 

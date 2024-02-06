@@ -7,17 +7,20 @@ use Illuminate\Auth\Events\Failed;
 use Jexactyl\Events\Auth\DirectLogin;
 use Illuminate\Contracts\Events\Dispatcher;
 use Jexactyl\Extensions\Illuminate\Events\Contracts\SubscribesToEvents;
+use Throwable;
 
 class AuthenticationListener implements SubscribesToEvents
 {
     /**
      * Handles an authentication event by logging the user and information about
      * the request.
+     * @throws Throwable
      */
     public function handle(Failed|DirectLogin $event): void
     {
         $activity = Activity::withRequestMetadata();
         if ($event->user) {
+
             $activity = $activity->subject($event->user);
         }
 

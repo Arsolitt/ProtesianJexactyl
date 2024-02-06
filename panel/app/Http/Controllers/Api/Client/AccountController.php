@@ -2,6 +2,8 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client;
 
+use Jexactyl\Exceptions\Model\DataValidationException;
+use Jexactyl\Exceptions\Repository\RecordNotFoundException;
 use Jexactyl\Models\User;
 use Jexactyl\Models\Coupon;
 use Illuminate\Http\Request;
@@ -17,6 +19,7 @@ use Jexactyl\Transformers\Api\Client\AccountTransformer;
 use Jexactyl\Http\Requests\Api\Client\Account\UpdateEmailRequest;
 use Jexactyl\Http\Requests\Api\Client\Account\UpdatePasswordRequest;
 use Jexactyl\Http\Requests\Api\Client\Account\UpdateUsernameRequest;
+use Throwable;
 
 class AccountController extends ClientApiController
 {
@@ -56,7 +59,7 @@ class AccountController extends ClientApiController
      * Update the authenticated user's password. All existing sessions will be logged
      * out immediately.
      *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function updatePassword(UpdatePasswordRequest $request): JsonResponse
     {
@@ -82,9 +85,9 @@ class AccountController extends ClientApiController
     /**
      * Update the authenticated user's username.
      *
-     * @throws \Jexactyl\Exceptions\Model\DataValidationException
-     * @throws \Jexactyl\Exceptions\Repository\RecordNotFoundException
-     * @throws \Throwable
+     * @throws DataValidationException
+     * @throws RecordNotFoundException
+     * @throws Throwable
      */
     public function updateUsername(UpdateUsernameRequest $request): JsonResponse
     {

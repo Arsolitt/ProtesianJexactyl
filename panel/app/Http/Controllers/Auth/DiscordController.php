@@ -2,7 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Auth;
 
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Jexactyl\Events\Auth\DirectLogin;
+use Jexactyl\Events\Auth\OAuthLogin;
+use Jexactyl\Facades\Activity;
 use Jexactyl\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -45,6 +51,7 @@ class DiscordController extends Controller
      *
      * @throws DisplayException
      * @throws DataValidationException
+     * @throws \Throwable
      */
     public function callback(Request $request)
     {
@@ -88,7 +95,7 @@ class DiscordController extends Controller
                 'name_last' => $discord->discriminator,
                 'password' => $this->genString(),
                 'ip' => $request->getClientIp(),
-                'server_slots' => $this->settings->get('registration:slots', 0),
+                'server_slots' => $this->settings->get('registration:slots', 2),
             ];
 
             try {
@@ -99,7 +106,14 @@ class DiscordController extends Controller
             }
             $user = User::where('email', $discord->email)->first();
         }
+
+
         Auth::loginUsingId($user->id, true);
+//        Event::dispatch(new DirectLogin($user, true));
+        Event::dispatch(new OAuthLogin($user, 'discord'));
+//        Activity::event('auth:success')->withRequestMetadata()->subject($user)->log();
+
+
         return redirect('/');
     }
 
