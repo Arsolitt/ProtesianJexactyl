@@ -11,6 +11,7 @@ import { getObjectKeys, isObject } from '@/lib/objects';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import { format, formatDistanceToNowStrict } from 'date-fns';
 import ActivityLogMetaButton from '@/components/elements/activity/ActivityLogMetaButton';
+import { ru } from 'date-fns/locale';
 
 interface Props {
     activity: ActivityLog;
@@ -88,7 +89,9 @@ export default ({ activity, children }: Props) => {
                             </span>
                         )}
                         <Tooltip placement={'right'} content={format(activity.timestamp, 'MMM do, yyyy H:mm:ss')}>
-                            <span>{formatDistanceToNowStrict(activity.timestamp, { addSuffix: true })}</span>
+                            <span>
+                                {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
+                            </span>
                         </Tooltip>
                     </div>
                 </div>

@@ -16,6 +16,7 @@ import {
     faTimesCircle,
     faUserLock,
 } from '@fortawesome/free-solid-svg-icons';
+import { ru } from 'date-fns/locale';
 
 export default () => {
     const { addFlash } = useFlash();
@@ -39,15 +40,15 @@ export default () => {
 
     return (
         <>
-            {store.earn.enabled ? (
-                <InformationBox icon={faCircle} iconCss={'animate-pulse'}>
-                    Earning <span className={'text-green-600'}>{store.earn.amount}</span> credits / min.
-                </InformationBox>
-            ) : (
-                <InformationBox icon={faExclamationCircle}>
-                    Credit earning is currently <span className={'text-red-600'}>disabled.</span>
-                </InformationBox>
-            )}
+            {/*{store.earn.enabled ? (*/}
+            {/*    <InformationBox icon={faCircle} iconCss={'animate-pulse'}>*/}
+            {/*        Earning <span className={'text-green-600'}>{store.earn.amount}</span> credits / min.*/}
+            {/*    </InformationBox>*/}
+            {/*) : (*/}
+            {/*    <InformationBox icon={faExclamationCircle}>*/}
+            {/*        Credit earning is currently <span className={'text-red-600'}>disabled.</span>*/}
+            {/*    </InformationBox>*/}
+            {/*)}*/}
             <InformationBox icon={faCoins}>
                 You have <span className={'text-green-600'}>{bal}</span> credits available.
             </InformationBox>
@@ -80,7 +81,7 @@ export default () => {
                                 />
                             </span>
                             {' - '}
-                            {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true })}
+                            {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
                         </>
                     ) : (
                         'Unable to get latest activity logs.'
