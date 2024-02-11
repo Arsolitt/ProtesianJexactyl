@@ -9,9 +9,9 @@ import InformationBox from '@/components/elements/InformationBox';
 import getLatestActivity, { Activity } from '@/api/account/getLatestActivity';
 import { wrapProperties } from '@/components/elements/activity/ActivityLogEntry';
 import {
-    faCircle,
+    // faCircle,
     faCoins,
-    faExclamationCircle,
+    // faExclamationCircle,
     faScroll,
     faTimesCircle,
     faUserLock,
@@ -24,7 +24,7 @@ export default () => {
     const [activity, setActivity] = useState<Activity>();
     const properties = wrapProperties(activity?.properties);
     const user = useStoreState((state) => state.user.data!);
-    const store = useStoreState((state) => state.storefront.data!);
+    // const store = useStoreState((state) => state.storefront.data!);
 
     useEffect(() => {
         getResources().then((d) => setBal(d.balance));

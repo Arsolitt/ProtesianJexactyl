@@ -27,7 +27,7 @@ class StoreController extends Controller
      */
     public function index(): View
     {
-        $prefix = 'jexactyl::store:';
+        $prefix = 'store:';
 
         $currencies = [];
         foreach (config('store.currencies') as $key => $value) {
@@ -70,7 +70,7 @@ class StoreController extends Controller
     public function update(StoreFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::' . $key, $value);
+            $this->settings->set($key, $value);
         }
 
         $this->alert->success('If you have enabled a payment gateway, please remember to configure them. <a href="https://docs.jexactyl.com">Documentation</a>')->flash();

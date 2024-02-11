@@ -61,21 +61,21 @@ export default ({ className, titles }: RowProps) => {
                 title={'CPU'}
                 description={'The amount of CPU (in %) you have available.'}
                 icon={<Icon.Cpu />}
-                amount={resources.cpu}
+                amount={9999}
                 suffix={'%'}
             />
             <ResourceBox
                 title={'Memory'}
                 description={'The amount of RAM (in MB/GB) you have available.'}
                 icon={<Icon.PieChart />}
-                amount={resources.memory}
+                amount={9999}
                 toHuman
             />
             <ResourceBox
                 title={'Disk'}
                 description={'The amount of storage (in MB/GB) you have available.'}
                 icon={<Icon.HardDrive />}
-                amount={resources.disk}
+                amount={9999}
                 toHuman
             />
             <ResourceBox
@@ -88,19 +88,19 @@ export default ({ className, titles }: RowProps) => {
                 title={'Ports'}
                 description={'The amount of ports you can add to your servers.'}
                 icon={<Icon.Share2 />}
-                amount={resources.ports}
+                amount={9999}
             />
             <ResourceBox
                 title={'Backups'}
                 description={'The amount of backup slots you can add to your servers.'}
                 icon={<Icon.Archive />}
-                amount={resources.backups}
+                amount={9999}
             />
             <ResourceBox
                 title={'Databases'}
                 description={'The amount of database slots you can add to your servers.'}
                 icon={<Icon.Database />}
-                amount={resources.databases}
+                amount={9999}
             />
         </StoreContainer>
     );

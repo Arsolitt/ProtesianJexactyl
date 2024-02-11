@@ -50,4 +50,37 @@ return [
         'secret' => env('STRIPE_CLIENT_SECRET', ''),
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET', ''),
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Yookassa Configuration
+    |--------------------------------------------------------------------------
+    | These values determine the configuration for the Yookassa purchase system.
+    |
+    */
+    'yookassa' => [
+        'shop' => env('YOOKASSA_SHOP_ID', ''),
+        'secret' => env('YOOKASSA_SECRET_KEY', ''),
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Lava Configuration
+    |--------------------------------------------------------------------------
+    | These values determine the configuration for the Lava purchase system.
+    |
+    */
+    'lava' => [
+        'shop' => env('LAVA_SHOP_ID', ''),
+        'secret' => env('LAVA_SECRET_KEY', ''),
+    ],
+    /*
+    |--------------------------------------------------------------------------
+    | Freekassa Configuration
+    |--------------------------------------------------------------------------
+    | These values determine the configuration for the Freekassa purchase system.
+    |
+    */
+    'freekassa' => [
+        'shop' => env('FREEKASSA_SHOP_ID', ''),
+        'secret' => env('FREEKASSA_SECRET_KEY', ''),
+    ],
 ];
