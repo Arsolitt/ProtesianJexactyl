@@ -1,4 +1,5 @@
 include .env
+
 ################ Docker commands ################
 
 # ребилд без глобальных изменений
@@ -13,15 +14,3 @@ up:
 # выключить контейнер
 down:
 	docker-compose down
-# зайти в терминал контейнера
-shell_php:
-	docker exec -it ${PROJECT_NAME}_php /usr/bin/zsh
-
-shell_db:
-	docker exec -it ${PROJECT_NAME}_database /usr/bin/bash
-
-shell_node:
-	docker exec -it ${PROJECT_NAME}_node /usr/bin/zsh
-
-shell_nginx:
-	docker exec -it ${PROJECT_NAME}_nginx /bin/zsh

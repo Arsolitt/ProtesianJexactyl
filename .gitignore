@@ -5,5 +5,5 @@ panel/install.lock
 panel/public/install/logs/
 panel/public/storage
 panel/node_modules
-database
+docker/database
 .idea

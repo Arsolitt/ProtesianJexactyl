@@ -12,7 +12,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: nginx/Dockerfile
+      dockerfile: docker/nginx/Dockerfile
       args:
         UID: ${UID}
         GID: ${GID}
@@ -23,10 +23,6 @@ services:
       - "${NGINX_HOST_PORT}:80"
     volumes:
       - "./panel:/var/www/panel"
-    depends_on:
-      - php
-      - database
-      - redis
     networks:
       - panel
 
@@ -43,7 +39,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - "database:/var/lib/mysql"
-      - "./database/init:/docker-entrypoint-initdb.d"
+      - "./docker/database/init:/docker-entrypoint-initdb.d"
     networks:
       - panel
     ports:
@@ -61,47 +57,114 @@ services:
     volumes:
       - "redis:/data"
 
-  php:
+  app:
     build:
       context: .
-      dockerfile: php/Dockerfile
+      dockerfile: docker/php.Dockerfile
       args:
-        UID: 1000
-        GID: 1000
-    restart: unless-stopped
+        UID: ${UID}
+        GID: ${GID}
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_php
-    container_name: ${PROJECT_NAME}_php
+    image: ${PROJECT_NAME}_app
+    container_name: ${PROJECT_NAME}_app
+    depends_on:
+      - redis
+      - database
+      - nginx
     volumes:
       - "./panel:/var/www/panel"
+    networks:
+      - panel
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    image: ${PROJECT_NAME}_tools
+    container_name: ${PROJECT_NAME}_scheduler
+    entrypoint: ["/home/tools/role.sh"]
+    depends_on:
+      - redis
+      - database
+      - app
+    environment:
+      CONTAINER_ROLE: scheduler
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+    image: ${PROJECT_NAME}_tools
+    container_name: ${PROJECT_NAME}_queue
+    entrypoint: ["/home/tools/role.sh"]
+    depends_on:
+      - redis
+      - database
+      - app
+    environment:
+      CONTAINER_ROLE: queue
+    volumes:
+      - "./panel:/home/app"
     networks:
       - panel
 
   composer:
     build:
       context: .
-      dockerfile: composer/Dockerfile
+      dockerfile: docker/php.Dockerfile
       args:
         UID: ${UID}
         GID: ${GID}
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_composer
-    container_name: ${PROJECT_NAME}_composer
+    image: ${PROJECT_NAME}_tools
+    entrypoint: ["/home/tools/composer"]
     volumes:
       - "./panel:/home/app"
     networks:
       - panel
-  node:
+
+  artisan:
     build:
       context: .
-      dockerfile: node/Dockerfile
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_tools
+    entrypoint: ["php", "/home/app/artisan"]
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  yarn:
+    build:
+      context: .
+      dockerfile: docker/node.Dockerfile
       args:
         UID: ${UID}
         GID: ${GID}
     image: ${PROJECT_NAME}_node
-    container_name: ${PROJECT_NAME}_node
     stdin_open: true
     tty: true
     volumes:
