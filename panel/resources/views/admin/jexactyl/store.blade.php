@@ -69,30 +69,24 @@
                                 </select>
                                 <p class="text-muted"><small>The name of the currency used for Jexactyl.</small></p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="box box-info">
-                    <div class="box-header with-border">
-                        <i class="fa fa-money"></i> <h3 class="box-title">Idle Earning <small>Configure settings for passive credit earning.</small></h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label">Enabled</label>
+                                <label class="control-label">Yookassa Enabled</label>
                                 <div>
-                                    <select name="earn:enabled" class="form-control">
-                                        <option @if ($earn_enabled == 'false') selected @endif value="false">Disabled</option>
-                                        <option @if ($earn_enabled == 'true') selected @endif value="true">Enabled</option>
+                                    <select name="store:yookassa:enabled" class="form-control">
+                                        <option @if ($yookassa_enabled == 'false') selected @endif value="false">Disabled</option>
+                                        <option @if ($yookassa_enabled == 'true') selected @endif value="true">Enabled</option>
                                     </select>
-                                    <p class="text-muted"><small>Determines whether users can earn credits passively.</small></p>
+                                    <p class="text-muted"><small>Determines whether users can buy credits with Yookassa.</small></p>
                                 </div>
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="control-label">Amount of credits per minute</label>
+                                <label class="control-label">Lava Enabled</label>
                                 <div>
-                                    <input type="text" class="form-control" name="earn:amount" value="{{ $earn_amount }}" />
-                                    <p class="text-muted"><small>The amount of credits a user should be given per minute of AFK.</small></p>
+                                    <select name="store:lava:enabled" class="form-control">
+                                        <option @if ($lava_enabled == 'false') selected @endif value="false">Disabled</option>
+                                        <option @if ($lava_enabled == 'true') selected @endif value="true">Enabled</option>
+                                    </select>
+                                    <p class="text-muted"><small>Determines whether users can buy credits with Lava.</small></p>
                                 </div>
                             </div>
                         </div>

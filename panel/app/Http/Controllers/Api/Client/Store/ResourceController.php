@@ -42,11 +42,11 @@ class ResourceController extends ClientApiController
     public function costs(Request $request)
     {
         $data = [];
-        $prefix = 'jexactyl::store:cost:';
+        $prefix = 'store:cost:';
         $types = ['cpu', 'memory', 'disk', 'slot', 'port', 'backup', 'database'];
 
         foreach ($types as $type) {
-            array_push($data, $this->settings->get($prefix . $type, 0));
+            $data[] = $this->settings->get($prefix . $type, 0);
         }
 
         return $this->fractal->item($data)

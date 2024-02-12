@@ -127,7 +127,7 @@ export default () => {
                 initialValues={{
                     name: `${user.username}'s server`,
                     description: 'Write a server description here.',
-                    cpu: 1,
+                    cpu: 50,
                     memory: 256,
                     disk: 256,
                     ports: 1,

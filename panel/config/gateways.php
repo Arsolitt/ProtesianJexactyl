@@ -16,16 +16,16 @@ return [
     | This value determines what currency to process orders in.
     |
     */
-    'currency' => env('STORE_CURRENCY', 'USD'),
+    'currency' => env('STORE_CURRENCY', 'RUB'),
 
     /*
     |--------------------------------------------------------------------------
     | Cost per 100 credits
     |--------------------------------------------------------------------------
-    | This value determines how much 100 credits costs. Defaults to $1 USD.
+    | This value determines how much 100 credits costs. Defaults to 100 RUB.
     |
     */
-    'cost' => env('STORE_COST', 1.00),
+    'cost' => env('STORE_COST', 100),
 
     /*
     |--------------------------------------------------------------------------
