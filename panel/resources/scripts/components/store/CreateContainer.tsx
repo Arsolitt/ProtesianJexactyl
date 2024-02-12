@@ -52,6 +52,8 @@ export default () => {
     const [loading, setLoading] = useState(false);
     const [resources, setResources] = useState<Resources>();
 
+    console.log(resources);
+
     const user = useStoreState((state) => state.user.data!);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 
@@ -129,7 +131,7 @@ export default () => {
                     description: 'Write a server description here.',
                     cpu: 50,
                     memory: 256,
-                    disk: 256,
+                    disk: 1024,
                     ports: 1,
                     backups: 1,
                     databases: 1,
@@ -141,13 +143,13 @@ export default () => {
                     name: string().required().min(3),
                     description: string().optional().min(3).max(191),
 
-                    cpu: number().required().min(25).max(9999),
-                    memory: number().required().min(256).max(9999),
-                    disk: number().required().min(256).max(9999),
+                    cpu: number().required().min(25).max(resources.limit.cpu),
+                    memory: number().required().min(256).max(resources.limit.ram),
+                    disk: number().required().min(1024).max(resources.limit.disk),
 
-                    ports: number().required().min(1).max(9999),
-                    backups: number().optional().max(9999),
-                    databases: number().optional().max(9999),
+                    ports: number().required().min(1).max(resources.limit.ports),
+                    backups: number().optional().max(resources.limit.backups),
+                    databases: number().optional().max(resources.limit.databases),
 
                     node: number().required().default(node),
                     nest: number().required().default(nest),
@@ -177,7 +179,7 @@ export default () => {
                         <TitledGreyBox title={'Server CPU limit'} icon={faMicrochip} className={'mt-8 sm:mt-0'}>
                             <Field name={'cpu'} />
                             <p className={'mt-1 text-xs'}>Assign a limit for usable CPU.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999}% in account</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.cpu}% in account</p>
                         </TitledGreyBox>
                         <TitledGreyBox title={'Server RAM limit'} icon={faMemory} className={'mt-8 sm:mt-0'}>
                             <div className={'relative'}>
@@ -185,7 +187,7 @@ export default () => {
                                 <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>MB</p>
                             </div>
                             <p className={'mt-1 text-xs'}>Assign a limit for usable RAM.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999}MB available</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.ram}MB available</p>
                         </TitledGreyBox>
                         <TitledGreyBox title={'Server Storage limit'} icon={faHdd} className={'mt-8 sm:mt-0'}>
                             <div className={'relative'}>
@@ -193,7 +195,7 @@ export default () => {
                                 <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>MB</p>
                             </div>
                             <p className={'mt-1 text-xs'}>Assign a limit for usable storage.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999}MB available</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.disk}MB available</p>
                         </TitledGreyBox>
                     </StoreContainer>
                     <h1 className={'text-5xl'}>Feature Limits</h1>
@@ -204,17 +206,17 @@ export default () => {
                         <TitledGreyBox title={'Server allocations'} icon={faNetworkWired} className={'mt-8 sm:mt-0'}>
                             <Field name={'ports'} />
                             <p className={'mt-1 text-xs'}>Assign a number of ports to your server.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999} available</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.ports} available</p>
                         </TitledGreyBox>
                         <TitledGreyBox title={'Server backups'} icon={faArchive} className={'mt-8 sm:mt-0'}>
                             <Field name={'backups'} />
                             <p className={'mt-1 text-xs'}>Assign a number of backups to your server.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999} available</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.backups} available</p>
                         </TitledGreyBox>
                         <TitledGreyBox title={'Server databases'} icon={faDatabase} className={'mt-8 sm:mt-0'}>
                             <Field name={'databases'} />
                             <p className={'mt-1 text-xs'}>Assign a number of databases to your server.</p>
-                            <p className={'mt-1 text-xs text-gray-400'}>{9999} available</p>
+                            <p className={'mt-1 text-xs text-gray-400'}>{resources.limit.databases} available</p>
                         </TitledGreyBox>
                     </StoreContainer>
                     <h1 className={'text-5xl'}>Deployment</h1>

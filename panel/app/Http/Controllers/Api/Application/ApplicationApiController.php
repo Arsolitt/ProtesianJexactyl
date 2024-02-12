@@ -19,9 +19,9 @@ abstract class ApplicationApiController extends Controller
     protected Fractal $fractal;
 
     /**
-     * @var \Jexactyl\Contracts\Repository\SettingsRepositoryInterface
+     * @var SettingsRepositoryInterface
      */
-    protected $settings;
+    protected SettingsRepositoryInterface $settings;
 
     /**
      * ApplicationApiController constructor.

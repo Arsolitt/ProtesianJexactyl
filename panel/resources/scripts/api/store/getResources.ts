@@ -3,23 +3,27 @@ import http, { FractalResponseData } from '@/api/http';
 export interface Resources {
     balance: number;
     slots: number;
-    cpu: number;
-    ram: number;
-    disk: number;
-    port: number;
-    backup: number;
-    database: number;
+    limit: {
+        cpu: number;
+        ram: number;
+        disk: number;
+        ports: number;
+        backups: number;
+        databases: number;
+    };
 }
 
 export const rawDataToResources = ({ attributes: data }: FractalResponseData): Resources => ({
     balance: data.balance,
     slots: data.slots,
-    cpu: data.cpu,
-    ram: data.ram,
-    disk: data.disk,
-    port: data.port,
-    backup: data.backup,
-    database: data.database,
+    limit: {
+        cpu: data.limit.cpu,
+        ram: data.limit.ram,
+        disk: data.limit.disk,
+        ports: data.limit.ports,
+        backups: data.limit.backups,
+        databases: data.limit.databases,
+    },
 });
 
 export const getResources = async (): Promise<Resources> => {

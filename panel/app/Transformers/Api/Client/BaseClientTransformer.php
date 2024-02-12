@@ -2,6 +2,11 @@
 
 namespace Jexactyl\Transformers\Api\Client;
 
+use Illuminate\Container\Container;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Extensions\Spatie\Fractalistic\Fractal;
 use Jexactyl\Models\User;
 use Jexactyl\Models\Server;
 use Webmozart\Assert\Assert;
@@ -9,6 +14,19 @@ use Jexactyl\Transformers\Api\Application\BaseTransformer as BaseApplicationTran
 
 abstract class BaseClientTransformer extends BaseApplicationTransformer
 {
+
+    protected SettingsRepositoryInterface $settings;
+    public function __construct()
+    {
+        parent::__construct();
+        Container::getInstance()->call([$this, 'loadDependencies']);
+    }
+
+    public function loadDependencies(SettingsRepositoryInterface $settings): void
+    {
+        $this->settings = $settings;
+    }
+
     /**
      * Return the user model of the user requesting this transformation.
      */

@@ -15,8 +15,6 @@ export default () => {
     const store = useStoreState((state) => state.storefront.data!.enabled);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
 
-    console.log(store);
-
     const onTriggerLogout = () => {
         http.post('/auth/logout').finally(() => {
             // @ts-expect-error this is valid
