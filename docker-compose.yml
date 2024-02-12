@@ -20,9 +20,12 @@ services:
     container_name: ${PROJECT_NAME}_nginx
     restart: unless-stopped
     ports:
-      - "${NGINX_HOST_PORT}:80"
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
     volumes:
       - "./panel:/var/www/panel"
+      - "./docker/nginx/fullchain.pem:/etc/ssl/cert.pem"
+      - "./docker/nginx/privkey.pem:/etc/ssl/key.pem"
     networks:
       - panel
 
