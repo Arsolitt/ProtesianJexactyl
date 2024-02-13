@@ -29,7 +29,7 @@
                 </div>
                 <div class="box-body">
                     @if ($version->isLatestPanel())
-                        You are running Jexactyl <code>{{ config('app.version') }}</code>. 
+                        You are running Jexactyl <code>{{ config('app.version') }}</code>.
                     @else
                         Jexactyl is not up-to-date. <code>{{ config('app.version') }} (current) -> <a href="https://github.com/jexactyl/jexactyl/releases/v{{ $version->getPanel() }}" target="_blank">{{ $version->getPanel() }}</a> (latest)</code>
                     @endif

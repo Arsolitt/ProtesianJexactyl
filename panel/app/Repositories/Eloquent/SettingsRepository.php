@@ -2,6 +2,8 @@
 
 namespace Jexactyl\Repositories\Eloquent;
 
+use Jexactyl\Exceptions\Model\DataValidationException;
+use Jexactyl\Exceptions\Repository\RecordNotFoundException;
 use Jexactyl\Models\Setting;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 
@@ -22,9 +24,9 @@ class SettingsRepository extends EloquentRepository implements SettingsRepositor
     /**
      * Store a new persistent setting in the database.
      *
-     * @throws \Jexactyl\Exceptions\Model\DataValidationException
+     * @throws DataValidationException|RecordNotFoundException
      */
-    public function set(string $key, string $value = null)
+    public function set(string $key, string $value = null): void
     {
         // Clear item from the cache.
         $this->clearCache($key);
@@ -59,7 +61,7 @@ class SettingsRepository extends EloquentRepository implements SettingsRepositor
     /**
      * Remove a key from the database cache.
      */
-    public function forget(string $key)
+    public function forget(string $key): void
     {
         $this->clearCache($key);
         $this->deleteWhere(['key' => $key]);
@@ -68,7 +70,7 @@ class SettingsRepository extends EloquentRepository implements SettingsRepositor
     /**
      * Remove a key from the cache.
      */
-    private function clearCache(string $key)
+    private function clearCache(string $key): void
     {
         unset(self::$cache[$key], self::$databaseMiss[$key]);
     }

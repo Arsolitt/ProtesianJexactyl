@@ -313,8 +313,11 @@ class Server extends Model
         });
     }
 
-    protected function updateMonthlyPrice(){
+    protected function updateMonthlyPrice(): void
+    {
         Cache::forget('server_monthly_price_' . $this->id);
         Cache::forget('server_hourly_price_' . $this->id);
+        $this->user->totalDiscount();
+        $cpu = $this->cpu * settings()->get('store:cost:cpu');
     }
 }

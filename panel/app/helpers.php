@@ -1,5 +1,7 @@
 <?php
 
+use Jexactyl\Repositories\Eloquent\SettingsRepository;
+
 if (!function_exists('is_digit')) {
     /**
      * Deal with normal (and irritating) PHP behavior to determine if
@@ -32,4 +34,15 @@ if (!function_exists('object_get_strict')) {
 
         return $object;
     }
+}
+
+if (!function_exists('settings')) {
+    /**
+     * Get a setting from the settings repository.
+     */
+    function settings(): SettingsRepository
+    {
+        return new SettingsRepository(app());
+    }
+
 }

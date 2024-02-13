@@ -298,4 +298,9 @@ class User extends Model implements
             })
             ->groupBy('servers.id');
     }
+
+    public function totalDiscount(): int
+    {
+        return 0;
+    }
 }
