@@ -4,6 +4,7 @@ namespace Jexactyl\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\Cache;
 use Znck\Eloquent\Traits\BelongsToThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,99 +13,6 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Jexactyl\Exceptions\Http\Server\ServerStateConflictException;
 
-/**
- * \Jexactyl\Models\Server.
- *
- * @property int $id
- * @property string|null $external_id
- * @property string $uuid
- * @property string $uuidShort
- * @property int $node_id
- * @property bool $renewable
- * @property int $renewal
- * @property string|null $bg
- * @property string $name
- * @property string $description
- * @property string|null $status
- * @property bool $skip_scripts
- * @property int $owner_id
- * @property int $memory
- * @property int $swap
- * @property int $disk
- * @property int $io
- * @property int $cpu
- * @property string|null $threads
- * @property bool $oom_disabled
- * @property int $allocation_id
- * @property int $nest_id
- * @property int $egg_id
- * @property string $startup
- * @property string $image
- * @property int|null $allocation_limit
- * @property int|null $database_limit
- * @property int $backup_limit
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $installed_at
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\ActivityLog[] $activity
- * @property int|null $activity_count
- * @property \Jexactyl\Models\Allocation|null $allocation
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Allocation[] $allocations
- * @property int|null $allocations_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Backup[] $backups
- * @property int|null $backups_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Database[] $databases
- * @property int|null $databases_count
- * @property \Jexactyl\Models\Egg|null $egg
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Mount[] $mounts
- * @property int|null $mounts_count
- * @property \Jexactyl\Models\Nest $nest
- * @property \Jexactyl\Models\Node $node
- * @property \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
- * @property int|null $notifications_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Schedule[] $schedules
- * @property int|null $schedules_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Subuser[] $subusers
- * @property int|null $subusers_count
- * @property \Jexactyl\Models\ServerTransfer|null $transfer
- * @property \Jexactyl\Models\User $user
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\EggVariable[] $variables
- * @property int|null $variables_count
- *
- * @method static \Database\Factories\ServerFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Server newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Server newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Server query()
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereAllocationId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereAllocationLimit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereBackupLimit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereCpu($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereDatabaseLimit($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereDisk($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereEggId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereExternalId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereImage($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereIo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereMemory($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereNestId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereNodeId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereOomDisabled($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereSkipScripts($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereStartup($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereSwap($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereThreads($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereUuid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Server whereUuidShort($value)
- *
- * @mixin \Eloquent
- */
 class Server extends Model
 {
     use BelongsToThrough;
@@ -114,13 +22,12 @@ class Server extends Model
      * The resource name for this model when it is transformed into an
      * API representation using fractal.
      */
-    public const RESOURCE_NAME = 'server';
-
-    public const STATUS_INSTALLING = 'installing';
-    public const STATUS_INSTALL_FAILED = 'install_failed';
-    public const STATUS_REINSTALL_FAILED = 'reinstall_failed';
-    public const STATUS_SUSPENDED = 'suspended';
-    public const STATUS_RESTORING_BACKUP = 'restoring_backup';
+    public const string RESOURCE_NAME = 'server';
+    public const string STATUS_INSTALLING = 'installing';
+    public const string STATUS_INSTALL_FAILED = 'install_failed';
+    public const string STATUS_REINSTALL_FAILED = 'reinstall_failed';
+    public const string STATUS_SUSPENDED = 'suspended';
+    public const string STATUS_RESTORING_BACKUP = 'restoring_backup';
 
     /**
      * The table associated with the model.
@@ -141,11 +48,6 @@ class Server extends Model
      * The default relationships to load for all server models.
      */
     protected $with = ['allocation'];
-
-    /**
-     * The attributes that should be mutated to dates.
-     */
-    protected $dates = [self::CREATED_AT, self::UPDATED_AT, 'deleted_at', 'installed_at'];
 
     /**
      * Fields that are not mass assignable.
@@ -178,6 +80,7 @@ class Server extends Model
         'database_limit' => 'present|nullable|integer|min:0',
         'allocation_limit' => 'sometimes|nullable|integer|min:0',
         'backup_limit' => 'present|nullable|integer|min:0',
+        'monthly_price' => 'required|numeric|min:0',
     ];
 
     /**
@@ -202,6 +105,10 @@ class Server extends Model
         'database_limit' => 'integer',
         'allocation_limit' => 'integer',
         'backup_limit' => 'integer',
+        self::CREATED_AT => 'datetime',
+        self::UPDATED_AT => 'datetime',
+        'deleted_at' => 'datetime',
+        'installed_at' => 'datetime',
     ];
 
     /**
@@ -379,7 +286,7 @@ class Server extends Model
      * sure the server is able to be transferred and is not currently being transferred
      * or installed.
      */
-    public function validateTransferState()
+    public function validateTransferState(): void
     {
         if (
             !$this->isInstalled() ||
@@ -388,5 +295,26 @@ class Server extends Model
         ) {
             throw new ServerStateConflictException($this);
         }
+    }
+
+    public function hourlyPrice(): float|int
+    {
+        return Cache::get('server_hourly_price_' . $this->id, function () {
+            Cache::set('server_hourly_price_' . $this->id, $this->monthlyPrice() / 30 / 24);
+            return $this->monthlyPrice() / 30 / 24;
+        });
+    }
+
+    public function monthlyPrice(): float|int
+    {
+        return Cache::get('server_monthly_price_' . $this->id, function () {
+            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price);
+            return $this->monthly_price;
+        });
+    }
+
+    protected function updateMonthlyPrice(){
+        Cache::forget('server_monthly_price_' . $this->id);
+        Cache::forget('server_hourly_price_' . $this->id);
     }
 }

@@ -68,32 +68,22 @@ class ServerController extends ClientApiController
     public function store(CreateServerRequest $request): JsonResponse
     {
         $user = $request->user();
-        $fee = Node::find($request->input('node'))->deploy_fee;
 
         if (!$user->verified) {
-            throw new DisplayException('Server deployment is unavailable for unverified accounts.');
+            throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей.');
         }
 
         if (Nest::find($request->input('nest'))->private) {
             throw new DisplayException('This nest is private and cannot be deployed to.');
         }
 
-        if ($user->store_slots < 1) {
-            throw new DisplayException('You do not have enough server slots in order to deploy a server.');
+        if ($user->server_slots < 1) {
+            throw new DisplayException('У вас недостаточно слотов для создания сервера.');
         }
 
         $server = $this->creationService->handle($request);
 
-        $user->update([
-            'store_balance' => $user->store_balance - $fee ?? 0,
-            'store_cpu' => $user->store_cpu - $request->input('cpu'),
-            'store_memory' => $user->store_memory - $request->input('memory'),
-            'store_disk' => $user->store_disk - $request->input('disk'),
-            'store_slots' => $user->store_slots - 1,
-            'store_ports' => $user->store_ports - $request->input('ports'),
-            'store_backups' => $user->store_backups - $request->input('backups'),
-            'store_databases' => $user->store_databases - $request->input('databases'),
-        ]);
+
 
         return new JsonResponse(['id' => $server->uuidShort]);
     }

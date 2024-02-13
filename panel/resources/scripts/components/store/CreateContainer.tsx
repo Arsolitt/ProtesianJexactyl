@@ -52,8 +52,6 @@ export default () => {
     const [loading, setLoading] = useState(false);
     const [resources, setResources] = useState<Resources>();
 
-    console.log(resources);
-
     const user = useStoreState((state) => state.user.data!);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 

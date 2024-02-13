@@ -54,14 +54,8 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property int|null $ssh_keys_count
  * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\ApiKey[] $tokens
  * @property int|null $tokens_count
- * @property int $store_balance
- * @property int $store_cpu
- * @property int $store_memory
- * @property int $store_disk
- * @property int $store_slots
- * @property int $store_ports
- * @property int $store_backups
- * @property int $store_databases
+ * @property int $credits
+ * @property int $server_slots
  * @property string $referral_code
  * @property bool|null $approved
  * @property bool $verified
@@ -102,14 +96,14 @@ class User extends Model implements
     use HasAccessTokens;
     use Notifiable;
 
-    public const USER_LEVEL_USER = 0;
-    public const USER_LEVEL_ADMIN = 1;
+    public const int USER_LEVEL_USER = 0;
+    public const int USER_LEVEL_ADMIN = 1;
 
     /**
      * The resource name for this model when it is transformed into an
      * API representation using fractal.
      */
-    public const RESOURCE_NAME = 'user';
+    public const string RESOURCE_NAME = 'user';
 
     /**
      * Level of servers to display when using access() on a user.
@@ -138,14 +132,8 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
-        'store_balance',
-        'store_cpu',
-        'store_memory',
-        'store_disk',
-        'store_slots',
-        'store_ports',
-        'store_backups',
-        'store_databases',
+        'credits',
+        'server_slots',
         'referral_code',
         'approved',
     ];
@@ -196,14 +184,8 @@ class User extends Model implements
         'totp_secret' => 'nullable|string',
         'approved' => 'nullable|boolean',
         'verified' => 'boolean',
-        'store_balance' => 'sometimes|int',
-        'store_cpu' => 'sometimes|int',
-        'store_memory' => 'sometimes|int',
-        'store_disk' => 'sometimes|int',
-        'store_slots' => 'sometimes|int',
-        'store_ports' => 'sometimes|int',
-        'store_backups' => 'sometimes|int',
-        'store_database' => 'sometimes|int',
+        'credits' => 'sometimes|int',
+        'server_slots' => 'sometimes|int',
     ];
 
     /**

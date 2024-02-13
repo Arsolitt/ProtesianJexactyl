@@ -2,11 +2,17 @@
 
 namespace Jexactyl\Services\Servers;
 
+use Illuminate\Validation\ValidationException;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Ramsey\Uuid\Uuid;
 use Jexactyl\Models\Egg;
 use Jexactyl\Models\User;
 use Illuminate\Support\Arr;
 use Jexactyl\Models\Server;
+use Throwable;
 use Webmozart\Assert\Assert;
 use Jexactyl\Models\Allocation;
 use Illuminate\Support\Collection;
@@ -42,12 +48,12 @@ class ServerCreationService
      * as possible given the input data. For example, if an allocation_id is passed with
      * no node_id the node_is will be picked from the allocation.
      *
-     * @throws \Throwable
-     * @throws \Jexactyl\Exceptions\DisplayException
-     * @throws \Illuminate\Validation\ValidationException
-     * @throws \Jexactyl\Exceptions\Repository\RecordNotFoundException
-     * @throws \Jexactyl\Exceptions\Service\Deployment\NoViableNodeException
-     * @throws \Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException
+     * @throws Throwable
+     * @throws DisplayException
+     * @throws ValidationException
+     * @throws RecordNotFoundException
+     * @throws NoViableNodeException
+     * @throws NoViableAllocationException
      */
     public function handle(array $data, DeploymentObject $deployment = null): Server
     {
@@ -109,9 +115,9 @@ class ServerCreationService
     /**
      * Gets an allocation to use for automatic deployment.
      *
-     * @throws \Jexactyl\Exceptions\DisplayException
-     * @throws \Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException
-     * @throws \Jexactyl\Exceptions\Service\Deployment\NoViableNodeException
+     * @throws DisplayException
+     * @throws NoViableAllocationException
+     * @throws NoViableNodeException
      */
     private function configureDeployment(array $data, DeploymentObject $deployment): Allocation
     {
