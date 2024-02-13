@@ -43,9 +43,9 @@ class StoreController extends Controller
             'selected_currency' => $this->settings->get($prefix . 'currency', 'USD'),
             'currencies' => $currencies,
 
-            'cpu' => $this->settings->get($prefix . 'cost:cpu', 50),
-            'memory' => $this->settings->get($prefix . 'cost:memory', 50),
-            'disk' => $this->settings->get($prefix . 'cost:disk', 25),
+            'cpu' => $this->settings->get($prefix . 'cost:cpu', 50) * 100,
+            'memory' => $this->settings->get($prefix . 'cost:memory', 50) * 1024,
+            'disk' => $this->settings->get($prefix . 'cost:disk', 25) * 1024,
             'slot' => $this->settings->get($prefix . 'cost:slot', 250),
             'port' => $this->settings->get($prefix . 'cost:port', 20),
             'backup' => $this->settings->get($prefix . 'cost:backup', 20),
@@ -69,6 +69,17 @@ class StoreController extends Controller
     public function update(StoreFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
+            switch ($key) {
+                case 'store:cost:cpu':
+                    $value = $value / 100;
+                    break;
+                case 'store:cost:disk':
+                case 'store:cost:memory':
+                    $value = $value / 1024;
+                    break;
+                default:
+                    break;
+            }
             $this->settings->set($key, $value);
         }
 

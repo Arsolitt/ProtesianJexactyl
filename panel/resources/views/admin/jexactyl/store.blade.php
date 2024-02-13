@@ -99,7 +99,7 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label">Cost per 50% CPU</label>
+                                <label class="control-label">Cost per 100% CPU</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:cpu" value="{{ $cpu }}" />
                                     <p class="text-muted"><small>Used to calculate the total cost for 50% CPU.</small></p>
