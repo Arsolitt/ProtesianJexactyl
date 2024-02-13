@@ -2,6 +2,8 @@
 
 namespace Jexactyl\Services\Store;
 
+use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Jexactyl\Models\Egg;
 use Jexactyl\Models\Nest;
 use Jexactyl\Models\Node;
@@ -13,20 +15,23 @@ use Jexactyl\Services\Servers\ServerCreationService;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
 use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
+use Throwable;
 
 class StoreCreationService
 {
     public function __construct(
-        private SettingsRepositoryInterface $settings,
-        private ServerCreationService $creationService,
-        private StoreVerificationService $verifyService
+        private SettingsRepositoryInterface       $settings,
+        private readonly ServerCreationService    $creationService,
+        private readonly StoreVerificationService $verifyService
     ) {
     }
 
     /**
-     * Creates a server on Jexactyl using the Storefront.
-     *
+     * @throws NoViableNodeException
+     * @throws Throwable
+     * @throws RecordNotFoundException
      * @throws DisplayException
+     * @throws NoViableAllocationException
      */
     public function handle(CreateServerRequest $request): Server
     {
@@ -56,11 +61,6 @@ class StoreCreationService
             'image' => array_values($egg->docker_images)[0],
             'startup' => $egg->startup,
             'start_on_completion' => false,
-            // Settings for the renewal system. Even if the renewal system is disabled,
-            // mark this server as enabled - so that if the renewal system is enabled again,
-            // it'll be part of the renewable servers.
-            'renewable' => true,
-            'renewal' => $this->settings->get('jexactyl::renewal:default'),
         ];
 
         foreach (EggVariable::where('egg_id', $egg->id)->get() as $var) {

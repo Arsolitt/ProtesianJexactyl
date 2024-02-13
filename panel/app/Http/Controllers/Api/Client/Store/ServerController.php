@@ -61,9 +61,7 @@ class ServerController extends ClientApiController
 
     /**
      * Stores a new server on the Panel.
-     *
      * @throws DisplayException
-     * @throws NoViableNodeException
      */
     public function store(CreateServerRequest $request): JsonResponse
     {
@@ -82,8 +80,6 @@ class ServerController extends ClientApiController
         }
 
         $server = $this->creationService->handle($request);
-
-
 
         return new JsonResponse(['id' => $server->uuidShort]);
     }

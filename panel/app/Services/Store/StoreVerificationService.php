@@ -19,31 +19,38 @@ class StoreVerificationService
      * resources or edit a servers resource limits if they do not
      * have sufficient resources in their account - or if the requested
      * amount goes over admin-defined limits.
+     * @throws DisplayException
      */
-    public function handle(CreateServerRequest $request)
+    public function handle(CreateServerRequest $request): void
     {
-        $this->checkUserResources($request);
+        $this->checkUserCredits($request);
         $this->checkResourceLimits($request);
-
-        $this->checkDeploymentCost($request);
     }
 
-    private function checkUserResources(CreateServerRequest $request)
+    /**
+     * @throws DisplayException
+     */
+    private function checkUserCredits(CreateServerRequest $request): void
     {
-        $types = ['cpu', 'memory', 'disk', 'slots', 'ports', 'backups', 'databases'];
-
-        foreach ($types as $type) {
-            $value = DB::table('users')->where('id', $request->user()->id)->pluck('store_' . $type)->first();
-
-            if ($value < $request->input($type)) {
-                throw new DisplayException('You only have' . $value . ' ' . $type . ', so you cannot deploy this server.');
-            }
+        $discount = 1 - ($request->user->totalDiscount() / 100);
+        $cpu = $request->input('cpu') * settings()->get('store:cost:cpu');
+        $ram = $request->input('memory') * settings()->get('store:cost:ram');
+        $disk = $request->input('disk') * settings()->get('store:cost:disk');
+        $ports = $request->input('ports') * settings()->get('store:cost:port');
+        $backups = $request->input('backups') * settings()->get('store:cost:backup');
+        $databases = $request->input('databases') * settings()->get('store:cost:database');
+        $price = ($cpu + $ram + $disk + $ports + $backups + $databases) * $discount / 30;
+        if ($request->user->credits < $price) {
+            throw new DisplayException('У тебя на балансе недостаточно средств, чтобы создать сервер!');
         }
     }
 
-    private function checkResourceLimits(CreateServerRequest $request)
+    /**
+     * @throws DisplayException
+     */
+    private function checkResourceLimits(CreateServerRequest $request): void
     {
-        $prefix = 'jexactyl::store:limit:';
+        $prefix = 'store:limit:';
         $types = ['cpu', 'memory', 'disk', 'slot', 'port', 'backup', 'database'];
 
         foreach ($types as $type) {
@@ -59,18 +66,6 @@ class StoreVerificationService
             if ($limit < $amount) {
                 throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limit);
             }
-        }
-    }
-
-    /**
-     * Ensures the user has enough credits in order to deploy to a given node.
-     */
-    private function checkDeploymentCost(CreateServerRequest $request)
-    {
-        $fee = Node::find($request->input('node'))->deploy_fee;
-
-        if ($fee > $request->user()->store_balance) {
-            throw new DisplayException('You do not have enough credits to deploy to this node, as it has a deployment fee of ' . $fee . ' credits.');
         }
     }
 }

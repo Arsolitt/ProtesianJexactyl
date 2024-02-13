@@ -4,6 +4,7 @@ namespace Jexactyl\Services\Servers;
 
 use Illuminate\Validation\ValidationException;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
 use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
 use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
@@ -25,20 +26,20 @@ use Jexactyl\Repositories\Eloquent\ServerVariableRepository;
 use Jexactyl\Services\Deployment\AllocationSelectionService;
 use Jexactyl\Exceptions\Http\Connection\DaemonConnectionException;
 
-class ServerCreationService
+readonly class ServerCreationService
 {
     /**
      * ServerCreationService constructor.
      */
     public function __construct(
         private AllocationSelectionService $allocationSelectionService,
-        private ConnectionInterface $connection,
-        private DaemonServerRepository $daemonServerRepository,
-        private FindViableNodesService $findViableNodesService,
-        private ServerRepository $repository,
-        private ServerDeletionService $serverDeletionService,
-        private ServerVariableRepository $serverVariableRepository,
-        private VariableValidatorService $validatorService
+        private ConnectionInterface        $connection,
+        private DaemonServerRepository     $daemonServerRepository,
+        private FindViableNodesService     $findViableNodesService,
+        private ServerRepository           $repository,
+        private ServerDeletionService      $serverDeletionService,
+        private ServerVariableRepository   $serverVariableRepository,
+        private VariableValidatorService   $validatorService
     ) {
     }
 
@@ -88,7 +89,7 @@ class ServerCreationService
         //
         // If that connection fails out we will attempt to perform a cleanup by just
         // deleting the server itself from the system.
-        /** @var \Jexactyl\Models\Server $server */
+        /** @var Server $server */
         $server = $this->connection->transaction(function () use ($data, $eggVariableData) {
             // Create the server and assign any additional allocations to it.
             $server = $this->createModel($data);
@@ -121,7 +122,7 @@ class ServerCreationService
      */
     private function configureDeployment(array $data, DeploymentObject $deployment): Allocation
     {
-        /** @var \Illuminate\Support\Collection $nodes */
+        /** @var Collection $nodes */
         $nodes = $this->findViableNodesService->setLocations($deployment->getLocations())
             ->setDisk(Arr::get($data, 'disk'))
             ->setMemory(Arr::get($data, 'memory'))
@@ -136,13 +137,13 @@ class ServerCreationService
     /**
      * Store the server in the database and return the model.
      *
-     * @throws \Jexactyl\Exceptions\Model\DataValidationException
+     * @throws DataValidationException
      */
     private function createModel(array $data): Server
     {
         $uuid = $this->generateUniqueUuidCombo();
 
-        /** @var \Jexactyl\Models\Server $model */
+        /** @var Server $model */
         $model = $this->repository->create([
             'external_id' => Arr::get($data, 'external_id'),
             'uuid' => $uuid,
@@ -170,6 +171,7 @@ class ServerCreationService
             'backup_limit' => Arr::get($data, 'backup_limit') ?? 0,
             'renewable' => Arr::get($data, 'renewable') ?? false,
             'renewal' => Arr::get($data, 'renewal') ?? 0,
+            'monthly_price' => 0,
         ]);
 
         return $model;
