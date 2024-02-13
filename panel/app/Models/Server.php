@@ -313,7 +313,7 @@ class Server extends Model
     public function dailyPrice(): float|int
     {
         return Cache::get('server_daily_price_' . $this->id, function () {
-            Cache::set('server_daily_price_' . $this->id, $this->monthlyPrice() / 30);
+            Cache::set('server_daily_price_' . $this->id, $this->monthlyPrice() / 30, 86400);
             return $this->monthlyPrice() / 30;
         });
     }
@@ -321,20 +321,9 @@ class Server extends Model
     public function monthlyPrice(): float|int
     {
         return Cache::get('server_monthly_price_' . $this->id, function () {
-            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price);
+            $discount = 1 - ($this->user->totalDiscount() / 100);
+            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price * $discount, 86400);
             return $this->monthly_price;
         });
-    }
-
-    public function actualPrice(): float
-    {
-        $discount = 1 - ($this->user->totalDiscount() / 100);
-        $cpu = $this->cpu * settings()->get('store:cost:cpu');
-        $ram = $this->ram * settings()->get('store:cost:ram');
-        $disk = $this->disk * settings()->get('store:cost:disk');
-        $ports = $this->ports * settings()->get('store:cost:port');
-        $backups = $this->backups * settings()->get('store:cost:backup');
-        $databases = $this->databases * settings()->get('store:cost:database');
-        return (float) ($cpu + $ram + $disk + $ports + $backups + $databases) * $discount;
     }
 }

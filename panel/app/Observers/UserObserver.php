@@ -40,4 +40,17 @@ class UserObserver
     {
         event(new Events\User\Deleted($user));
     }
+
+    public function updating(User $user): void
+    {
+        event(new Events\User\Updating($user));
+    }
+
+    /**
+     * Listen to the Server saved event.
+     */
+    public function updated(User $user): void
+    {
+        event(new Events\User\Updated($user));
+    }
 }
