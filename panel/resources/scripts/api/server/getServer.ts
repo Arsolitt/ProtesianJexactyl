@@ -43,8 +43,6 @@ export interface Server {
     isTransferring: boolean;
     variables: ServerEggVariable[];
     allocations: Allocation[];
-    renewal: number;
-    renewable: boolean;
     bg: string;
 }
 
@@ -73,8 +71,6 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     allocations: ((data.relationships?.allocations as FractalResponseList | undefined)?.data || []).map(
         rawDataToServerAllocation
     ),
-    renewal: data.renewal,
-    renewable: data.renewable,
     bg: data.bg,
 });
 

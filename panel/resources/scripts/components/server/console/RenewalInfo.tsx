@@ -13,7 +13,6 @@ export default () => {
     const [loading, setLoading] = useState(false);
     const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
-    const renewal = ServerContext.useStoreState((state) => state.server.data!.renewal);
 
     const doRenewal = () => {
         setLoading(true);
@@ -55,7 +54,7 @@ export default () => {
                 You will be charged {store.renewals.cost} credits to add {store.renewals.days} days until your next
                 renewal is due.
             </Dialog.Confirm>
-            in {renewal} days{' '}
+            in 666 days{' '}
             <span className={'text-blue-500 text-sm cursor-pointer'} onClick={() => setOpen(true)}>
                 {'('}Renew{')'}
             </span>

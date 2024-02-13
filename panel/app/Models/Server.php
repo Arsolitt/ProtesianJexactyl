@@ -59,8 +59,6 @@ class Server extends Model
         'owner_id' => 'required|integer|exists:users,id',
         'name' => 'required|string|min:1|max:191',
         'node_id' => 'required|exists:nodes,id',
-        'renewable' => 'sometimes|boolean',
-        'renewal' => 'sometimes|integer',
         'bg' => 'nullable|string',
         'description' => 'string',
         'status' => 'nullable|string',
@@ -88,8 +86,6 @@ class Server extends Model
      */
     protected $casts = [
         'node_id' => 'integer',
-        'renewable' => 'boolean',
-        'renewal' => 'integer',
         'bg' => 'string',
         'skip_scripts' => 'boolean',
         'owner_id' => 'integer',

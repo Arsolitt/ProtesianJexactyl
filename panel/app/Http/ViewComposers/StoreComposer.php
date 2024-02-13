@@ -28,12 +28,6 @@ class StoreComposer extends Composer
                 'stripe' => $this->setting('store:stripe:enabled', Composer::TYPE_BOOL),
             ],
 
-            'renewals' => [
-                'enabled' => $this->setting('renewal:enabled', Composer::TYPE_BOOL),
-                'cost' => $this->setting('renewal:cost', Composer::TYPE_INT),
-                'days' => $this->setting('renewal:default', Composer::TYPE_INT),
-            ],
-
             'editing' => [
                 'enabled' => $this->setting('renewal:editing', Composer::TYPE_BOOL),
             ],

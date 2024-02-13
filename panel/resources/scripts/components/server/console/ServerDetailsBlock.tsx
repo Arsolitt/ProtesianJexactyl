@@ -34,7 +34,6 @@ export default ({ className }: { className?: string }) => {
     const instance = ServerContext.useStoreState((state) => state.socket.instance);
     const connected = ServerContext.useStoreState((state) => state.socket.connected);
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
-    const renewable = ServerContext.useStoreState((state) => state.server.data!.renewable);
 
     const textLimits = useMemo(
         () => ({
@@ -134,11 +133,11 @@ export default ({ className }: { className?: string }) => {
             <StatBlock icon={faScroll} title={'Save Console Logs'}>
                 <ConsoleShareContainer />
             </StatBlock>
-            {renewable && (
+            {
                 <StatBlock icon={faClock} title={'Renewal Date'}>
                     <RenewalInfo />
                 </StatBlock>
-            )}
+            }
         </div>
     );
 };

@@ -25,12 +25,9 @@ class ServerController extends Controller
      */
     public function index(): View
     {
-        $prefix = 'jexactyl::renewal:';
+        $prefix = 'server:';
 
         return view('admin.jexactyl.server', [
-            'enabled' => $this->settings->get($prefix . 'enabled', false),
-            'default' => $this->settings->get($prefix . 'default', 7),
-            'cost' => $this->settings->get($prefix . 'cost', 20),
             'editing' => $this->settings->get($prefix . 'editing', false),
             'deletion' => $this->settings->get($prefix . 'deletion', true),
         ]);
@@ -45,7 +42,7 @@ class ServerController extends Controller
     public function update(ServerFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::renewal:' . $key, $value);
+            $this->settings->set('server:' . $key, $value);
         }
 
         $this->alert->success('Jexactyl Server settings has been updated.')->flash();
