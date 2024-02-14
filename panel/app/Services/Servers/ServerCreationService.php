@@ -170,7 +170,7 @@ class ServerCreationService
             'allocation_limit' => Arr::get($data, 'allocation_limit') ?? 0,
             'backup_limit' => Arr::get($data, 'backup_limit') ?? 0,
             'monthly_price' => 0,
-        ], false, true);
+        ]);
 
         return $model;
     }
