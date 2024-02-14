@@ -75,9 +75,10 @@ abstract class EloquentRepository extends Repository implements RepositoryInterf
      */
     public function create(array $fields, bool $validate = true, bool $force = false): Model|bool
     {
-        $instance = $this->getBuilder()->newModelInstance();
-        ($force) ? $instance->forceFill($fields) : $instance->fill($fields);
 
+        $instance = $this->getBuilder()->newModelInstance();
+
+        ($force) ? $instance->forceFill($fields) : $instance->fill($fields);
         if (!$validate) {
             $saved = $instance->skipValidation()->save();
         } else {

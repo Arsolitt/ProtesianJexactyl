@@ -11,7 +11,7 @@ import { faClock, faHdd, faMemory, faMicrochip, faScroll, faWifi } from '@fortaw
 import { capitalize } from '@/lib/strings';
 import styled from 'styled-components/macro';
 import tw from 'twin.macro';
-import RenewalInfo from './RenewalInfo';
+// import RenewalInfo from './RenewalInfo';
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime', number>;
 
@@ -80,7 +80,7 @@ export default ({ className }: { className?: string }) => {
 
     return (
         <div className={classNames('grid grid-cols-6 gap-2 md:gap-4', className)}>
-            <StatBlock icon={faClock} title={'Uptime'}>
+            <StatBlock icon={faClock} title={'Время работы'}>
                 {status === null ? (
                     'Offline'
                 ) : stats.uptime > 0 ? (
@@ -89,12 +89,12 @@ export default ({ className }: { className?: string }) => {
                     capitalize(status)
                 )}
             </StatBlock>
-            <StatBlock icon={faWifi} title={'Address'} copyOnClick={allocation}>
+            <StatBlock icon={faWifi} title={'Адрес'} copyOnClick={allocation}>
                 {allocation}
             </StatBlock>
-            <StatBlock icon={faMicrochip} title={'CPU'}>
+            <StatBlock icon={faMicrochip} title={'Процессор'}>
                 {status === 'offline' ? (
-                    <span className={'text-gray-400'}>Offline</span>
+                    <span className={'text-gray-400'}>Выключен</span>
                 ) : (
                     <Limit limit={textLimits.cpu}>{stats.cpu.toFixed(2)}%</Limit>
                 )}
@@ -106,9 +106,9 @@ export default ({ className }: { className?: string }) => {
                     <Bar style={{ width: cpuUsed === undefined ? '100%' : `${cpuUsed}%` }} />
                 )}
             </StatBlock>
-            <StatBlock icon={faMemory} title={'Memory'}>
+            <StatBlock icon={faMemory} title={'ОЗУ'}>
                 {status === 'offline' ? (
-                    <span className={'text-gray-400'}>Offline</span>
+                    <span className={'text-gray-400'}>Выключен</span>
                 ) : (
                     <Limit limit={textLimits.memory}>{bytesToString(stats.memory)}</Limit>
                 )}
@@ -120,7 +120,7 @@ export default ({ className }: { className?: string }) => {
                     <Bar style={{ width: memoryUsed === undefined ? '100%' : `${memoryUsed}%` }} />
                 )}
             </StatBlock>
-            <StatBlock icon={faHdd} title={'Disk'}>
+            <StatBlock icon={faHdd} title={'Диск'}>
                 <Limit limit={textLimits.disk}>{bytesToString(stats.disk)}</Limit>
                 {diskUsed > 90 ? (
                     <Bar style={{ width: '100%' }} css={tw`bg-red-500`} />
@@ -130,14 +130,14 @@ export default ({ className }: { className?: string }) => {
                     <Bar style={{ width: diskUsed === undefined ? '100%' : `${diskUsed}%` }} />
                 )}
             </StatBlock>
-            <StatBlock icon={faScroll} title={'Save Console Logs'}>
+            <StatBlock icon={faScroll} title={'Сохранить логи'}>
                 <ConsoleShareContainer />
             </StatBlock>
-            {
-                <StatBlock icon={faClock} title={'Renewal Date'}>
-                    <RenewalInfo />
-                </StatBlock>
-            }
+            {/*{*/}
+            {/*    <StatBlock icon={faClock} title={'Renewal Date'}>*/}
+            {/*        /!*<RenewalInfo />*!/*/}
+            {/*    </StatBlock>*/}
+            {/*}*/}
         </div>
     );
 };

@@ -3,7 +3,15 @@
 namespace Jexactyl\Providers;
 
 use Jexactyl\Events\Auth\OAuthLogin;
+use Jexactyl\Events\Server\Created as ServerCreatedEvent;
+use Jexactyl\Events\Server\Creating as ServerCreatingEvent;
+use Jexactyl\Events\Server\Updated as ServerUpdatedEvent;
+use Jexactyl\Events\Server\Deleted as ServerDeletedEvent;
 use Jexactyl\Listeners\Auth\OAuthLoginListener;
+use Jexactyl\Listeners\Server\CreatedListener as ServerCreatedListener;
+use Jexactyl\Listeners\Server\CreatingListener as ServerCreatingListener;
+use Jexactyl\Listeners\Server\UpdatedListener as ServerUpdatedListener;
+use Jexactyl\Listeners\Server\DeletedListener as ServerDeletedListener;
 use Jexactyl\Models\User;
 use Jexactyl\Models\Server;
 use Jexactyl\Models\Subuser;
@@ -25,6 +33,10 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         ServerInstalledEvent::class => [ServerInstalledNotification::class],
         OAuthLogin::class => [OAuthLoginListener::class],
+        ServerCreatingEvent::class => [ServerCreatingListener::class],
+        ServerCreatedEvent::class => [ServerCreatedListener::class],
+        ServerUpdatedEvent::class => [ServerUpdatedListener::class],
+        ServerDeletedEvent::class => [ServerDeletedListener::class],
     ];
 
     protected $subscribe = [

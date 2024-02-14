@@ -11,6 +11,7 @@ use Jexactyl\Services\Users\UserUpdateService;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
 use Jexactyl\Http\Requests\Admin\Users\ResourceFormRequest;
+use Throwable;
 
 class ResourceController extends Controller
 {
@@ -34,6 +35,7 @@ class ResourceController extends Controller
      *
      * @throws DataValidationException
      * @throws RecordNotFoundException
+     * @throws Throwable
      */
     public function update(ResourceFormRequest $request, User $user): RedirectResponse
     {
