@@ -51,8 +51,8 @@ class ReferralCode extends Model
         'code' => 'present|string|size:16',
     ];
 
-    protected $dates = [
-        self::CREATED_AT,
+    protected $casts = [
+        self::CREATED_AT => 'datetime',
     ];
 
     /**

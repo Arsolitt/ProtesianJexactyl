@@ -106,6 +106,9 @@ class ApiKey extends Model
         'r_' . AdminAcl::RESOURCE_NESTS => 'int',
         'r_' . AdminAcl::RESOURCE_NODES => 'int',
         'r_' . AdminAcl::RESOURCE_SERVERS => 'int',
+        self::CREATED_AT => 'datetime',
+        self::UPDATED_AT => 'datetime',
+        'last_used_at' => 'datetime',
     ];
 
     /**
@@ -146,12 +149,6 @@ class ApiKey extends Model
         'r_' . AdminAcl::RESOURCE_NESTS => 'integer|min:0|max:3',
         'r_' . AdminAcl::RESOURCE_NODES => 'integer|min:0|max:3',
         'r_' . AdminAcl::RESOURCE_SERVERS => 'integer|min:0|max:3',
-    ];
-
-    protected $dates = [
-        self::CREATED_AT,
-        self::UPDATED_AT,
-        'last_used_at',
     ];
 
     /**

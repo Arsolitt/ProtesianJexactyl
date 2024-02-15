@@ -108,39 +108,6 @@ class Server extends Model
         'installed_at' => 'datetime',
     ];
 
-//    protected $fillable = [
-//        'external_id',
-//        'owner_id',
-//        'name',
-//        'node_id',
-//        'bg',
-//        'description',
-//        'status',
-//        'memory',
-//        'swap',
-//        'io',
-//        'cpu',
-//        'threads',
-//        'oom_disabled',
-//        'disk',
-//        'allocation_id',
-//        'nest_id',
-//        'egg_id',
-//        'startup',
-//        'skip_scripts',
-//        'image',
-//        'database_limit',
-//        'allocation_limit',
-//        'backup_limit',
-//        'monthly_price',
-//        'installed_at',
-//        'deleted_at',
-//        'updated_at',
-//        'created_at'
-//    ];
-
-
-/** fill with all Model fields */
     protected $fillable = [
         'external_id',
         'uuid',

@@ -31,10 +31,10 @@ class TicketMessage extends Model
      */
     protected $table = 'ticket_messages';
 
-    /**
-     * The attributes that should be mutated to dates.
-     */
-    protected $dates = [self::CREATED_AT, self::UPDATED_AT];
+    protected $casts= [
+        self::CREATED_AT => 'datetime',
+        self::UPDATED_AT => 'datetime'
+    ];
 
     /**
      * Fields that are not mass assignable.

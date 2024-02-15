@@ -139,15 +139,14 @@ class User extends Model implements
     ];
 
     /**
-     * Cast values to correct type.
+     * Cast values to a correct type.
      */
     protected $casts = [
         'root_admin' => 'boolean',
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
+        'totp_authenticated_at' => 'datetime',
     ];
-
-    protected $dates = ['totp_authenticated_at'];
 
     /**
      * The attributes excluded from the model's JSON form.
