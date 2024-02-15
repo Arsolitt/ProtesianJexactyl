@@ -23,7 +23,6 @@ class UpdatedListener
     public function handle(Updated $event): void
     {
         $server = $event->server;
-        \Log::debug($server);
         Cache::forget('server_monthly_price_' . $server->id);
         Cache::forget('server_daily_price_' . $server->id);
         Cache::forget('server_hourly_price_' . $server->id);

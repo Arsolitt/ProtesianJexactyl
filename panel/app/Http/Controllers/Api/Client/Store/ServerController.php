@@ -2,11 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
+use Jexactyl\Models\Egg;
 use Jexactyl\Models\Nest;
 use Jexactyl\Models\Node;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Repositories\Eloquent\NodeRepository;
 use Jexactyl\Services\Store\StoreCreationService;
 use Jexactyl\Transformers\Api\Client\Store\EggTransformer;
 use Jexactyl\Transformers\Api\Client\Store\NestTransformer;
@@ -29,6 +31,10 @@ class ServerController extends ClientApiController
     {
         $nodes = Node::where('deployable', true)->get();
 
+        foreach ($nodes as $node) {
+            \Log::debug($node->isViable(1000, 1000));
+        }
+
         return $this->fractal->collection($nodes)
             ->transformWith($this->getTransformer(NodeTransformer::class))
             ->toArray();
@@ -49,6 +55,8 @@ class ServerController extends ClientApiController
     /**
      * Get all available eggs for server deployment.
      */
+
+    // TODO: добавить сортировку для яичек, чтобы отключать каждое по отдельности
     public function eggs(Request $request): array
     {
         $id = $request->input('id') ?? Nest::where('private', false)->first()->id;
@@ -63,17 +71,21 @@ class ServerController extends ClientApiController
      * Stores a new server on the Panel.
      * @throws DisplayException
      */
-    public function store(CreateServerRequest $request): JsonResponse
+    public function store(CreateServerRequest $request, NodeRepository $repository): JsonResponse
     {
         $user = $request->user();
 
         if (!$user->verified) {
-            throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей.');
+            throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей!');
         }
 
         if (Nest::find($request->input('nest'))->private) {
-            throw new DisplayException('This nest is private and cannot be deployed to.');
+            throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
         }
+
+//        if (Egg::find($request->input('egg'))->private) {
+//            throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
+//        }
 
         if ($user->server_slots < 1) {
             throw new DisplayException('У вас недостаточно слотов для создания сервера.');
@@ -82,5 +94,10 @@ class ServerController extends ClientApiController
         $server = $this->creationService->handle($request);
 
         return new JsonResponse(['id' => $server->uuidShort]);
+    }
+
+    protected function getPreferredNode()
+    {
+
     }
 }

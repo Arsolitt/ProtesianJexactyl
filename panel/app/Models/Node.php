@@ -83,12 +83,23 @@ class Node extends Model
      * Fields that are mass assignable.
      */
     protected $fillable = [
-        'public', 'name', 'location_id',
-        'fqdn', 'scheme', 'behind_proxy',
-        'memory', 'memory_overallocate', 'disk',
-        'disk_overallocate', 'upload_size', 'daemonBase',
-        'daemonSFTP', 'daemonListen', 'deploy_fee',
-        'description', 'maintenance_mode',
+        'public',
+        'name',
+        'location_id',
+        'fqdn',
+        'scheme',
+        'behind_proxy',
+        'memory',
+        'memory_overallocate',
+        'disk',
+        'disk_overallocate',
+        'upload_size',
+        'daemonBase',
+        'daemonSFTP',
+        'daemonListen',
+        'deploy_fee',
+        'description',
+        'maintenance_mode'
     ];
 
     public static array $validationRules = [
