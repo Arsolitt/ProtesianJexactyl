@@ -31,7 +31,7 @@ class UserTransformer extends BaseClientTransformer
             'slots' => $model->server_slots,
             'limit' => [
                 'cpu' => $this->settings->get('store:limit:cpu', 50),
-                'ram' => $this->settings->get('store:limit:ram', 256),
+                'ram' => $this->settings->get('store:limit:memory', 256),
                 'disk' => $this->settings->get('store:limit:disk', 1024),
                 'ports' => $this->settings->get('store:limit:port', 1),
                 'backups' => $this->settings->get('store:limit:backup', 1),

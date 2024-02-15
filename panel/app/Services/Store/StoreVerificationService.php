@@ -32,7 +32,7 @@ class StoreVerificationService
      */
     private function checkUserCredits(CreateServerRequest $request): void
     {
-        $discount = 1 - ($request->user->totalDiscount() / 100);
+        $discount = 1 - ($request->user()->totalDiscount() / 100);
         $cpu = $request->input('cpu') * settings()->get('store:cost:cpu');
         $ram = $request->input('memory') * settings()->get('store:cost:ram');
         $disk = $request->input('disk') * settings()->get('store:cost:disk');
@@ -40,7 +40,7 @@ class StoreVerificationService
         $backups = $request->input('backups') * settings()->get('store:cost:backup');
         $databases = $request->input('databases') * settings()->get('store:cost:database');
         $price = ($cpu + $ram + $disk + $ports + $backups + $databases) * $discount / 30;
-        if ($request->user->credits < $price) {
+        if ($request->user()->credits < $price) {
             throw new DisplayException('У тебя на балансе недостаточно средств, чтобы создать сервер!');
         }
     }

@@ -139,7 +139,7 @@ class NodeRepository extends EloquentRepository implements NodeRepositoryInterfa
     /**
      * Returns a node with the given id with the Node's resource usage.
      */
-    public function getNodeWithResourceUsage(int $node_id): Node
+    public function getNodeWithResourceUsage(int $node_id): ?Node
     {
         $instance = $this->getBuilder()
             ->select(['nodes.id', 'nodes.fqdn', 'nodes.scheme', 'nodes.daemon_token', 'nodes.daemonListen', 'nodes.memory', 'nodes.disk', 'nodes.memory_overallocate', 'nodes.disk_overallocate'])

@@ -19,10 +19,11 @@ use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 
 class ServerController extends ClientApiController
 {
+
     /**
      * ServerController constructor.
      */
-    public function __construct(private StoreCreationService $creationService)
+    public function __construct(private StoreCreationService $creationService, private NodeRepository $nodeRepo)
     {
         parent::__construct();
     }
@@ -30,10 +31,7 @@ class ServerController extends ClientApiController
     public function nodes(Request $request): array
     {
         $nodes = Node::where('deployable', true)->get();
-
-        foreach ($nodes as $node) {
-            \Log::debug($node->isViable(1000, 1000));
-        }
+        
 
         return $this->fractal->collection($nodes)
             ->transformWith($this->getTransformer(NodeTransformer::class))
@@ -71,7 +69,7 @@ class ServerController extends ClientApiController
      * Stores a new server on the Panel.
      * @throws DisplayException
      */
-    public function store(CreateServerRequest $request, NodeRepository $repository): JsonResponse
+    public function store(CreateServerRequest $request): JsonResponse
     {
         $user = $request->user();
 
@@ -91,13 +89,40 @@ class ServerController extends ClientApiController
             throw new DisplayException('У вас недостаточно слотов для создания сервера.');
         }
 
+        $node_id = $this->getPreferredNode($request->input('memory'), $request->input('disk'));
+
+        $request->merge([
+            'node' => $node_id
+        ]);
+
         $server = $this->creationService->handle($request);
 
         return new JsonResponse(['id' => $server->uuidShort]);
     }
 
-    protected function getPreferredNode()
+    /**
+     * @throws NoViableNodeException
+     */
+    protected function getPreferredNode(int $memory, int $disk): int|DisplayException
     {
+        $availableNodes = [];
+        $nodes = Node::where('deployable', true)->get();
+        foreach ($nodes as $node) {
+            $stats = $this->nodeRepo->getUsageStats($node);
+            if ($this->nodeRepo->getNodeWithResourceUsage($node->id)->isViable($memory, $disk)) {
+                $availableNodes[] = [
+                    'id' => $node->id,
+                    'percent' => $stats['memory']['percent']
+                ];
+            }
+        }
 
+        if (count($availableNodes) < 1) {
+            throw new NoViableNodeException('Нет доступных узлов для создания, обратитесь в поддержку!');
+        }
+        usort($availableNodes, function ($a, $b) {
+            return $a['percent'] - $b['percent'];
+        });
+        return $availableNodes[0]['id'];
     }
 }
