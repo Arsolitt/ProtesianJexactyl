@@ -2,6 +2,7 @@
 
 namespace Jexactyl\Transformers\Api\Application;
 
+use Jexactyl\Exceptions\Transformer\InvalidTransformerLevelException;
 use Jexactyl\Models\User;
 use Jexactyl\Services\Acl\Api\AdminAcl;
 use League\Fractal\Resource\Collection;
@@ -37,8 +38,8 @@ class UserTransformer extends BaseTransformer
             'first_name' => $user->name_first,
             'last_name' => $user->name_last,
             'language' => $user->language,
-            'root_admin' => (bool) $user->root_admin,
-            '2fa' => (bool) $user->use_totp,
+            'root_admin' => (bool)$user->root_admin,
+            '2fa' => (bool)$user->use_totp,
             'created_at' => $this->formatTimestamp($user->created_at),
             'updated_at' => $this->formatTimestamp($user->updated_at),
         ];
@@ -47,7 +48,7 @@ class UserTransformer extends BaseTransformer
     /**
      * Return the servers associated with this user.
      *
-     * @throws \Jexactyl\Exceptions\Transformer\InvalidTransformerLevelException
+     * @throws InvalidTransformerLevelException
      */
     public function includeServers(User $user): Collection|NullResource
     {

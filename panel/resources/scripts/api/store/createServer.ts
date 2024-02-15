@@ -3,16 +3,15 @@ import http from '@/api/http';
 interface Params {
     name: string;
     description: string | null;
-    cpu: number;
+
     memory: number;
     disk: number;
     ports: number;
-    backups: number | null;
-    databases: number | null;
+    backups: number;
+    databases: number;
 
-    egg: number | null;
-    nest: number | null;
-    node: number | null;
+    egg: number;
+    nest: number;
 }
 
 interface Data {
@@ -20,9 +19,9 @@ interface Data {
     id: string;
 }
 
-export default (params: Params, egg: number, nest: number, node: number): Promise<Data> => {
+export default (params: Params, egg: number, nest: number): Promise<Data> => {
     return new Promise((resolve, reject) => {
-        http.post('/api/client/store/create', { ...params, egg, nest, node })
+        http.post('/api/client/store/create', { ...params, egg, nest })
             .then((data) => resolve(data.data))
             .catch(reject);
     });

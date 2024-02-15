@@ -12,6 +12,7 @@ class UserTransformer extends BaseClientTransformer
     {
         parent::__construct();
     }
+
     /**
      * Return the resource name for the JSONAPI output.
      */

@@ -2,23 +2,28 @@
 
 namespace Jexactyl\Models;
 
-use Jexactyl\Rules\Username;
-use Jexactyl\Facades\Activity;
+use Database\Factories\UserFactory;
+use Eloquent;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Notifications\DatabaseNotification;
+use Illuminate\Notifications\DatabaseNotificationCollection;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rules\In;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Builder;
+use Jexactyl\Facades\Activity;
 use Jexactyl\Models\Traits\HasAccessTokens;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Jexactyl\Traits\Helpers\AvailableLanguages;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Jexactyl\Notifications\SendPasswordReset as ResetPasswordNotification;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Jexactyl\Rules\Username;
+use Jexactyl\Traits\Helpers\AvailableLanguages;
 
 /**
  * Jexactyl\Models\User.
@@ -37,22 +42,22 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property bool $root_admin
  * @property bool $use_totp
  * @property string|null $totp_secret
- * @property \Illuminate\Support\Carbon|null $totp_authenticated_at
+ * @property Carbon|null $totp_authenticated_at
  * @property bool $gravatar
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\ApiKey[] $apiKeys
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property \Illuminate\Database\Eloquent\Collection|ApiKey[] $apiKeys
  * @property int|null $api_keys_count
  * @property string $name
- * @property \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property int|null $notifications_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\RecoveryToken[] $recoveryTokens
+ * @property \Illuminate\Database\Eloquent\Collection|RecoveryToken[] $recoveryTokens
  * @property int|null $recovery_tokens_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\Server[] $servers
+ * @property \Illuminate\Database\Eloquent\Collection|Server[] $servers
  * @property int|null $servers_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\UserSSHKey[] $sshKeys
+ * @property \Illuminate\Database\Eloquent\Collection|UserSSHKey[] $sshKeys
  * @property int|null $ssh_keys_count
- * @property \Illuminate\Database\Eloquent\Collection|\Jexactyl\Models\ApiKey[] $tokens
+ * @property \Illuminate\Database\Eloquent\Collection|ApiKey[] $tokens
  * @property int|null $tokens_count
  * @property int $credits
  * @property int $server_slots
@@ -60,7 +65,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @property bool|null $approved
  * @property bool $verified
  *
- * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static UserFactory factory(...$parameters)
  * @method static Builder|User newModelQuery()
  * @method static Builder|User newQuery()
  * @method static Builder|User query()
@@ -82,7 +87,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
  * @method static Builder|User whereUsername($value)
  * @method static Builder|User whereUuid($value)
  *
- * @mixin \Eloquent
+ * @mixin Eloquent
  */
 class User extends Model implements
     AuthenticatableContract,
@@ -104,17 +109,35 @@ class User extends Model implements
      * API representation using fractal.
      */
     public const string RESOURCE_NAME = 'user';
-
+    /**
+     * Rules verifying that the data being stored matches the expectations of the database.
+     */
+    public static array $validationRules = [
+        'uuid' => 'required|string|size:36|unique:users,uuid',
+        'email' => 'required|email|between:1,191|unique:users,email',
+        'external_id' => 'sometimes|nullable|string|max:191|unique:users,external_id',
+        'discord_id' => 'nullable|string|regex:/^[0-9]{17,20}$/|unique:users,discord_id',
+        'username' => 'required|between:1,191|unique:users,username',
+        'name_first' => 'required|string|between:1,191',
+        'name_last' => 'required|string|between:1,191',
+        'password' => 'sometimes|nullable|string',
+        'root_admin' => 'boolean',
+        'language' => 'string',
+        'use_totp' => 'boolean',
+        'totp_secret' => 'nullable|string',
+        'approved' => 'nullable|boolean',
+        'verified' => 'boolean',
+        'credits' => 'sometimes|numeric|min:0',
+        'server_slots' => 'sometimes|int',
+    ];
     /**
      * Level of servers to display when using access() on a user.
      */
     protected string $accessLevel = 'all';
-
     /**
      * The table associated with the model.
      */
     protected $table = 'users';
-
     /**
      * A list of mass-assignable variables.
      */
@@ -137,7 +160,6 @@ class User extends Model implements
         'referral_code',
         'approved',
     ];
-
     /**
      * Cast values to a correct type.
      */
@@ -147,12 +169,10 @@ class User extends Model implements
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
     ];
-
     /**
      * The attributes excluded from the model's JSON form.
      */
     protected $hidden = ['password', 'remember_token', 'totp_secret', 'totp_authenticated_at'];
-
     /**
      * Default values for specific fields in the database.
      */
@@ -163,28 +183,6 @@ class User extends Model implements
         'use_totp' => false,
         'totp_secret' => null,
         'approved' => false,
-    ];
-
-    /**
-     * Rules verifying that the data being stored matches the expectations of the database.
-     */
-    public static array $validationRules = [
-        'uuid' => 'required|string|size:36|unique:users,uuid',
-        'email' => 'required|email|between:1,191|unique:users,email',
-        'external_id' => 'sometimes|nullable|string|max:191|unique:users,external_id',
-        'discord_id' => 'nullable|string|regex:/^[0-9]{17,20}$/|unique:users,discord_id',
-        'username' => 'required|between:1,191|unique:users,username',
-        'name_first' => 'required|string|between:1,191',
-        'name_last' => 'required|string|between:1,191',
-        'password' => 'sometimes|nullable|string',
-        'root_admin' => 'boolean',
-        'language' => 'string',
-        'use_totp' => 'boolean',
-        'totp_secret' => 'nullable|string',
-        'approved' => 'nullable|boolean',
-        'verified' => 'boolean',
-        'credits' => 'sometimes|numeric|min:0',
-        'server_slots' => 'sometimes|int',
     ];
 
     /**
@@ -206,7 +204,12 @@ class User extends Model implements
      */
     public function toVueObject(): array
     {
-        return Collection::make($this->toArray())->except(['id', 'external_id'])->toArray();
+        return Collection::make($this->toArray())->except(['id', 'external_id'])->merge(['discount' => $this->totalDiscount()])->toArray();
+    }
+
+    public function totalDiscount(): int
+    {
+        return 0;
     }
 
     /**
@@ -296,10 +299,5 @@ class User extends Model implements
                 $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
-    }
-
-    public function totalDiscount(): int
-    {
-        return 0;
     }
 }

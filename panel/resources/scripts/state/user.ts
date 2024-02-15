@@ -14,6 +14,7 @@ export interface UserData {
     referralCode: string;
     createdAt: Date;
     updatedAt: Date;
+    discount: number;
 }
 
 export interface UserStore {

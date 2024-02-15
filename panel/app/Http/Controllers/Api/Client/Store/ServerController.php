@@ -2,20 +2,19 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
-use Jexactyl\Models\Egg;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
+use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
+use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
 use Jexactyl\Models\Nest;
 use Jexactyl\Models\Node;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Repositories\Eloquent\NodeRepository;
 use Jexactyl\Services\Store\StoreCreationService;
 use Jexactyl\Transformers\Api\Client\Store\EggTransformer;
 use Jexactyl\Transformers\Api\Client\Store\NestTransformer;
 use Jexactyl\Transformers\Api\Client\Store\NodeTransformer;
-use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
-use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
-use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 
 class ServerController extends ClientApiController
 {
@@ -31,7 +30,7 @@ class ServerController extends ClientApiController
     public function nodes(Request $request): array
     {
         $nodes = Node::where('deployable', true)->get();
-        
+
 
         return $this->fractal->collection($nodes)
             ->transformWith($this->getTransformer(NodeTransformer::class))
@@ -65,10 +64,6 @@ class ServerController extends ClientApiController
             ->toArray();
     }
 
-    /**
-     * Stores a new server on the Panel.
-     * @throws DisplayException
-     */
     public function store(CreateServerRequest $request): JsonResponse
     {
         $user = $request->user();

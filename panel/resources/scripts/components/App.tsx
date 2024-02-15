@@ -26,8 +26,9 @@ interface ExtendedWindow extends Window {
         use_totp: boolean;
         referral_code: string;
         language: string;
-        updated_at: string;
         created_at: string;
+        updated_at: string;
+        discount: number;
         /* eslint-enable camelcase */
     };
 }
@@ -51,6 +52,7 @@ const App = () => {
             referralCode: JexactylUser.referral_code,
             createdAt: new Date(JexactylUser.created_at),
             updatedAt: new Date(JexactylUser.updated_at),
+            discount: JexactylUser.discount,
         });
     }
 
