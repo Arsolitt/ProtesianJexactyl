@@ -2,39 +2,35 @@
 
 namespace Jexactyl\Http\Controllers\Auth;
 
-use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Jexactyl\Events\Auth\DirectLogin;
-use Jexactyl\Events\Auth\OAuthLogin;
-use Jexactyl\Facades\Activity;
-use Jexactyl\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
-use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Http\Controllers\Controller;
-use Jexactyl\Services\Users\UserCreationService;
-use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Events\Auth\OAuthLogin;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Model\DataValidationException;
+use Jexactyl\Models\User;
+use Jexactyl\Services\Users\UserCreationService;
+use Throwable;
 
-class DiscordController extends Controller
+class DiscordController extends AbstractLoginController
 {
     private SettingsRepositoryInterface $settings;
     private UserCreationService $creationService;
 
     public function __construct(
-        UserCreationService $creationService,
+        UserCreationService         $creationService,
         SettingsRepositoryInterface $settings,
-    ) {
+    )
+    {
         $this->creationService = $creationService;
         $this->settings = $settings;
     }
 
     /**
-     * Uses the Discord API to return a user objext.
+     * Uses the Discord API to return a user object.
      */
     public function index(): JsonResponse
     {
@@ -51,7 +47,7 @@ class DiscordController extends Controller
      *
      * @throws DisplayException
      * @throws DataValidationException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function callback(Request $request)
     {
@@ -64,26 +60,25 @@ class DiscordController extends Controller
         ]);
 
         if (!$code->ok()) {
-            response()->json(['error' => 'invalid_grant'], 401);
+            return response()->json(['error' => 'Неправильные параметры запроса!'], 403);
         }
 
         $req = json_decode($code->body());
         if (preg_match('(email|guilds|identify|guilds.join)', $req->scope) !== 1) {
-            response()->json(['error' => 'invalid_scope'], 401);
+            return response()->json(['error' => 'Неправильные параметры запроса!'], 403);
         }
 
         $discord = json_decode(Http::withHeaders(['Authorization' => 'Bearer ' . $req->access_token])->asForm()->get('https://discord.com/api/users/@me')->body());
 
         if (User::where('discord_id', $discord->id)->exists()) {
             $user = User::where('discord_id', $discord->id)->first();
-        } elseif(User::where('email', $discord->email)->exists()) {
+        } elseif (User::where('email', $discord->email)->exists()) {
             $user = User::where('email', $discord->email)->first();
             $user->update(['discord_id' => $discord->id]);
-        }
-        else {
+        } else {
 
             if (!$this->settings->get('discord:enabled')) {
-                response()->json(['error' => 'invalid_grant'], 401);
+                return response()->json(['error' => 'Вход по дискорду отключен Администрацией!'], 403);
             }
 
             $data = [
@@ -100,20 +95,16 @@ class DiscordController extends Controller
 
             try {
                 $this->creationService->handle($data);
-            } catch (\Exception $e) {
-                Log::error($e);
-                response()->json(['error' => 'invalid_grant'], 401);
+            } catch (DataValidationException $e) {
+                return response()->json(['error' => 'Никнейм уже занят! Попробуй зайти с помощью почты и привязать аккаунт.'], 403);
             }
             $user = User::where('email', $discord->email)->first();
         }
 
-
-        Auth::loginUsingId($user->id, true);
-//        Event::dispatch(new DirectLogin($user, true));
-        Event::dispatch(new OAuthLogin($user, 'discord'));
-//        Activity::event('auth:success')->withRequestMetadata()->subject($user)->log();
-
-
+        if ($user) {
+            Auth::loginUsingId($user->id, true);
+            Event::dispatch(new OAuthLogin($user, 'discord'));
+        }
         return redirect('/');
     }
 

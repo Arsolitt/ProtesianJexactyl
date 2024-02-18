@@ -2,17 +2,17 @@
 
 namespace Jexactyl\Http\Controllers\Auth;
 
+use Carbon\CarbonImmutable;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Models\User;
-use Carbon\CarbonImmutable;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use Jexactyl\Facades\Activity;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Contracts\View\View;
-use Illuminate\Contracts\View\Factory as ViewFactory;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Jexactyl\Models\User;
 use Throwable;
 
 class LoginController extends AbstractLoginController
