@@ -10,11 +10,19 @@
 git clone git@github.com:Arsolitt/ProtesianJexactyl.git .
 ```
 
-Прописать первичный конфиг в .env файл
+Прописать конфиг в .env файл
 
 ```shell
 cp .env.example .env
 ```
+
+Чтобы включить https нужно:
+
+- Сгенерировать сертификаты
+- Положить сертификаты в `docker/nginx/fullchain.pem` и `docker/nginx/privkey.pem`
+- Убрать комментарии на 52 и 53 строке в `docker/nginx/default.conf`
+
+Создать .env для лары
 
 ```shell
 cd panel && cp .env.example .env

@@ -92,7 +92,7 @@ services:
     restart: unless-stopped
     image: ${PROJECT_NAME}_tools
     container_name: ${PROJECT_NAME}_scheduler
-    entrypoint: ["/home/tools/role.sh"]
+    entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
       - redis
       - database
@@ -116,7 +116,7 @@ services:
     restart: unless-stopped
     image: ${PROJECT_NAME}_tools
     container_name: ${PROJECT_NAME}_queue
-    entrypoint: ["/home/tools/role.sh"]
+    entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
       - redis
       - database
@@ -138,7 +138,7 @@ services:
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_tools
-    entrypoint: ["/home/tools/composer"]
+    entrypoint: [ "/home/tools/composer" ]
     volumes:
       - "./panel:/home/app"
     networks:
@@ -154,7 +154,7 @@ services:
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_tools
-    entrypoint: ["php", "/home/app/artisan"]
+    entrypoint: [ "php", "/home/app/artisan" ]
     volumes:
       - "./panel:/home/app"
     networks:
