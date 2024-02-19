@@ -76,6 +76,7 @@ class ServerController extends ClientApiController
             throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
         }
 
+        // TODO: реализовать приватные яйца
 //        if (Egg::find($request->input('egg'))->private) {
 //            throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
 //        }
@@ -87,7 +88,8 @@ class ServerController extends ClientApiController
         $node_id = $this->getPreferredNode($request->input('memory'), $request->input('disk'));
 
         $request->merge([
-            'node' => $node_id
+            'node' => $node_id,
+            'cpu' => 999
         ]);
 
         $server = $this->creationService->handle($request);

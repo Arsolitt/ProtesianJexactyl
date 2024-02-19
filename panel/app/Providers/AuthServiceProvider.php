@@ -2,11 +2,11 @@
 
 namespace Jexactyl\Providers;
 
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Jexactyl\Models\ApiKey;
 use Jexactyl\Models\Server;
-use Laravel\Sanctum\Sanctum;
 use Jexactyl\Policies\ServerPolicy;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,14 +17,14 @@ class AuthServiceProvider extends ServiceProvider
         Server::class => ServerPolicy::class,
     ];
 
-    public function boot()
+    public function boot(): void
     {
         Sanctum::usePersonalAccessTokenModel(ApiKey::class);
 
         $this->registerPolicies();
     }
 
-    public function register()
+    public function register(): void
     {
         Sanctum::ignoreMigrations();
     }
