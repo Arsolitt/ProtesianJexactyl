@@ -36,25 +36,21 @@ export default () => {
     if (!resources) return <Spinner size={'large'} centered />;
 
     return (
-        <PageContentBlock title={'Account Balance'} description={'Purchase credits easily via Stripe or PayPal.'}>
+        <PageContentBlock title={'Биллинг'} description={'Пополнение баланса и последние транзакции'}>
             <Container className={'lg:grid lg:grid-cols-2 my-10'}>
-                <ContentBox title={'Account Balance'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
-                    <h1 css={tw`text-7xl flex justify-center items-center`}>
-                        {resources.balance} <span className={'text-base ml-4'}>credits</span>
-                    </h1>
+                <ContentBox title={'Текущий баланс'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
+                    <h1 css={tw`text-7xl flex justify-center items-center`}>{resources.balance} ₽</h1>
                 </ContentBox>
                 <ContentBox
-                    title={'Purchase credits'}
+                    title={'Пополнение баланса'}
                     showFlashes={'account:balance'}
                     css={tw`mt-8 sm: mt-0
                         sm: ml-8`}
                 >
                     {gateways.length < 1 ? (
-                        <p className={'text-gray-400 text-sm text-center'}>
-                            Payment gateways are unavailable at this time.
-                        </p>
+                        <p className={'text-gray-400 text-sm text-center'}>Нет доступных платёжных шлюзов</p>
                     ) : (
-                        <>{<PurchaseForm />}</>
+                        <>{<PurchaseForm gateways={gateways} />}</>
                     )}
                 </ContentBox>
             </Container>

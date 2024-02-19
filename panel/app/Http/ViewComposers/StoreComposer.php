@@ -24,6 +24,7 @@ class StoreComposer extends Composer
             $enabled = $this->setting($prefix . 'enabled', Composer::TYPE_BOOL);
             if ($enabled) {
                 $gateways[] = [
+                    'id' => $key,
                     'name' => $this->setting($prefix . 'name', Composer::TYPE_STR),
                     'enabled' => $enabled,
                     'min' => $this->setting($prefix . 'min', Composer::TYPE_INT),
