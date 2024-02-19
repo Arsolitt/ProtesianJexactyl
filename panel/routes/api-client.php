@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Jexactyl\Http\Controllers\Api\Client;
-use Jexactyl\Http\Middleware\Activity\ServerSubject;
 use Jexactyl\Http\Middleware\Activity\AccountSubject;
-use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
-use Jexactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
+use Jexactyl\Http\Middleware\Activity\ServerSubject;
 use Jexactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
+use Jexactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
+use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,10 +99,6 @@ Route::group([
     Route::post('/eggs', [Client\Store\ServerController::class, 'eggs'])->name('api:client:store.eggs');
     Route::post('/stripe', [Client\Store\StripeController::class, 'purchase'])->name('api:client:store.stripe');
     Route::post('/resources', [Client\Store\ResourceController::class, 'purchase'])->name('api:client:store.resources');
-
-    Route::group(['prefix' => '/earn', 'middleware' => 'throttle:earn'], function () {
-        Route::post('/', [Client\Store\ResourceController::class, 'earn'])->name('api:client:store.earn');
-    });
 
     Route::group(['prefix' => '/paypal'], function () {
         Route::get('/callback', [Client\Store\PayPalController::class, 'callback'])->name('api:client:store.paypal.callback');

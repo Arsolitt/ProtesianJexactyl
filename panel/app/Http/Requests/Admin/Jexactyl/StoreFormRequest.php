@@ -10,10 +10,13 @@ class StoreFormRequest extends AdminFormRequest
     {
         return [
             'store:enabled' => 'required|in:true,false',
-            'store:paypal:enabled' => 'required|in:true,false',
-            'store:stripe:enabled' => 'required|in:true,false',
+
+
             'store:yookassa:enabled' => 'required|in:true,false',
-            'store:lava:enabled' => 'required|in:true,false',
+            'store:yookassa:name' => 'required|string|min:1|max:15',
+            'store:yookassa:min' => 'required|int|min:1',
+            'store:yookassa:max' => 'required|int|min:9999',
+
             'store:currency' => 'required|min:1|max:10',
 
             'store:cost:cpu' => 'required|int|min:1',

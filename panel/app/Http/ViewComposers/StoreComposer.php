@@ -17,29 +17,29 @@ class StoreComposer extends Composer
     /**
      * Provide access to the asset service in the views.
      */
-    public function compose(View $view)
+    public function compose(View $view): void
     {
+        foreach (array_keys(config('store.gateways')) as $key) {
+            $prefix = 'store:' . $key . ':';
+            $enabled = $this->setting($prefix . 'enabled', Composer::TYPE_BOOL);
+            if ($enabled) {
+                $gateways[] = [
+                    'name' => $this->setting($prefix . 'name', Composer::TYPE_STR),
+                    'enabled' => $enabled,
+                    'min' => $this->setting($prefix . 'min', Composer::TYPE_INT),
+                    'max' => $this->setting($prefix . 'max', Composer::TYPE_INT),
+                ];
+            }
+        }
         $view->with('storeConfiguration', [
             'enabled' => $this->setting('store:enabled', Composer::TYPE_BOOL),
             'currency' => $this->setting('store:currency', Composer::TYPE_STR),
 
-            'gateways' => [
-                'paypal' => $this->setting('store:paypal:enabled', Composer::TYPE_BOOL),
-                'stripe' => $this->setting('store:stripe:enabled', Composer::TYPE_BOOL),
-            ],
-
-            'editing' => [
-                'enabled' => $this->setting('renewal:editing', Composer::TYPE_BOOL),
-            ],
+            'gateways' => $gateways ?? [],
 
             'referrals' => [
                 'enabled' => $this->setting('referrals:enabled', Composer::TYPE_BOOL),
                 'reward' => $this->setting('referrals:reward', Composer::TYPE_INT),
-            ],
-
-            'earn' => [
-                'enabled' => $this->setting('earn:enabled', Composer::TYPE_BOOL),
-                'amount' => $this->setting('earn:amount', Composer::TYPE_INT),
             ],
         ]);
     }

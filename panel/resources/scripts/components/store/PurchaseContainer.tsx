@@ -7,8 +7,7 @@ import Spinner from '@/components/elements/Spinner';
 import ContentBox from '@/components/elements/ContentBox';
 import { getResources, Resources } from '@/api/store/getResources';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import StripePurchaseForm from '@/components/store/forms/StripePurchaseForm';
-import PaypalPurchaseForm from '@/components/store/forms/PaypalPurchaseForm';
+import PurchaseForm from '@/components/store/forms/PurchaseForm';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -28,8 +27,7 @@ const Container = styled.div`
 
 export default () => {
     const [resources, setResources] = useState<Resources>();
-    const paypal = useStoreState((state) => state.storefront.data!.gateways?.paypal);
-    const stripe = useStoreState((state) => state.storefront.data!.gateways?.stripe);
+    const gateways = useStoreState((state) => state.storefront.data!.gateways);
 
     useEffect(() => {
         getResources().then((resources) => setResources(resources));
@@ -49,17 +47,14 @@ export default () => {
                     title={'Purchase credits'}
                     showFlashes={'account:balance'}
                     css={tw`mt-8 sm: mt-0
-                    sm: ml-8`}
+                        sm: ml-8`}
                 >
-                    {!paypal && !stripe ? (
+                    {gateways.length < 1 ? (
                         <p className={'text-gray-400 text-sm text-center'}>
                             Payment gateways are unavailable at this time.
                         </p>
                     ) : (
-                        <>
-                            {paypal && <PaypalPurchaseForm />}
-                            {stripe && <StripePurchaseForm />}
-                        </>
+                        <>{<PurchaseForm />}</>
                     )}
                 </ContentBox>
             </Container>
