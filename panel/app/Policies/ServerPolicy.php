@@ -2,24 +2,11 @@
 
 namespace Jexactyl\Policies;
 
-use Jexactyl\Models\User;
 use Jexactyl\Models\Server;
+use Jexactyl\Models\User;
 
 class ServerPolicy
 {
-    /**
-     * Checks if the user has the given permission on/for the server.
-     */
-    protected function checkPermission(User $user, Server $server, string $permission): bool
-    {
-        $subuser = $server->subusers->where('user_id', $user->id)->first();
-        if (!$subuser || empty($permission)) {
-            return false;
-        }
-
-        return in_array($permission, $subuser->permissions);
-    }
-
     /**
      * Runs before any of the functions are called. Used to determine if user is root admin, if so, ignore permissions.
      */
@@ -30,6 +17,19 @@ class ServerPolicy
         }
 
         return $this->checkPermission($user, $server, $ability);
+    }
+
+    /**
+     * Checks if the user has the given permission on/for the server.
+     */
+    protected function checkPermission(User $user, Server $server, string $permission): bool
+    {
+        $subUser = $server->subusers->where('user_id', $user->id)->first();
+        if (!$subUser || empty($permission)) {
+            return false;
+        }
+
+        return in_array($permission, $subUser->permissions);
     }
 
     /**
