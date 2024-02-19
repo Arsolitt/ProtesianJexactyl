@@ -1,7 +1,6 @@
 import tw from 'twin.macro';
 import React, { useState } from 'react';
 import useFlash from '@/plugins/useFlash';
-import { useStoreState } from '@/state/hooks';
 import Code from '@/components/elements/Code';
 import { ServerContext } from '@/state/server';
 import Input from '@/components/elements/Input';
@@ -13,6 +12,7 @@ import ServerErrorSvg from '@/assets/images/server_error.svg';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+// import { useStoreState } from 'easy-peasy';
 
 export default () => {
     const [name, setName] = useState('');
@@ -23,7 +23,7 @@ export default () => {
     const [confirmDialog, setConfirmDialog] = useState(false);
 
     const { clearFlashes, clearAndAddHttpError } = useFlash();
-    const store = useStoreState((state) => state.storefront.data!);
+    // const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const serverName = ServerContext.useStoreState((state) => state.server.data!.name);
 
@@ -72,7 +72,7 @@ export default () => {
                 onConfirmed={() => doRenewal()}
             >
                 <SpinnerOverlay visible={isSubmit} />
-                Are you sure you want to spend {store.renewals.cost} credits to renew your server?
+                Are you sure you want to spend 666 credits to renew your server?
             </Dialog.Confirm>
             <Dialog.Confirm
                 open={deleteDialog}

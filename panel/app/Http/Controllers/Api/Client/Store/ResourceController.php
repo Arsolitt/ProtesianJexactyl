@@ -2,15 +2,15 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
+use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
 use Jexactyl\Services\Store\ResourcePurchaseService;
 use Jexactyl\Transformers\Api\Client\Store\CostTransformer;
 use Jexactyl\Transformers\Api\Client\Store\UserTransformer;
-use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
-use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
 
 class ResourceController extends ClientApiController
 {
@@ -52,28 +52,6 @@ class ResourceController extends ClientApiController
         return $this->fractal->item($data)
             ->transformWith($this->getTransformer(CostTransformer::class))
             ->toArray();
-    }
-
-    /**
-     * Allows a user to earn credits via passive earning.
-     *
-     * @throws DisplayException
-     */
-    public function earn(Request $request)
-    {
-        $amount = $this->settings->get('jexactyl::earn:amount', 0);
-
-        if ($this->settings->get('jexactyl::earn:enabled') != 'true') {
-            throw new DisplayException('Credit earning is currently disabled.');
-        }
-
-        try {
-            $request->user()->update(['store_balance' => $request->user()->store_balance + $amount]);
-        } catch (DisplayException $ex) {
-            throw new DisplayException('Unable to passively earn coins.');
-        }
-
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
 
     /**

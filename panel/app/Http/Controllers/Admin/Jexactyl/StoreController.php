@@ -2,14 +2,14 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Http\Controllers\Controller;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Jexactyl\StoreFormRequest;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Prologue\Alerts\AlertsMessageBag;
 
 class StoreController extends Controller
 {
@@ -17,9 +17,10 @@ class StoreController extends Controller
      * StoreController constructor.
      */
     public function __construct(
-        private AlertsMessageBag $alert,
+        private AlertsMessageBag            $alert,
         private SettingsRepositoryInterface $settings
-    ) {
+    )
+    {
     }
 
     /**
@@ -30,16 +31,23 @@ class StoreController extends Controller
         $prefix = 'store:';
 
         $currencies = [];
-        foreach (config('store.currencies') as $key => $value) {
+        foreach (config('store.settings.currencies') as $key => $value) {
             $currencies[] = ['code' => $key, 'name' => $value];
         }
 
         return view('admin.jexactyl.store', [
             'enabled' => $this->settings->get($prefix . 'enabled', false),
-            'paypal_enabled' => $this->settings->get($prefix . 'paypal:enabled', false),
-            'stripe_enabled' => $this->settings->get($prefix . 'stripe:enabled', false),
-            'yookassa_enabled' => $this->settings->get($prefix . 'yookassa:enabled', false),
-            'lava_enabled' => $this->settings->get($prefix . 'lava:enabled', false),
+            'yookassa' => [
+                'name' => $this->settings->get($prefix . 'yookassa:name', 'Yookassa'),
+                'enabled' => $this->settings->get($prefix . 'yookassa:enabled', false),
+                'min' => $this->settings->get($prefix . 'yookassa:min', 10),
+                'max' => $this->settings->get($prefix . 'yookassa:max', 9999),
+            ],
+//            'lava' => [
+//                'enabled' => $this->settings->get($prefix . 'lava:enabled', false),
+//                'min' => $this->settings->get($prefix . 'lava:min', 10),
+//                'max' => $this->settings->get($prefix . 'lava:max', 9999),
+//            ],
             'selected_currency' => $this->settings->get($prefix . 'currency', 'USD'),
             'currencies' => $currencies,
 

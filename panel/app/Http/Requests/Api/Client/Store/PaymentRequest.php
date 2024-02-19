@@ -23,7 +23,7 @@ class PaymentRequest extends ClientApiRequest
      */
     public function rules(): array
     {
-        $methods = ['Yookassa', 'Lava'];
+        $methods = array_keys(config('store.gateways'));
         $min = settings()->get('gateway:' . Request::input('method') . ':min', 1);
         $max = settings()->get('gateway:' . Request::input('method') . ':max', 9999);
         return [

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import useFlash from '@/plugins/useFlash';
 import { httpErrorToHuman } from '@/api/http';
-import { useStoreState } from '@/state/hooks';
 import { ServerContext } from '@/state/server';
 import renewServer from '@/api/server/renewServer';
 import { Dialog } from '@/components/elements/dialog';
@@ -11,7 +10,7 @@ export default () => {
     const [open, setOpen] = useState(false);
     const { addFlash, clearFlashes } = useFlash();
     const [loading, setLoading] = useState(false);
-    const store = useStoreState((state) => state.storefront.data!);
+    // const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const doRenewal = () => {
@@ -51,8 +50,6 @@ export default () => {
                 onConfirmed={() => doRenewal()}
             >
                 <SpinnerOverlay visible={loading} />
-                You will be charged {store.renewals.cost} credits to add {store.renewals.days} days until your next
-                renewal is due.
             </Dialog.Confirm>
             in 666 days{' '}
             <span className={'text-blue-500 text-sm cursor-pointer'} onClick={() => setOpen(true)}>
