@@ -1,5 +1,13 @@
 import { action, Action } from 'easy-peasy';
 
+export interface Gateway {
+    id: string;
+    name: string;
+    enabled: boolean;
+    min: number;
+    max: number;
+}
+
 export interface StorefrontSettings {
     enabled: boolean;
     currency: string;
@@ -20,14 +28,7 @@ export interface StorefrontSettings {
         backup: number;
         database: number;
     };
-    gateways: [
-        {
-            name: string;
-            enabled: boolean;
-            min: number;
-            max: number;
-        }
-    ];
+    gateways: Gateway[];
 }
 
 export interface StorefrontStore {
