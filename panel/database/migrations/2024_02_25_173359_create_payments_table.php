@@ -12,12 +12,12 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignId('user')->constrained('users')->cascadeOnDelete();
+            $table->unsignedInteger('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('external_id')->nullable();
             $table->enum('status', ['open', 'paid', 'canceled'])->default('open');
             $table->unsignedInteger('amount')->default(0);
             $table->string('currency')->default('RUB');
-            $table->string('method')->default('manual');
+            $table->string('gateway')->default('manual');
             $table->timestamps();
         });
     }
