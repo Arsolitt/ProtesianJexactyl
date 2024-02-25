@@ -58,7 +58,7 @@ const ConflictStateRenderer = () => {
             image={ServerRestoreSvg}
             message={
                 isTransferring
-                    ? 'Your server is being transfered to a new node, please check back later.'
+                    ? 'Your server is being transferred to a new node, please check back later.'
                     : 'Your server is currently being restored from a backup, please check back in a few minutes.'
             }
         />
@@ -73,7 +73,8 @@ export default () => {
     const [error, setError] = useState('');
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const databasesEnabled = useStoreState((state) => state.settings.data!.databases);
-    const editEnabled = useStoreState((state) => state.storefront.data!.editing.enabled);
+    // TODO: переделать систему редактирования сервера
+    const editEnabled = true;
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
     const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
