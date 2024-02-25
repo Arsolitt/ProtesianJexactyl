@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->increments('id');
             $table->unsignedInteger('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('external_id')->nullable();
             $table->enum('status', ['open', 'paid', 'canceled'])->default('open');
@@ -19,6 +19,8 @@ return new class extends Migration {
             $table->string('currency')->default('RUB');
             $table->string('gateway')->default('manual');
             $table->timestamps();
+
+            $table->index('user_id');
         });
     }
 
