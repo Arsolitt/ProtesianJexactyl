@@ -4,10 +4,17 @@ namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
 use Illuminate\Http\Request;
 use Jexactyl\Http\Controllers\Controller;
+use Jexactyl\Http\Requests\Api\Client\Store\PaymentRequest;
 use Jexactyl\Models\Payment;
 
 class PaymentController extends Controller
 {
+
+    public function purchase(PaymentRequest $request)
+    {
+
+    }
+
     /**
      * Display a listing of the resource.
      */

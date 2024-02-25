@@ -13,7 +13,7 @@ class PaymentRequest extends ClientApiRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,11 +23,11 @@ class PaymentRequest extends ClientApiRequest
      */
     public function rules(): array
     {
-        $methods = array_keys(config('store.gateways'));
+        $gateways = array_keys(config('store.gateways'));
         $min = settings()->get('gateway:' . Request::input('method') . ':min', 1);
         $max = settings()->get('gateway:' . Request::input('method') . ':max', 9999);
         return [
-            'method' => 'required|string|in:' . implode(',', $methods),
+            'gateway' => 'required|string|in:' . implode(',', $gateways),
             'amount' => 'required|int|min:' . $min . '|max:' . $max,
         ];
     }

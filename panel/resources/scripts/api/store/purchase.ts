@@ -8,7 +8,7 @@ interface Data {
 
 export default (values: PurchaseValues): Promise<Data> => {
     return new Promise((resolve, reject) => {
-        http.post('/api/client/store/purchase', { ...values })
+        http.post('/api/client/store/payment', { ...values })
             .then((data) => resolve(data.data))
             .catch(reject);
     });
