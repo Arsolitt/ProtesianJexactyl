@@ -2,9 +2,9 @@
 
 namespace Jexactyl\Services\Analytics;
 
-use Jexactyl\Models\Server;
 use Jexactyl\Models\AnalyticsData;
 use Jexactyl\Models\AnalyticsMessage;
+use Jexactyl\Models\Server;
 
 class AnalyticsReviewService
 {
