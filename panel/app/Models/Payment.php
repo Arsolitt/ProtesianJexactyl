@@ -13,9 +13,11 @@ class Payment extends Model
     public const string STATUS_PAID = 'paid';
     public const string STATUS_CANCELED = 'canceled';
 
+    protected $guarded = ['id', 'created_at', 'updated_at'];
+
 
     public static array $validationRules = [
-        'user' => 'required|nullable',
+        'user_id' => 'required|nullable',
         'external_id' => 'nullable|string',
         'status' => 'required|in:open,paid,canceled',
         'amount' => 'required|numeric|min:0',
@@ -24,7 +26,7 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'user' => 'string|integer',
+        'user_id' => 'integer',
         'external_id' => 'string',
         'status' => 'string',
         'amount' => 'integer',
@@ -33,7 +35,7 @@ class Payment extends Model
     ];
 
     protected $fillable = [
-        'user',
+        'user_id',
         'external_id',
         'status',
         'amount',

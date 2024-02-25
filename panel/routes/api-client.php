@@ -104,6 +104,8 @@ Route::group([
         Route::get('/callback', [Client\Store\PayPalController::class, 'callback'])->name('api:client:store.paypal.callback');
         Route::post('/', [Client\Store\PayPalController::class, 'purchase'])->name('api:client:store.paypal');
     });
+
+    Route::post('/purchase', [Client\Store\PaymentController::class, 'purchase'])->name('api:client:store.purchase');
 });
 
 /*

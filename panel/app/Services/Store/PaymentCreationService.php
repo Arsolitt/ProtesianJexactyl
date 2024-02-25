@@ -8,6 +8,7 @@ use Jexactyl\Http\Requests\Api\Client\Store\PaymentRequest;
 use Jexactyl\Models\Payment;
 use Jexactyl\Repositories\Eloquent\PaymentRepository;
 use Jexactyl\Services\Store\Gateways\YookassaService;
+use Symfony\Component\Uid\Ulid;
 
 class PaymentCreationService
 {
@@ -26,7 +27,8 @@ class PaymentCreationService
     public function handle(PaymentRequest $request): Payment
     {
         $data = [
-            'user' => $request->user()->id,
+            'id' => Ulid::generate(),
+            'user_id' => $request->user()->id,
             'status' => Payment::STATUS_OPEN,
             'amount' => $request->input('amount'),
             'currency' => $this->settings->get('store:currency'),
@@ -42,7 +44,9 @@ class PaymentCreationService
      */
     private function createModel(array $data): Payment
     {
-        return $this->repository->create(array_except($data, ['url']));
+        $payment = $this->repository->create(array_except($data, ['url']));
+        $payment->url = $data['url'];
+        return $payment;
     }
 
     private function processGateway(array $data): array
