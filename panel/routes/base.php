@@ -18,5 +18,5 @@ Route::get('/{react}', [Base\IndexController::class, 'index'])
     ->where('react', '^(?!(\/)?(api|auth|admin|daemon)).+');
 
 Route::group(['prefix' => '/notification', 'middleware' => 'throttle:5,1'], function () {
-    Route::post('/YookassaNotification', [PaymentController::class, 'yookassa'])->name('api:client:store:notification:yookassa');
+    Route::post('/yookassa', [PaymentController::class, 'yookassa'])->name('api:client:store:notification:yookassa');
 });
