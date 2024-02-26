@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->ulid('id')->primary();
             $table->unsignedInteger('user_id')->constrained('users', 'id')->cascadeOnDelete();
             $table->string('external_id')->nullable();
             $table->enum('status', ['open', 'paid', 'canceled'])->default('open');
@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->index('user_id');
+            $table->index('status');
+            $table->index(['gateway', 'external_id']);
         });
     }
 
