@@ -16,7 +16,7 @@ class PaymentCreationService
 
     private Payment $payment;
 
-    private PaymentGatewayInterface|null $gaService;
+    private PaymentGatewayInterface $gaService;
 
     public function __construct(
         private SettingsRepositoryInterface $settings,
