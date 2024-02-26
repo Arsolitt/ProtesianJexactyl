@@ -3,19 +3,24 @@
 namespace Jexactyl\Services\Store;
 
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Contracts\Store\PaymentGatewayInterface;
+use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Http\Requests\Api\Client\Store\PaymentRequest;
 use Jexactyl\Models\Payment;
 use Jexactyl\Repositories\Eloquent\PaymentRepository;
 use Jexactyl\Services\Store\Gateways\YookassaService;
-use Symfony\Component\Uid\Ulid;
 
 class PaymentCreationService
 {
+
+    private Payment $payment;
+
+    private PaymentGatewayInterface|null $gaService;
+
     public function __construct(
         private SettingsRepositoryInterface $settings,
-        private PaymentRepository           $repository,
-        private YookassaService             $yookassa
+        private PaymentRepository           $repository
     )
     {
 
@@ -23,11 +28,11 @@ class PaymentCreationService
 
     /**
      * @throws DataValidationException
+     * @throws DisplayException
      */
     public function handle(PaymentRequest $request): Payment
     {
         $data = [
-            'id' => Ulid::generate(),
             'user_id' => $request->user()->id,
             'status' => Payment::STATUS_OPEN,
             'amount' => $request->input('amount'),
@@ -35,26 +40,44 @@ class PaymentCreationService
             'gateway' => $request->input('gateway'),
         ];
 
-        return $this->createModel($this->processGateway($data));
-
+        return $this->createModel($data)->bindGateway()->processPayment()->payment;
     }
 
     /**
      * @throws DataValidationException
      */
-    private function createModel(array $data): Payment
+    private function createModel(array $data): self
     {
-        $payment = $this->repository->create(array_except($data, ['url']));
-        $payment->url = $data['url'];
-        return $payment;
+        $this->payment = $this->repository->create($data);
+        return $this;
     }
 
-    private function processGateway(array $data): array
+    /**
+     * @throws DisplayException
+     */
+    private function bindGateway(): self
     {
-        return match ($data['gateway']) {
-            'yookassa' => $this->yookassa->handle($data),
-            default => '',
+        $this->gaService = match ($this->payment->gateway) {
+            'yookassa' => new YookassaService(),
+            default => $this->paymentFailed('Неизвестный платёжный шлюз: ' . $this->payment->gateway),
         };
+        return $this;
+    }
+
+    private function processPayment(): self
+    {
+        $this->payment = $this->gaService->handle($this->payment);
+        $this->payment->save();
+        return $this;
+    }
+
+    /**
+     * @throws DisplayException
+     */
+    private function paymentFailed(string $msg = 'Ошибка при проведении платежа'): self
+    {
+        $this->payment->delete();
+        throw new DisplayException($msg);
     }
 
 }

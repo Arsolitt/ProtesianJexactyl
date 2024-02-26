@@ -3,6 +3,7 @@
 namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
 use Illuminate\Http\Request;
+use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Api\Client\Store\PaymentRequest;
@@ -12,20 +13,21 @@ use Jexactyl\Services\Store\PaymentCreationService;
 class PaymentController extends Controller
 {
 
-    public function __construct(private PaymentCreationService $creationService)
+    public function __construct(private readonly PaymentCreationService $creationService)
     {
 
     }
 
     /**
-     * @throws DataValidationException
+     * @throws DataValidationException|DisplayException
      */
     public function purchase(PaymentRequest $request)
     {
-
         $payment = $this->creationService->handle($request);
-        return response()->json($payment);
-
+        return response()->json([
+            'success' => true,
+            'url' => $payment->url
+        ]);
     }
 
     /**
