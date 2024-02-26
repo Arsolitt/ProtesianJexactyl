@@ -17,12 +17,13 @@ class Payment extends Model
 
 
     public static array $validationRules = [
-        'user_id' => 'required|nullable',
-        'external_id' => 'nullable|string',
+        'user_id' => 'required|numeric|min:0',
+        'external_id' => 'sometimes|nullable|string',
         'status' => 'required|in:open,paid,canceled',
         'amount' => 'required|numeric|min:0',
         'currency' => 'required|string',
         'gateway' => 'required|string',
+        'url' => 'sometimes|nullable|string|max:1024'
     ];
 
     protected $casts = [
@@ -32,6 +33,7 @@ class Payment extends Model
         'amount' => 'integer',
         'currency' => 'string',
         'gateway' => 'string',
+        'url' => 'string'
     ];
 
     protected $fillable = [
@@ -41,10 +43,11 @@ class Payment extends Model
         'amount',
         'currency',
         'gateway',
+        'url'
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user', 'id');
+        return $this->belongsTo(User::class);
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->unsignedInteger('amount')->default(0);
             $table->string('currency')->default('RUB');
             $table->string('gateway')->default('manual');
+            $table->text('url')->nullable();
             $table->timestamps();
 
             $table->index('user_id');
