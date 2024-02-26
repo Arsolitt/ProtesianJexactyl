@@ -76,7 +76,8 @@ class PaymentCreationService
      */
     private function paymentFailed(string $msg = 'Ошибка при проведении платежа'): self
     {
-        $this->payment->delete();
+        // TODO: monthly delete all canceled payments
+        $this->payment->update(['status' => Payment::STATUS_CANCELED]);
         throw new DisplayException($msg);
     }
 
