@@ -199,6 +199,11 @@ class User extends Model implements
         return $rules;
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'user', 'id');
+    }
+
     /**
      * Return the user model in a format that can be passed over to React templates.
      */

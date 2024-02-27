@@ -97,13 +97,9 @@ Route::group([
     });
 
     Route::post('/eggs', [Client\Store\ServerController::class, 'eggs'])->name('api:client:store.eggs');
-    Route::post('/stripe', [Client\Store\StripeController::class, 'purchase'])->name('api:client:store.stripe');
     Route::post('/resources', [Client\Store\ResourceController::class, 'purchase'])->name('api:client:store.resources');
 
-    Route::group(['prefix' => '/paypal'], function () {
-        Route::get('/callback', [Client\Store\PayPalController::class, 'callback'])->name('api:client:store.paypal.callback');
-        Route::post('/', [Client\Store\PayPalController::class, 'purchase'])->name('api:client:store.paypal');
-    });
+    Route::post('/purchase', [Client\Store\PaymentController::class, 'purchase'])->name('api:client:store.purchase');
 });
 
 /*
