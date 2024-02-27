@@ -2,10 +2,8 @@
 
 namespace Jexactyl\Services\Store;
 
-use Jexactyl\Models\Node;
-use Illuminate\Support\Facades\DB;
-use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
 
 class StoreVerificationService
@@ -33,13 +31,12 @@ class StoreVerificationService
     private function checkUserCredits(CreateServerRequest $request): void
     {
         $discount = 1 - ($request->user()->totalDiscount() / 100);
-        $cpu = $request->input('cpu') * settings()->get('store:cost:cpu');
         $ram = $request->input('memory') * settings()->get('store:cost:ram');
         $disk = $request->input('disk') * settings()->get('store:cost:disk');
         $ports = $request->input('ports') * settings()->get('store:cost:port');
         $backups = $request->input('backups') * settings()->get('store:cost:backup');
         $databases = $request->input('databases') * settings()->get('store:cost:database');
-        $price = ($cpu + $ram + $disk + $ports + $backups + $databases) * $discount / 30;
+        $price = ($ram + $disk + $ports + $backups + $databases) * $discount / 30;
         if ($request->user()->credits < $price) {
             throw new DisplayException('У тебя на балансе недостаточно средств, чтобы создать сервер!');
         }
@@ -51,7 +48,7 @@ class StoreVerificationService
     private function checkResourceLimits(CreateServerRequest $request): void
     {
         $prefix = 'store:limit:';
-        $types = ['cpu', 'memory', 'disk', 'slot', 'port', 'backup', 'database'];
+        $types = ['memory', 'disk', 'slot', 'port', 'backup', 'database'];
 
         foreach ($types as $type) {
             $suffix = '';

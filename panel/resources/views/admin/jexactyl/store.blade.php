@@ -119,14 +119,6 @@
                     <div class="box-body">
                         <div class="row">
                             <div class="form-group col-md-4">
-                                <label class="control-label">Cost per 100% CPU</label>
-                                <div>
-                                    <input type="text" class="form-control" name="store:cost:cpu" value="{{ $cpu }}"/>
-                                    <p class="text-muted"><small>Used to calculate the total cost for 50% CPU.</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-4">
                                 <label class="control-label">Cost per 1GB RAM</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:memory"
@@ -188,18 +180,6 @@
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <div class="form-group col-md-4">
-                                <label class="control-label">CPU limit</label>
-                                <div>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:cpu"
-                                               value="{{ $limit_cpu }}"/>
-                                        <span class="input-group-addon">%</span>
-                                    </div>
-                                    <p class="text-muted"><small>The maximum amount of CPU a server can be deployed
-                                            with. </small></p>
-                                </div>
-                            </div>
                             <div class="form-group col-md-4">
                                 <label class="control-label">RAM limit</label>
                                 <div>
