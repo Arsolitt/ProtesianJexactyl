@@ -2,23 +2,25 @@
 
 namespace Jexactyl\Providers;
 
-use Jexactyl\Models;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Cache;
-use Jexactyl\Extensions\Themes\Theme;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
+use Jexactyl\Console\Commands\Overrides\QueueWorkCommand;
+use Jexactyl\Console\Commands\Overrides\ScheduleWorkCommandExtend;
+use Jexactyl\Extensions\Themes\Theme;
+use Jexactyl\Models;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
         Schema::defaultStringLength(191);
 
@@ -49,12 +51,20 @@ class AppServiceProvider extends ServiceProvider
             'task' => Models\Task::class,
             'user' => Models\User::class,
         ]);
+
+        $this->app->bind(QueueWorkCommand::class, function ($app) {
+            return new QueueWorkCommand($app['queue.worker'], $app['cache.store']);
+        });
+
+        $this->app->bind(ScheduleWorkCommandExtend::class, function ($app) {
+            return new ScheduleWorkCommandExtend();
+        });
     }
 
     /**
      * Register application service providers.
      */
-    public function register()
+    public function register(): void
     {
         // Only load the settings service provider if the environment
         // is configured to allow it.
