@@ -4,6 +4,7 @@ namespace Jexactyl\Listeners\Payment;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Jexactyl\Events\Store\PaymentPaid;
+use Jexactyl\Models\Payment;
 
 class PaidListener implements ShouldQueue
 {
@@ -23,7 +24,7 @@ class PaidListener implements ShouldQueue
   public function handle(PaymentPaid $event): void
   {
     $event->payment->update([
-      'status' => 'paid',
+      'status' => Payment::STATUS_PAID,
     ]);
   }
 

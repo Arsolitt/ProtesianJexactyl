@@ -4,6 +4,7 @@ namespace Jexactyl\Services\Store;
 
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Contracts\Store\PaymentGatewayInterface;
+use Jexactyl\Events\Store\PaymentCanceled;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Http\Requests\Api\Client\Store\PaymentRequest;
@@ -77,7 +78,7 @@ class PaymentCreationService
     private function paymentFailed(string $msg = 'Ошибка при проведении платежа'): self
     {
         // TODO: monthly delete all canceled payments
-        $this->payment->update(['status' => Payment::STATUS_CANCELED]);
+        PaymentCanceled::dispatch($this->payment);
         throw new DisplayException($msg);
     }
 
