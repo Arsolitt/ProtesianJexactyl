@@ -2,8 +2,8 @@ FROM php:8.3.2-fpm-bookworm
 ARG UID
 ARG GID
 RUN apt-get update -y && apt-get upgrade -y
-RUN apt-get install -y libicu-dev libzip-dev libpng-dev git zsh zip unzip
-RUN docker-php-ext-install intl pdo_mysql pdo mysqli zip gd bcmath
+RUN apt-get install -y libicu-dev libzip-dev libpng-dev git zsh zip unzip procps
+RUN docker-php-ext-install intl pdo_mysql pdo mysqli zip gd bcmath pcntl
 COPY ./docker/www.conf /usr/local/etc/php-fpm.d/
 COPY ./docker/role.sh /home/tools/role.sh
 COPY --from=composer:2.6.6 /usr/bin/composer /home/tools/composer
