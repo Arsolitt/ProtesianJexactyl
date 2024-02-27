@@ -3,24 +3,28 @@
 namespace Jexactyl\Listeners\Payment;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Jexactyl\Events\Store\PaymentPaid;
 
-class PaidListener
+class PaidListener implements ShouldQueue
 {
-    /**
-     * Create the event listener.
-     */
-    public function __construct()
-    {
-        //
-    }
+  public string $queue = 'standard';
 
-    /**
-     * Handle the event.
-     */
-    public function handle(PaymentPaid $event): void
-    {
-        //
-    }
+  /**
+   * Create the event listener.
+   */
+  public function __construct()
+  {
+    //
+  }
+
+  /**
+   * Handle the event.
+   */
+  public function handle(PaymentPaid $event): void
+  {
+    $event->payment->update([
+      'status' => 'paid',
+    ]);
+  }
+
 }

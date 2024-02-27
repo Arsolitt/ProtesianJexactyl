@@ -2,7 +2,9 @@
 
 namespace Jexactyl\Services\Store;
 
-use Illuminate\Support\Facades\Log;
+use Jexactyl\Events\Store\PaymentCanceled;
+use Jexactyl\Events\Store\PaymentPaid;
+use Jexactyl\Events\User\UpdateCredits;
 use Jexactyl\Models\Payment;
 
 class PaymentProcessingService
@@ -10,14 +12,14 @@ class PaymentProcessingService
 
     public function paid(Payment $payment): void
     {
-        // TODO: Add payment processing
-        Log::debug('Payment paid', ['payment' => $payment->toArray()]);
+        PaymentPaid::dispatch($payment);
+        UpdateCredits::dispatch($payment->user, $payment->amount, 'increment');
     }
 
     public function canceled(Payment $payment): void
     {
         // TODO: Add payment processing
-        Log::debug('Payment canceled', ['payment' => $payment->toArray()]);
+        PaymentCanceled::dispatch($payment);
     }
 
 }
