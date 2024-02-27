@@ -51,20 +51,18 @@ class StoreController extends Controller
             'selected_currency' => $this->settings->get($prefix . 'currency', 'USD'),
             'currencies' => $currencies,
 
-            'cpu' => $this->settings->get($prefix . 'cost:cpu', 50) * 100,
-            'memory' => $this->settings->get($prefix . 'cost:memory', 50) * 1024,
-            'disk' => $this->settings->get($prefix . 'cost:disk', 25) * 1024,
-            'slot' => $this->settings->get($prefix . 'cost:slot', 250),
-            'port' => $this->settings->get($prefix . 'cost:port', 20),
-            'backup' => $this->settings->get($prefix . 'cost:backup', 20),
-            'database' => $this->settings->get($prefix . 'cost:database', 20),
+            'memory' => $this->settings->get($prefix . 'cost:memory', 75 / 1024) * 1024,
+            'disk' => $this->settings->get($prefix . 'cost:disk', 2 / 1024) * 1024,
+            'slot' => $this->settings->get($prefix . 'cost:slot', 50),
+            'port' => $this->settings->get($prefix . 'cost:port', 10),
+            'backup' => $this->settings->get($prefix . 'cost:backup', 10),
+            'database' => $this->settings->get($prefix . 'cost:database', 10),
 
-            'limit_cpu' => $this->settings->get($prefix . 'limit:cpu', 100),
-            'limit_memory' => $this->settings->get($prefix . 'limit:memory', 1024),
-            'limit_disk' => $this->settings->get($prefix . 'limit:disk', 256),
-            'limit_port' => $this->settings->get($prefix . 'limit:port', 1),
-            'limit_backup' => $this->settings->get($prefix . 'limit:backup', 1),
-            'limit_database' => $this->settings->get($prefix . 'limit:database', 1),
+            'limit_memory' => $this->settings->get($prefix . 'limit:memory', 16384),
+            'limit_disk' => $this->settings->get($prefix . 'limit:disk', 102400),
+            'limit_port' => $this->settings->get($prefix . 'limit:port', 25),
+            'limit_backup' => $this->settings->get($prefix . 'limit:backup', 25),
+            'limit_database' => $this->settings->get($prefix . 'limit:database', 25),
         ]);
     }
 
@@ -78,9 +76,6 @@ class StoreController extends Controller
     {
         foreach ($request->normalize() as $key => $value) {
             switch ($key) {
-                case 'store:cost:cpu':
-                    $value = $value / 100;
-                    break;
                 case 'store:cost:disk':
                 case 'store:cost:memory':
                     $value = $value / 1024;
