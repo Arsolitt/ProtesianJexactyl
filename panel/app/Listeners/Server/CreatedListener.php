@@ -2,9 +2,8 @@
 
 namespace Jexactyl\Listeners\Server;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 use Jexactyl\Events\Server\Created;
+use Jexactyl\Events\User\UpdateCredits;
 
 class CreatedListener
 {
@@ -23,9 +22,10 @@ class CreatedListener
     {
         $user = $event->server->user;
         $server = $event->server;
+        // TODO: implement UserUpdateSlots
         $user->update([
-            'credits' => $user->credits - $server->hourlyPrice(),
             'server_slots' => $user->server_slots - 1,
         ]);
+        UpdateCredits::dispatch($user, $server->hourlyPrice(), 'decrement');
     }
 }
