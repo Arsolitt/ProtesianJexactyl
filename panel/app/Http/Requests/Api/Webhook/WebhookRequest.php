@@ -1,11 +1,11 @@
 <?php
 
-namespace Jexactyl\Http\Requests\Api\Notification;
+namespace Jexactyl\Http\Requests\Api\Webhook;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class YookassaWebhookRequest extends FormRequest
+class WebhookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
