@@ -4,6 +4,7 @@ namespace Jexactyl\Listeners\Payment;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Jexactyl\Events\Store\PaymentCanceled;
+use Jexactyl\Models\Payment;
 
 class CanceledListener implements ShouldQueue
 {
@@ -24,7 +25,7 @@ class CanceledListener implements ShouldQueue
     public function handle(PaymentCanceled $event): void
     {
         $event->payment->update([
-            'status' => 'canceled',
+            'status' => Payment::STATUS_CANCELED,
         ]);
     }
 }

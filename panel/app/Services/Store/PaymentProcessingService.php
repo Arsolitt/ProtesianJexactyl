@@ -18,7 +18,6 @@ class PaymentProcessingService
 
     public function canceled(Payment $payment): void
     {
-        // TODO: Add payment processing
         PaymentCanceled::dispatch($payment);
     }
 
