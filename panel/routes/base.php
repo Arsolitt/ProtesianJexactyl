@@ -1,7 +1,8 @@
 <?php
 
-use Jexactyl\Http\Controllers\Base;
 use Illuminate\Support\Facades\Route;
+use Jexactyl\Http\Controllers\Api\Webhook\WebhookController;
+use Jexactyl\Http\Controllers\Base;
 use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
 
 Route::get('/', [Base\IndexController::class, 'index'])->name('index')->fallback();
@@ -16,4 +17,6 @@ Route::get('/locales/locale.json', Base\LocaleController::class)
 Route::get('/{react}', [Base\IndexController::class, 'index'])
     ->where('react', '^(?!(\/)?(api|auth|admin|daemon)).+');
 
-Route::post('/stripe/listen', [Base\StripeController::class, 'index']);
+Route::group(['prefix' => '/webhook', 'middleware' => 'throttle:5,1'], function () {
+    Route::post('/payment/{gateway}', [WebhookController::class, 'payment'])->name('api:webhook:payment');
+});

@@ -24,23 +24,6 @@ export default (props: Props) => {
     const [submitting, setSubmitting] = useState(false);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 
-    // const submit = () => {
-    //     setSubmitting(true);
-    //
-    //     stripe(amount)
-    //         .then((url) => {
-    //             setSubmitting(false);
-    //
-    //             // @ts-expect-error this is valid
-    //             window.location.href = url;
-    //         })
-    //         .catch((error) => {
-    //             setSubmitting(false);
-    //
-    //             clearAndAddHttpError({ key: 'store:stripe', error });
-    //         });
-    // };
-
     const submit = (values: PurchaseValues) => {
         setSubmitting(true);
         clearFlashes('store:purchase');
