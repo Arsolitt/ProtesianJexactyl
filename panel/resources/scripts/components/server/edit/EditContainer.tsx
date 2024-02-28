@@ -13,6 +13,7 @@ import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import editServer, { Resources } from '@/api/server/editServer';
 import { Costs, getCosts } from '@/api/store/getCosts';
 import { useStoreState } from 'easy-peasy';
+import { getLimits, Limits } from '@/api/store/getLimits';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -49,10 +50,12 @@ export default () => {
     const currentResources = ServerContext.useStoreState((state) => state.server.data!.limits);
     const currentFeatures = ServerContext.useStoreState((state) => state.server.data!.featureLimits);
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
+    const [limits, setLimits] = useState<Limits>();
 
     useEffect(() => {
         clearFlashes();
-        getCosts().then((costs) => setCosts(costs));
+        getCosts().then((costs: Costs) => setCosts(costs));
+        getLimits().then((limits: Limits) => setLimits(limits));
     }, []);
 
     const resourcesInitialState: Resources = {
@@ -65,19 +68,19 @@ export default () => {
     const [resources, setResources] = useState<Resources>(resourcesInitialState);
 
     const resourceMinLimits: Resources = {
-        memory: 512,
-        disk: 1536,
-        allocations: 1,
-        backups: 0,
-        databases: 0,
+        memory: limits?.min.memory || 512,
+        disk: limits?.min.disk || 1536,
+        allocations: limits?.min.allocations || 1,
+        backups: limits?.min.backups || 0,
+        databases: limits?.min.databases || 0,
     };
 
     const resourceMaxLimits: Resources = {
-        memory: 16384,
-        disk: 102400,
-        allocations: 25,
-        backups: 25,
-        databases: 25,
+        memory: limits?.max.memory || 102400,
+        disk: limits?.max.disk || 1024000,
+        allocations: limits?.max.allocations || 999,
+        backups: limits?.max.backups || 999,
+        databases: limits?.max.databases || 999,
     };
 
     const increment = (field: keyof Resources, amount: number) => {
