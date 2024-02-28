@@ -37,32 +37,35 @@ class StoreController extends Controller
 
         return view('admin.jexactyl.store', [
             'enabled' => $this->settings->get($prefix . 'enabled', false),
+
             'yookassa' => [
                 'name' => $this->settings->get($prefix . 'yookassa:name', 'Yookassa'),
                 'enabled' => $this->settings->get($prefix . 'yookassa:enabled', false),
                 'min' => $this->settings->get($prefix . 'yookassa:min', 10),
                 'max' => $this->settings->get($prefix . 'yookassa:max', 9999),
             ],
-//            'lava' => [
-//                'enabled' => $this->settings->get($prefix . 'lava:enabled', false),
-//                'min' => $this->settings->get($prefix . 'lava:min', 10),
-//                'max' => $this->settings->get($prefix . 'lava:max', 9999),
-//            ],
+
             'selected_currency' => $this->settings->get($prefix . 'currency', 'USD'),
             'currencies' => $currencies,
 
-            'memory' => $this->settings->get($prefix . 'cost:memory', 75 / 1024) * 1024,
-            'disk' => $this->settings->get($prefix . 'cost:disk', 2 / 1024) * 1024,
-            'slot' => $this->settings->get($prefix . 'cost:slot', 50),
-            'allocation' => $this->settings->get($prefix . 'cost:allocation', 10),
-            'backup' => $this->settings->get($prefix . 'cost:backup', 10),
-            'database' => $this->settings->get($prefix . 'cost:database', 10),
+            'cost_memory' => $this->settings->get($prefix . 'cost:memory', 75 / 1024) * 1024,
+            'cost_disk' => $this->settings->get($prefix . 'cost:disk', 2 / 1024) * 1024,
+            'cost_slot' => $this->settings->get($prefix . 'cost:slot', 50),
+            'cost_allocation' => $this->settings->get($prefix . 'cost:allocation', 10),
+            'cost_backup' => $this->settings->get($prefix . 'cost:backup', 10),
+            'cost_database' => $this->settings->get($prefix . 'cost:database', 10),
 
-            'limit_memory' => $this->settings->get($prefix . 'limit:memory', 16384),
-            'limit_disk' => $this->settings->get($prefix . 'limit:disk', 102400),
-            'limit_allocation' => $this->settings->get($prefix . 'limit:allocation', 25),
-            'limit_backup' => $this->settings->get($prefix . 'limit:backup', 25),
-            'limit_database' => $this->settings->get($prefix . 'limit:database', 25),
+            'limit_min_memory' => $this->settings->get($prefix . 'limit:min:memory', 512),
+            'limit_min_disk' => $this->settings->get($prefix . 'limit:min:disk', 1536),
+            'limit_min_allocation' => $this->settings->get($prefix . 'limit:min:allocation', 1),
+            'limit_min_backup' => $this->settings->get($prefix . 'limit:min:backup', 1),
+            'limit_min_database' => $this->settings->get($prefix . 'limit:min:database', 1),
+
+            'limit_max_memory' => $this->settings->get($prefix . 'limit:max:memory', 16384),
+            'limit_max_disk' => $this->settings->get($prefix . 'limit:max:disk', 102400),
+            'limit_max_allocation' => $this->settings->get($prefix . 'limit:max:allocation', 25),
+            'limit_max_backup' => $this->settings->get($prefix . 'limit:max:backup', 25),
+            'limit_max_database' => $this->settings->get($prefix . 'limit:max:database', 25),
         ]);
     }
 

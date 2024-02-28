@@ -122,7 +122,7 @@
                                 <label class="control-label">Cost per 1GB RAM</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:memory"
-                                           value="{{ $memory }}"/>
+                                           value="{{ $cost_memory }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1GB of
                                             RAM.</small></p>
                                 </div>
@@ -130,7 +130,8 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label">Cost per 1GB Disk</label>
                                 <div>
-                                    <input type="text" class="form-control" name="store:cost:disk" value="{{ $disk }}"/>
+                                    <input type="text" class="form-control" name="store:cost:disk"
+                                           value="{{ $cost_disk }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1GB of
                                             disk.</small></p>
                                 </div>
@@ -138,7 +139,8 @@
                             <div class="form-group col-md-4">
                                 <label class="control-label">Cost per 1 Server Slot</label>
                                 <div>
-                                    <input type="text" class="form-control" name="store:cost:slot" value="{{ $slot }}"/>
+                                    <input type="text" class="form-control" name="store:cost:slot"
+                                           value="{{ $cost_slot }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1 server
                                             slot.</small></p>
                                 </div>
@@ -147,7 +149,7 @@
                                 <label class="control-label">Cost per 1 Network Allocation</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:allocation"
-                                           value="{{ $allocation }}"/>
+                                           value="{{ $cost_allocation }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1 port.</small>
                                     </p>
                                 </div>
@@ -156,7 +158,7 @@
                                 <label class="control-label">Cost per 1 Server Backup</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:backup"
-                                           value="{{ $backup }}"/>
+                                           value="{{ $cost_backup }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1 backup.</small>
                                     </p>
                                 </div>
@@ -165,7 +167,7 @@
                                 <label class="control-label">Cost per 1 Server Database</label>
                                 <div>
                                     <input type="text" class="form-control" name="store:cost:database"
-                                           value="{{ $database }}"/>
+                                           value="{{ $cost_database }}"/>
                                     <p class="text-muted"><small>Used to calculate the total cost for 1
                                             database.</small></p>
                                 </div>
@@ -176,8 +178,7 @@
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <i class="fa fa-area-chart"></i>
-                        <h3 class="box-title">Resource Limits <small>Set limits for how many of each resource a server
-                                can be deployed with.</small></h3>
+                        <h3 class="box-title">Resource Min Limits <small>Set specific limits for resources.</small></h3>
                     </div>
                     <div class="box-body">
                         <div class="row">
@@ -185,8 +186,78 @@
                                 <label class="control-label">RAM limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:memory"
-                                               value="{{ $limit_memory }}"/>
+                                        <input type="text" class="form-control" name="store:limit:min:memory"
+                                               value="{{ $limit_min_memory }}"/>
+                                        <span class="input-group-addon">MB</span>
+                                    </div>
+                                    <p class="text-muted"><small>The minimum amount of RAM a server can be deployed
+                                            with. </small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Disk limit</label>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="store:limit:min:disk"
+                                               value="{{ $limit_min_disk }}"/>
+                                        <span class="input-group-addon">MB</span>
+                                    </div>
+                                    <p class="text-muted"><small>The minimum amount of disk a server can be deployed
+                                            with. </small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Network Allocation limit</label>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="store:limit:min:allocation"
+                                               value="{{ $limit_min_allocation }}"/>
+                                        <span class="input-group-addon">ports</span>
+                                    </div>
+                                    <p class="text-muted"><small>The minimum amount of ports (allocations) a server can
+                                            be deployed with. </small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Backup limit</label>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="store:limit:min:backup"
+                                               value="{{ $limit_min_backup }}"/>
+                                        <span class="input-group-addon">backups</span>
+                                    </div>
+                                    <p class="text-muted"><small>The minimum amount of backups a server can be deployed
+                                            with. </small></p>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="control-label">Database limit</label>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="store:limit:min:database"
+                                               value="{{ $limit_min_database }}"/>
+                                        <span class="input-group-addon">databases</span>
+                                    </div>
+                                    <p class="text-muted"><small>The minimum amount of databases a server can be
+                                            deployed with. </small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <i class="fa fa-area-chart"></i>
+                        <h3 class="box-title">Resource Max Limits <small>Set specific limits for resources.</small></h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="form-group col-md-4">
+                                <label class="control-label">RAM limit</label>
+                                <div>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="store:limit:max:memory"
+                                               value="{{ $limit_max_memory }}"/>
                                         <span class="input-group-addon">MB</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of RAM a server can be deployed
@@ -197,8 +268,8 @@
                                 <label class="control-label">Disk limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:disk"
-                                               value="{{ $limit_disk }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:disk"
+                                               value="{{ $limit_max_disk }}"/>
                                         <span class="input-group-addon">MB</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of disk a server can be deployed
@@ -209,8 +280,8 @@
                                 <label class="control-label">Network Allocation limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:allocation"
-                                               value="{{ $limit_allocation }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:allocation"
+                                               value="{{ $limit_max_allocation }}"/>
                                         <span class="input-group-addon">ports</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of ports (allocations) a server can
@@ -221,8 +292,8 @@
                                 <label class="control-label">Backup limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:backup"
-                                               value="{{ $limit_backup }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:backup"
+                                               value="{{ $limit_max_backup }}"/>
                                         <span class="input-group-addon">backups</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of backups a server can be deployed
@@ -233,8 +304,8 @@
                                 <label class="control-label">Database limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:database"
-                                               value="{{ $limit_database }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:database"
+                                               value="{{ $limit_max_database }}"/>
                                         <span class="input-group-addon">databases</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of databases a server can be
@@ -251,3 +322,5 @@
         </div>
     </div>
 @endsection
+
+
