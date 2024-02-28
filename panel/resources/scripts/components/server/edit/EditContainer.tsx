@@ -1,7 +1,7 @@
 import tw from 'twin.macro';
 import { breakpoint } from '@/theme';
 import * as Icon from 'react-feather';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useFlash from '@/plugins/useFlash';
 import styled from 'styled-components/macro';
 import { ServerContext } from '@/state/server';
@@ -11,7 +11,7 @@ import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import editServer, { Resources } from '@/api/server/editServer';
-import { Costs } from '@/api/store/getCosts';
+import { Costs, getCosts } from '@/api/store/getCosts';
 import { useStoreState } from 'easy-peasy';
 
 const Container = styled.div`
@@ -49,6 +49,11 @@ export default () => {
     const currentResources = ServerContext.useStoreState((state) => state.server.data!.limits);
     const currentFeatures = ServerContext.useStoreState((state) => state.server.data!.featureLimits);
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
+
+    useEffect(() => {
+        clearFlashes();
+        getCosts().then((costs) => setCosts(costs));
+    }, []);
 
     const resourcesInitialState: Resources = {
         memory: currentResources?.memory,
@@ -97,11 +102,7 @@ export default () => {
 
     const finalPrices = (): Prices => {
         if (!costs) {
-            return {
-                monthly: 0,
-                daily: 0,
-                hourly: 0,
-            };
+            return { monthly: 0, daily: 0, hourly: 0 };
         }
         const discount = 1 - user.discount / 100;
         const data = {

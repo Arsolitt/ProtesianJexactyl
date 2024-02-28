@@ -39,7 +39,7 @@ interface CreateValues {
 
     memory: number;
     disk: number;
-    ports: number;
+    allocations: number;
     backups: number;
     databases: number;
 
@@ -50,7 +50,7 @@ interface CreateValues {
 interface Prices {
     memory: number;
     disk: number;
-    ports: number;
+    allocations: number;
     backups: number;
     databases: number;
     total: number;
@@ -95,12 +95,12 @@ export default () => {
         const data: Prices = {
             memory: values.memory * costs.memory * discount,
             disk: (values.disk - values.memory * 3) * costs.disk * discount,
-            ports: (values.ports - 1) * costs.ports * discount,
+            allocations: (values.allocations - 1) * costs.allocations * discount,
             backups: (values.backups - 1) * costs.backups * discount,
             databases: (values.databases - 1) * costs.databases * discount,
             total: 0,
         };
-        data.total = (data.memory + data.disk + data.ports + data.backups + data.databases) * discount;
+        data.total = (data.memory + data.disk + data.allocations + data.backups + data.databases) * discount;
         return data;
     };
 
@@ -153,7 +153,7 @@ export default () => {
                     description: 'Напиши его прямо сюда',
                     memory: 512,
                     disk: 1536,
-                    ports: 1,
+                    allocations: 1,
                     backups: 1,
                     databases: 1,
                     nest: 1,
@@ -178,7 +178,7 @@ export default () => {
                         })
                         .max(resources.limit.disk),
 
-                    ports: number().required().min(1).max(resources.limit.ports),
+                    allocations: number().required().min(1).max(resources.limit.allocations),
                     backups: number().required().min(0).max(resources.limit.backups),
                     databases: number().required().min(0).max(resources.limit.databases),
 
@@ -248,10 +248,10 @@ export default () => {
                                 </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Порты'} icon={faNetworkWired} className={'mt-8 sm:mt-0'}>
-                                <Field name={'ports'} />
+                                <Field name={'allocations'} />
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно портов?</p>
                                 <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.ports} портов
+                                    Максимально можно выбрать {resources.limit.allocations} портов
                                 </p>
                             </TitledGreyBox>
                         </StoreContainer>
@@ -314,9 +314,9 @@ export default () => {
                                     </span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    Порты: {values.ports} Шт. - это{' '}
+                                    Порты: {values.allocations} Шт. - это{' '}
                                     <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).ports.toFixed(2)}р.
+                                        {finalPrices(values, costs).allocations.toFixed(2)}р.
                                     </span>
                                 </p>
                             </TitledGreyBox>

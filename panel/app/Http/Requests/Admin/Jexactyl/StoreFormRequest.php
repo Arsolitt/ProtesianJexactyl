@@ -10,7 +10,7 @@ class StoreFormRequest extends AdminFormRequest
     {
         return [
             'store:enabled' => 'required|in:true,false',
-            
+
             'store:yookassa:enabled' => 'required|in:true,false',
             'store:yookassa:name' => 'required|string|min:1|max:15',
             'store:yookassa:min' => 'required|int|min:1',
@@ -21,13 +21,13 @@ class StoreFormRequest extends AdminFormRequest
             'store:cost:memory' => 'required|int|min:1',
             'store:cost:disk' => 'required|int|min:1',
             'store:cost:slot' => 'required|int|min:1',
-            'store:cost:port' => 'required|int|min:1',
+            'store:cost:allocation' => 'required|int|min:1',
             'store:cost:backup' => 'required|int|min:1',
             'store:cost:database' => 'required|int|min:1',
 
             'store:limit:memory' => 'required|int|min:256',
             'store:limit:disk' => 'required|int|min:1024',
-            'store:limit:port' => 'required|int|min:1',
+            'store:limit:allocation' => 'required|int|min:1',
             'store:limit:backup' => 'required|int|min:1',
             'store:limit:database' => 'required|int|min:1',
         ];
