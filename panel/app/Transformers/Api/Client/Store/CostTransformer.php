@@ -21,13 +21,12 @@ class CostTransformer extends BaseClientTransformer
     public function transform(array $model): array
     {
         return [
-            'cpu' => $model[0],
-            'memory' => $model[1],
-            'disk' => $model[2],
-            'slots' => $model[3],
-            'allocations' => $model[4],
-            'backups' => $model[5],
-            'databases' => $model[6],
+            'memory' => $model[0],
+            'disk' => $model[1],
+            'slots' => $model[2],
+            'allocations' => $model[3],
+            'backups' => $model[4],
+            'databases' => $model[5],
         ];
     }
 }

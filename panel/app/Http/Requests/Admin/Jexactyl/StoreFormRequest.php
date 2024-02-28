@@ -25,11 +25,17 @@ class StoreFormRequest extends AdminFormRequest
             'store:cost:backup' => 'required|int|min:1',
             'store:cost:database' => 'required|int|min:1',
 
-            'store:limit:memory' => 'required|int|min:256',
-            'store:limit:disk' => 'required|int|min:1024',
-            'store:limit:allocation' => 'required|int|min:1',
-            'store:limit:backup' => 'required|int|min:1',
-            'store:limit:database' => 'required|int|min:1',
+            'store:limit:min:memory' => 'required|int|min:256',
+            'store:limit:min:disk' => 'required|int|min:1024',
+            'store:limit:min:allocation' => 'required|int|min:1',
+            'store:limit:min:backup' => 'required|int|min:1',
+            'store:limit:min:database' => 'required|int|min:1',
+
+            'store:limit:max:memory' => 'required|int|min:256',
+            'store:limit:max:disk' => 'required|int|min:1024',
+            'store:limit:max:allocation' => 'required|int|min:1',
+            'store:limit:max:backup' => 'required|int|min:1',
+            'store:limit:max:database' => 'required|int|min:1',
         ];
     }
 }
