@@ -3,12 +3,10 @@ import classNames from 'classnames';
 import * as Icon from 'react-feather';
 import styled from 'styled-components/macro';
 import { megabytesToHuman } from '@/helpers';
-import React, { useState, useEffect } from 'react';
-import Spinner from '@/components/elements/Spinner';
+import React from 'react';
 import ContentBox from '@/components/elements/ContentBox';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import StoreContainer from '@/components/elements/StoreContainer';
-import { getResources, Resources } from '@/api/store/getResources';
 
 const Wrapper = styled.div`
     ${tw`text-2xl flex flex-row justify-center items-center`};
@@ -29,14 +27,6 @@ interface BoxProps {
 }
 
 export default ({ className, titles }: RowProps) => {
-    const [resources, setResources] = useState<Resources>();
-
-    useEffect(() => {
-        getResources().then((resources) => setResources(resources));
-    }, []);
-
-    if (!resources) return <Spinner size={'large'} centered />;
-
     const ResourceBox = (props: BoxProps) => (
         <ContentBox title={titles ? props.title : undefined}>
             <Tooltip content={props.description}>
@@ -55,7 +45,7 @@ export default ({ className, titles }: RowProps) => {
                 title={'Credits'}
                 description={'The amount of credits you have available.'}
                 icon={<Icon.DollarSign />}
-                amount={resources.balance}
+                amount={9999}
             />
             <ResourceBox
                 title={'CPU'}
@@ -82,7 +72,7 @@ export default ({ className, titles }: RowProps) => {
                 title={'Slots'}
                 description={'The amount of servers you are able to deploy.'}
                 icon={<Icon.Server />}
-                amount={resources.slots}
+                amount={9999}
             />
             <ResourceBox
                 title={'Ports'}
