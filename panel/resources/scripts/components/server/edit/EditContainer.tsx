@@ -5,12 +5,14 @@ import React, { useState } from 'react';
 import useFlash from '@/plugins/useFlash';
 import styled from 'styled-components/macro';
 import { ServerContext } from '@/state/server';
-import editServer from '@/api/server/editServer';
 import { Dialog } from '@/components/elements/dialog';
 import { Button } from '@/components/elements/button/index';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import editServer, { Resources } from '@/api/server/editServer';
+import { Costs } from '@/api/store/getCosts';
+import { useStoreState } from 'easy-peasy';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -32,25 +34,102 @@ const Wrapper = styled.div`
     ${tw`text-2xl flex flex-row justify-center items-center`};
 `;
 
+interface Prices {
+    monthly: number;
+    daily: number;
+    hourly: number;
+}
+
 export default () => {
     const [submitting, setSubmitting] = useState(false);
-    const [resource, setResource] = useState('');
-    const [amount, setAmount] = useState(0);
 
+    const user = useStoreState((state) => state.user.data!);
+    const [costs, setCosts] = useState<Costs>();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const currentResources = ServerContext.useStoreState((state) => state.server.data!.limits);
+    const currentFeatures = ServerContext.useStoreState((state) => state.server.data!.featureLimits);
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
 
-    const edit = (resource: string, amount: number) => {
+    const resourcesInitialState: Resources = {
+        memory: currentResources?.memory,
+        disk: currentResources?.disk,
+        allocations: currentFeatures?.allocations,
+        backups: currentFeatures?.backups,
+        databases: currentFeatures?.databases,
+    };
+    const [resources, setResources] = useState<Resources>(resourcesInitialState);
+
+    const resourceMinLimits: Resources = {
+        memory: 512,
+        disk: 1536,
+        allocations: 1,
+        backups: 0,
+        databases: 0,
+    };
+
+    const resourceMaxLimits: Resources = {
+        memory: 16384,
+        disk: 102400,
+        allocations: 25,
+        backups: 25,
+        databases: 25,
+    };
+
+    const increment = (field: keyof Resources, amount: number) => {
+        setResources((prevState) => ({
+            ...prevState,
+            [field]:
+                prevState[field] + amount <= resourceMaxLimits[field]
+                    ? prevState[field] + amount
+                    : resourceMaxLimits[field],
+        }));
+    };
+
+    const decrement = (field: keyof Resources, amount: number) => {
+        setResources((prevState) => ({
+            ...prevState,
+            [field]:
+                prevState[field] - amount >= resourceMinLimits[field]
+                    ? prevState[field] - amount
+                    : resourceMinLimits[field],
+        }));
+    };
+
+    const finalPrices = (): Prices => {
+        if (!costs) {
+            return {
+                monthly: 0,
+                daily: 0,
+                hourly: 0,
+            };
+        }
+        const discount = 1 - user.discount / 100;
+        const data = {
+            memory: resources.memory * costs.memory,
+            disk: resources.disk * costs.disk,
+            ports: resources.allocations * costs.allocations,
+            backups: resources.backups * costs.backups,
+            databases: resources.databases * costs.databases,
+        };
+        const price: number = (data.memory + data.disk + data.ports + data.backups + data.databases) * discount;
+        return {
+            monthly: price,
+            daily: price / 30,
+            hourly: price / 30 / 24,
+        };
+    };
+
+    const edit = () => {
         clearFlashes('server:edit');
         setSubmitting(true);
 
-        editServer(uuid, resource, amount)
+        editServer(uuid, resources)
             .then(() => {
                 setSubmitting(false);
                 addFlash({
                     key: 'server:edit',
                     type: 'success',
-                    message: 'Server resources have been edited successfully.',
+                    message: 'Характеристики сервера успешно изменены!',
                 });
             })
             .catch((error) => clearAndAddHttpError({ key: 'server:edit', error }));
@@ -58,190 +137,187 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Edit Server'}
-            description={'Add and remove resources from your server.'}
+            title={'Характеристики сервера'}
+            description={'Добавить или уменьшить доступные серверу ресурсы'}
             showFlashKey={'server:edit'}
         >
             <SpinnerOverlay size={'large'} visible={submitting} />
             <Dialog.Confirm
                 open={submitting}
                 onClose={() => setSubmitting(false)}
-                title={'Confirm resource edit'}
-                onConfirmed={() => edit(resource, amount)}
+                title={'Подтвердить изменение характеристик'}
+                onConfirmed={() => edit()}
             >
-                This will move resources between your account and the server. Are you sure you want to continue?
+                Характеристики сервера будут изменены и спишется оплата за первый час работы.
             </Dialog.Confirm>
-            <Container css={tw`lg:grid lg:grid-cols-3 gap-4 my-10`}>
-                <TitledGreyBox title={'Edit server CPU limit'} css={tw`mt-8 sm:mt-0`}>
-                    <Wrapper>
-                        <Icon.Cpu size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('cpu');
-                                setAmount(50);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
-                        <Button.Danger
-                            css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('cpu');
-                                setAmount(-50);
-                            }}
-                        >
-                            <Icon.Minus />
-                        </Button.Danger>
-                    </Wrapper>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the amount of CPU assigned to the server.
-                    </p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>Limit cannot be lower than 50%.</p>
-                </TitledGreyBox>
-                <TitledGreyBox title={'Edit server RAM limit'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+            <Container
+                css={tw`lg: grid
+                    lg: grid-cols-3 gap-4 my-10`}
+            >
+                <TitledGreyBox
+                    title={'Оперативная память'}
+                    css={tw`mt-8 sm: mt-0
+                        sm: ml-8`}
+                >
                     <Wrapper>
                         <Icon.PieChart size={40} />
                         <Button.Success
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('memory');
-                                setAmount(1024);
+                            onClick={(event) => {
+                                increment('memory', event.shiftKey ? 1024 : 256);
                             }}
                         >
                             <Icon.Plus />
                         </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('memory');
-                                setAmount(-1024);
+                            onClick={(event) => {
+                                decrement('memory', event.shiftKey ? 1024 : 256);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
                     </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.memory} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the amount of RAM assigned to the server.
+                        Ограничения: от {resourceMinLimits.memory} МБ до {resourceMaxLimits.memory} МБ
                     </p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>Limit cannot be lower than 1GB.</p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Edit server storage limit'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <TitledGreyBox
+                    title={'Дисковое пространство'}
+                    css={tw`mt-8 sm: mt-0
+                        sm: ml-8`}
+                >
                     <Wrapper>
                         <Icon.HardDrive size={40} />
                         <Button.Success
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('disk');
-                                setAmount(1024);
+                            onClick={(event) => {
+                                increment('disk', event.shiftKey ? 10240 : 1024);
                             }}
                         >
                             <Icon.Plus />
                         </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('disk');
-                                setAmount(-1024);
+                            onClick={(event) => {
+                                decrement('disk', event.shiftKey ? 10240 : 1024);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
                     </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.disk} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the amount of storage assigned to the server.
+                        Ограничения: от {resourceMinLimits.disk} МБ до {resourceMaxLimits.disk} МБ
                     </p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>Limit cannot be lower than 1GB.</p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Edit server port quantity'} css={tw`mt-8 sm:mt-0`}>
+                <TitledGreyBox title={'Доступные порты'} css={tw`mt-8 sm: mt-0`}>
                     <Wrapper>
                         <Icon.Share2 size={40} />
                         <Button.Success
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('allocation_limit');
-                                setAmount(1);
+                            onClick={(event) => {
+                                increment('allocations', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Plus />
                         </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('allocation_limit');
-                                setAmount(-1);
+                            onClick={(event) => {
+                                decrement('allocations', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
                     </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.allocations} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the limit of ports assigned to the server.
+                        Ограничения: от {resourceMinLimits.allocations} шт. до {resourceMaxLimits.allocations} шт.
                     </p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>Limit cannot be lower than 1.</p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Edit server backup limit'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <TitledGreyBox
+                    title={'Количество бэкапов'}
+                    css={tw`mt-8 sm: mt-0
+                        sm: ml-8`}
+                >
                     <Wrapper>
                         <Icon.Archive size={40} />
                         <Button.Success
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('backup_limit');
-                                setAmount(1);
+                            onClick={(event) => {
+                                increment('backups', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Plus />
                         </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('backup_limit');
-                                setAmount(-1);
+                            onClick={(event) => {
+                                decrement('backups', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
                     </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.backups} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the limit of backups assigned to the server.
+                        Ограничения: от {resourceMinLimits.backups} шт. до {resourceMaxLimits.backups} шт.
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Edit server database limit'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <TitledGreyBox
+                    title={'Количество баз данных'}
+                    css={tw`mt-8 sm: mt-0
+                        sm: ml-8`}
+                >
                     <Wrapper>
                         <Icon.Database size={40} />
                         <Button.Success
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('database_limit');
-                                setAmount(1);
+                            onClick={(event) => {
+                                increment('databases', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Plus />
                         </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                                setResource('database_limit');
-                                setAmount(-1);
+                            onClick={(event) => {
+                                decrement('databases', event.shiftKey ? 5 : 1);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
                     </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.databases} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        Change the limit of databases assigned to the server.
+                        Ограничения: от {resourceMinLimits.databases} шт. до {resourceMaxLimits.databases} шт.
+                    </p>
+                </TitledGreyBox>
+                <TitledGreyBox title={'Итог'} css={tw`mt-8 sm: mt-0`}>
+                    <Wrapper>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={() => {
+                                setSubmitting(true);
+                            }}
+                        >
+                            <Icon.Check />
+                        </Button.Success>
+                        <Button.Danger
+                            css={tw`ml-4`}
+                            onClick={() => {
+                                setResources(resourcesInitialState);
+                            }}
+                        >
+                            <Icon.X />
+                        </Button.Danger>
+                    </Wrapper>
+                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>Новая цена:</p>
+                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                        В месяц: {finalPrices().monthly.toFixed(2)} <br />В день: {finalPrices().daily.toFixed(2)}
+                        <br /> В час: {finalPrices().hourly.toFixed(2)}
                     </p>
                 </TitledGreyBox>
             </Container>
