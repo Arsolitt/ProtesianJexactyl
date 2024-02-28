@@ -25,7 +25,7 @@ class CostTransformer extends BaseClientTransformer
             'memory' => $model[1],
             'disk' => $model[2],
             'slots' => $model[3],
-            'ports' => $model[4],
+            'allocations' => $model[4],
             'backups' => $model[5],
             'databases' => $model[6],
         ];

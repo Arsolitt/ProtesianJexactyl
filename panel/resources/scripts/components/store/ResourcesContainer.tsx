@@ -4,11 +4,11 @@ import * as Icon from 'react-feather';
 import { Link } from 'react-router-dom';
 import useFlash from '@/plugins/useFlash';
 import styled from 'styled-components/macro';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Spinner from '@/components/elements/Spinner';
 import { Button } from '@/components/elements/button';
 import { Dialog } from '@/components/elements/dialog';
-import { getCosts, Costs } from '@/api/store/getCosts';
+import { Costs, getCosts } from '@/api/store/getCosts';
 import purchaseResource from '@/api/store/purchaseResource';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
@@ -120,7 +120,7 @@ export default () => {
                 <PurchaseBox
                     type={'Ports'}
                     amount={1}
-                    cost={costs.ports}
+                    cost={costs.allocations}
                     setOpen={setOpen}
                     icon={<Icon.Share2 />}
                     setResource={setResource}
