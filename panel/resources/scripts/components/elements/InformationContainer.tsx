@@ -3,32 +3,22 @@ import apiVerify from '@/api/account/verify';
 import { useStoreState } from '@/state/hooks';
 import React, { useEffect, useState } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { getResources } from '@/api/store/getResources';
 import Translate from '@/components/elements/Translate';
 import InformationBox from '@/components/elements/InformationBox';
 import getLatestActivity, { Activity } from '@/api/account/getLatestActivity';
 import { wrapProperties } from '@/components/elements/activity/ActivityLogEntry';
-import {
-    // faCircle,
-    faCoins,
-    // faExclamationCircle,
-    faScroll,
-    faTimesCircle,
-    faUserLock,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCoins, faScroll, faTimesCircle, faUserLock } from '@fortawesome/free-solid-svg-icons';
 import { ru } from 'date-fns/locale';
 
 export default () => {
     const { addFlash } = useFlash();
-    const [bal, setBal] = useState(0);
     const [activity, setActivity] = useState<Activity>();
     const properties = wrapProperties(activity?.properties);
     const user = useStoreState((state) => state.user.data!);
     // const store = useStoreState((state) => state.storefront.data!);
 
     useEffect(() => {
-        getResources().then((d) => setBal(d.balance));
-        getLatestActivity().then((d) => setActivity(d));
+        getLatestActivity().then((activity) => setActivity(activity));
     }, []);
 
     const verify = () => {
@@ -50,7 +40,7 @@ export default () => {
             {/*    </InformationBox>*/}
             {/*)}*/}
             <InformationBox icon={faCoins}>
-                Баланс: <span className={'text-green-600'}>{bal}</span>
+                Баланс: <span className={'text-green-600'}>{user.credits}</span>
             </InformationBox>
             <InformationBox icon={faUserLock}>
                 {user.useTotp ? (

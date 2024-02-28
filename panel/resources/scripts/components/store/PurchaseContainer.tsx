@@ -2,10 +2,9 @@ import tw from 'twin.macro';
 import { breakpoint } from '@/theme';
 import styled from 'styled-components/macro';
 import { useStoreState } from '@/state/hooks';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Spinner from '@/components/elements/Spinner';
 import ContentBox from '@/components/elements/ContentBox';
-import { getResources, Resources } from '@/api/store/getResources';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import PurchaseForm from '@/components/store/forms/PurchaseForm';
 
@@ -26,20 +25,16 @@ const Container = styled.div`
 `;
 
 export default () => {
-    const [resources, setResources] = useState<Resources>();
+    const user = useStoreState((state) => state.user.data!);
     const gateways = useStoreState((state) => state.storefront.data!.gateways);
 
-    useEffect(() => {
-        getResources().then((resources) => setResources(resources));
-    }, []);
-
-    if (!resources) return <Spinner size={'large'} centered />;
+    if (!user) return <Spinner size={'large'} centered />;
 
     return (
         <PageContentBlock title={'Биллинг'} description={'Пополнение баланса и последние транзакции'}>
             <Container className={'lg:grid lg:grid-cols-2 my-10'}>
                 <ContentBox title={'Текущий баланс'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
-                    <h1 css={tw`text-7xl flex justify-center items-center`}>{resources.balance} ₽</h1>
+                    <h1 css={tw`text-7xl flex justify-center items-center`}>{user.credits} ₽</h1>
                 </ContentBox>
                 <ContentBox
                     title={'Пополнение баланса'}

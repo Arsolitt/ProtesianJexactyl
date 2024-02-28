@@ -29,6 +29,7 @@ interface ExtendedWindow extends Window {
         created_at: string;
         updated_at: string;
         discount: number;
+        credits: number;
         /* eslint-enable camelcase */
     };
 }
@@ -53,6 +54,7 @@ const App = () => {
             createdAt: new Date(JexactylUser.created_at),
             updatedAt: new Date(JexactylUser.updated_at),
             discount: JexactylUser.discount,
+            credits: JexactylUser.credits,
         });
     }
 
