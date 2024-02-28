@@ -10,6 +10,7 @@ use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
 use Jexactyl\Services\Store\ResourcePurchaseService;
 use Jexactyl\Transformers\Api\Client\Store\CostTransformer;
+use Jexactyl\Transformers\Api\Client\Store\LimitTransformer;
 use Jexactyl\Transformers\Api\Client\Store\UserTransformer;
 
 class ResourceController extends ClientApiController
@@ -43,7 +44,7 @@ class ResourceController extends ClientApiController
     {
         $data = [];
         $prefix = 'store:cost:';
-        $types = ['cpu', 'memory', 'disk', 'slot', 'allocation', 'backup', 'database'];
+        $types = ['memory', 'disk', 'slot', 'allocation', 'backup', 'database'];
 
         foreach ($types as $type) {
             $data[] = $this->settings->get($prefix . $type, 0);
@@ -51,6 +52,22 @@ class ResourceController extends ClientApiController
 
         return $this->fractal->item($data)
             ->transformWith($this->getTransformer(CostTransformer::class))
+            ->toArray();
+    }
+
+    public function limits(Request $request)
+    {
+        $data = [];
+        $prefixMin = 'store:limit:min:';
+        $prefixMax = 'store:limit:max:';
+        $types = ['memory', 'disk', 'allocation', 'backup', 'database'];
+
+        foreach ($types as $type) {
+            $data['min'][] = $this->settings->get($prefixMin . $type, 0);
+            $data['max'][] = $this->settings->get($prefixMax . $type, 0);
+        }
+        return $this->fractal->item($data)
+            ->transformWith($this->getTransformer(LimitTransformer::class))
             ->toArray();
     }
 

@@ -18,7 +18,6 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import StoreContainer from '@/components/elements/StoreContainer';
-import { getResources, Resources } from '@/api/store/getResources';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import {
     faArchive,
@@ -32,6 +31,7 @@ import {
     faNetworkWired,
     faStickyNote,
 } from '@fortawesome/free-solid-svg-icons';
+import { getLimits, Limits } from '@/api/store/getLimits';
 
 interface CreateValues {
     name: string;
@@ -58,10 +58,11 @@ interface Prices {
 
 export default () => {
     const [loading, setLoading] = useState(false);
-    const [resources, setResources] = useState<Resources>();
+    const [limits, setLimits] = useState<Limits>();
     const [costs, setCosts] = useState<Costs>();
 
     const user = useStoreState((state) => state.user.data!);
+    const discount = 1 - user.discount / 100;
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 
     const [egg, setEgg] = useState<number>(0);
@@ -70,16 +71,41 @@ export default () => {
     const [nests, setNests] = useState<Nest[]>();
     const [nodes, setNodes] = useState<Node[]>();
 
+    const [values, setValues] = useState<CreateValues>({
+        name: `Крутой сервер от ${user.username} 0_0`,
+        description: 'Напиши его прямо сюда',
+        memory: limits?.min.memory || 512,
+        disk: limits?.min.disk || 1536,
+        allocations: limits?.min.allocations || 1,
+        backups: limits?.min.backups || 0,
+        databases: limits?.min.databases || 0,
+        nest: 1,
+        egg: 1,
+    });
+
     useEffect(() => {
         clearFlashes();
 
-        getResources().then((resources) => setResources(resources));
-        getCosts().then((costs) => setCosts(costs));
+        getLimits()
+            .then((limits) => setLimits(limits))
+            .catch((error) => {
+                clearAndAddHttpError({ key: 'store:create', error });
+                return <Spinner size={'large'} centered />;
+            });
+        getCosts()
+            .then((costs) => setCosts(costs))
+            .catch((error) => {
+                clearAndAddHttpError({ key: 'store:create', error });
+                return <Spinner size={'large'} centered />;
+            });
 
         getEggs().then((eggs) => setEggs(eggs));
         getNests().then((nests) => setNests(nests));
         getNodes().then((nodes) => setNodes(nodes));
     }, []);
+
+    if (!costs) return <Spinner size={'large'} centered />;
+    if (!limits) return <Spinner size={'large'} centered />;
 
     const changeNest = (e: ChangeEvent<HTMLSelectElement>) => {
         setNest(parseInt(e.target.value));
@@ -90,17 +116,17 @@ export default () => {
         });
     };
 
-    const finalPrices = (values: CreateValues, costs: Costs): Prices => {
-        const discount = 1 - user.discount / 100;
+    const finalPrices = (): Prices => {
         const data: Prices = {
             memory: values.memory * costs.memory * discount,
-            disk: (values.disk - values.memory * 3) * costs.disk * discount,
+            disk: values.disk * costs.disk * discount,
             allocations: (values.allocations - 1) * costs.allocations * discount,
-            backups: (values.backups - 1) * costs.backups * discount,
-            databases: (values.databases - 1) * costs.databases * discount,
+            backups: values.backups * costs.backups * discount,
+            databases: values.databases * costs.databases * discount,
             total: 0,
         };
         data.total = (data.memory + data.disk + data.allocations + data.backups + data.databases) * discount;
+        console.log(values);
         return data;
     };
 
@@ -122,9 +148,6 @@ export default () => {
                 clearAndAddHttpError({ key: 'store:create', error });
             });
     };
-
-    if (!resources) return <Spinner size={'large'} centered />;
-    if (!costs) return <Spinner size={'large'} centered />;
 
     if (!nodes) {
         return (
@@ -148,46 +171,24 @@ export default () => {
         <PageContentBlock title={'Создать сервер'} showFlashKey={'store:create'}>
             <Formik
                 onSubmit={submit}
-                initialValues={{
-                    name: `Крутой сервер от ${user.username} 0_0`,
-                    description: 'Напиши его прямо сюда',
-                    memory: 512,
-                    disk: 1536,
-                    allocations: 1,
-                    backups: 1,
-                    databases: 1,
-                    nest: 1,
-                    egg: 1,
-                }}
+                initialValues={values}
                 validationSchema={object().shape({
                     name: string().required().min(3),
-                    description: string().optional().min(3).max(191),
+                    description: string().optional().min(3).max(255),
 
-                    memory: number().required().min(512).max(resources.limit.ram),
-                    disk: number()
-                        .required()
-                        .test('min', '', function (value) {
-                            const { memory } = this.parent;
-                            const minValue = memory * 3;
-                            return (
-                                value >= minValue ||
-                                this.createError({
-                                    message: `Диска должно быть минимум ${minValue} МБ`,
-                                })
-                            );
-                        })
-                        .max(resources.limit.disk),
+                    memory: number().required().min(limits.min.memory).max(limits.max.memory),
+                    disk: number().required().min(limits.min.disk).max(limits.max.disk),
 
-                    allocations: number().required().min(1).max(resources.limit.allocations),
-                    backups: number().required().min(0).max(resources.limit.backups),
-                    databases: number().required().min(0).max(resources.limit.databases),
+                    allocations: number().required().min(limits.min.allocations).max(limits.max.allocations),
+                    backups: number().required().min(limits.min.backups).max(limits.max.backups),
+                    databases: number().required().min(limits.min.databases).max(limits.max.databases),
 
                     nest: number().required().default(nest),
                     egg: number().required().default(egg),
                 })}
             >
                 {({ values }) => (
-                    <Form>
+                    <Form onChange={() => setValues(values)}>
                         <h1 className={'text-5xl'}>Основная информация</h1>
                         <h3 className={'text-2xl text-neutral-500'}>Назови свой сервер и придумай ему описание</h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-2 my-10 gap-4'}>
@@ -215,9 +216,7 @@ export default () => {
                                     <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>МБ</p>
                                 </div>
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно ОЗУ?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.ram}МБ
-                                </p>
+                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Лимит диска'} icon={faHdd} className={'mt-8 sm:mt-0'}>
                                 <div className={'relative'}>
@@ -225,9 +224,7 @@ export default () => {
                                     <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>МБ</p>
                                 </div>
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно диска?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.disk}МБ
-                                </p>
+                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                         </StoreContainer>
                         <h1 className={'text-5xl'}>Дополнительные ништяки</h1>
@@ -236,23 +233,17 @@ export default () => {
                             <TitledGreyBox title={'Резервные копии'} icon={faArchive} className={'mt-8 sm:mt-0'}>
                                 <Field name={'backups'} />
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно резервных копий?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.backups} резервных копий
-                                </p>
+                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Базы данных'} icon={faDatabase} className={'mt-8 sm:mt-0'}>
                                 <Field name={'databases'} />
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно баз данных?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.databases} баз данных
-                                </p>
+                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Порты'} icon={faNetworkWired} className={'mt-8 sm:mt-0'}>
                                 <Field name={'allocations'} />
                                 <p className={'mt-1 text-xs'}>Сколько тебе нужно портов?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>
-                                    Максимально можно выбрать {resources.limit.allocations} портов
-                                </p>
+                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                         </StoreContainer>
                         <h1 className={'text-5xl'}>Что будешь запускать?</h1>
@@ -291,33 +282,23 @@ export default () => {
                             >
                                 <p className={'mt-1'}>
                                     Оперативная память: {values.memory} МБ - это{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).memory.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().memory.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Место на диске: {values.disk} МБ - это{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).disk.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().disk.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Резервные копии: {values.backups} Шт. и это{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).backups.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().backups.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Базы данных: {values.databases} Шт. - это{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).databases.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().databases.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Порты: {values.allocations} Шт. - это{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).allocations.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().allocations.toFixed(2)}р.</span>
                                 </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Цены'} icon={faCoins} className={'mt-8 sm:mt-0 text-lg'}>
@@ -327,20 +308,16 @@ export default () => {
                                 </p>
                                 <p className={'mt-1'}>
                                     В месяц:{' '}
-                                    <span className={'text-green-500'}>
-                                        {finalPrices(values, costs).total.toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{finalPrices().total.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     В день:{' '}
-                                    <span className={'text-green-500'}>
-                                        {(finalPrices(values, costs).total / 30).toFixed(2)}р.
-                                    </span>
+                                    <span className={'text-green-500'}>{(finalPrices().total / 30).toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     В час:{' '}
                                     <span className={'text-green-500'}>
-                                        {(finalPrices(values, costs).total / 30 / 24).toFixed(2)}р.
+                                        {(finalPrices().total / 30 / 24).toFixed(2)}р.
                                     </span>
                                 </p>
                             </TitledGreyBox>
