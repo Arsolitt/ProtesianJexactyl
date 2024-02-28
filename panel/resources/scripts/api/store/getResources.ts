@@ -7,7 +7,7 @@ export interface Resources {
         cpu: number;
         ram: number;
         disk: number;
-        ports: number;
+        allocations: number;
         backups: number;
         databases: number;
     };
@@ -20,7 +20,7 @@ export const rawDataToResources = ({ attributes: data }: FractalResponseData): R
         cpu: data.limit.cpu,
         ram: data.limit.ram,
         disk: data.limit.disk,
-        ports: data.limit.ports,
+        allocations: data.limit.allocations,
         backups: data.limit.backups,
         databases: data.limit.databases,
     },
