@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
+use Jexactyl\Services\Store\LimitsService;
 use Jexactyl\Services\Store\ResourcePurchaseService;
 use Jexactyl\Transformers\Api\Client\Store\CostTransformer;
 use Jexactyl\Transformers\Api\Client\Store\LimitTransformer;
@@ -18,7 +19,10 @@ class ResourceController extends ClientApiController
     /**
      * ResourceController constructor.
      */
-    public function __construct(private ResourcePurchaseService $purchaseService)
+    public function __construct(
+        private ResourcePurchaseService $purchaseService,
+        private LimitsService           $limitsService
+    )
     {
         parent::__construct();
     }
@@ -57,15 +61,7 @@ class ResourceController extends ClientApiController
 
     public function limits(Request $request)
     {
-        $data = [];
-        $prefixMin = 'store:limit:min:';
-        $prefixMax = 'store:limit:max:';
-        $types = ['memory', 'disk', 'allocation', 'backup', 'database'];
-
-        foreach ($types as $type) {
-            $data['min'][] = $this->settings->get($prefixMin . $type, 0);
-            $data['max'][] = $this->settings->get($prefixMax . $type, 0);
-        }
+        $data = $this->limitsService->getLimits();
         return $this->fractal->item($data)
             ->transformWith($this->getTransformer(LimitTransformer::class))
             ->toArray();
