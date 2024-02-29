@@ -5,6 +5,8 @@ namespace Jexactyl\Http\Controllers\Api\Client\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
 use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
@@ -15,6 +17,7 @@ use Jexactyl\Services\Store\StoreCreationService;
 use Jexactyl\Transformers\Api\Client\Store\EggTransformer;
 use Jexactyl\Transformers\Api\Client\Store\NestTransformer;
 use Jexactyl\Transformers\Api\Client\Store\NodeTransformer;
+use Throwable;
 
 class ServerController extends ClientApiController
 {
@@ -64,6 +67,13 @@ class ServerController extends ClientApiController
             ->toArray();
     }
 
+    /**
+     * @throws RecordNotFoundException
+     * @throws NoViableAllocationException
+     * @throws NoViableNodeException
+     * @throws Throwable
+     * @throws DisplayException
+     */
     public function store(CreateServerRequest $request): JsonResponse
     {
         $user = $request->user();

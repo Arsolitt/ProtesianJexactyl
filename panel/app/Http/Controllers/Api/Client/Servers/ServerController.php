@@ -2,16 +2,18 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Servers;
 
-use Jexactyl\Models\Server;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
+use Jexactyl\Http\Requests\Api\Client\Servers\DeleteServerRequest;
+use Jexactyl\Http\Requests\Api\Client\Servers\GetServerRequest;
+use Jexactyl\Http\Requests\Api\Client\Servers\UpdateBackgroundRequest;
+use Jexactyl\Models\Server;
+use Jexactyl\Services\Servers\GetUserPermissionsService;
 use Jexactyl\Services\Servers\ServerDeletionService;
 use Jexactyl\Transformers\Api\Client\ServerTransformer;
-use Jexactyl\Services\Servers\GetUserPermissionsService;
-use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
-use Jexactyl\Http\Requests\Api\Client\Servers\GetServerRequest;
-use Jexactyl\Http\Requests\Api\Client\Servers\DeleteServerRequest;
-use Jexactyl\Http\Requests\Api\Client\Servers\UpdateBackgroundRequest;
+use Throwable;
 
 class ServerController extends ClientApiController
 {
@@ -53,7 +55,7 @@ class ServerController extends ClientApiController
      * Deletes the requested server via the API and
      * returns the resources to the authenticated user.
      *
-     * @throws DisplayException
+     * @throws DisplayException|Throwable
      */
     public function delete(DeleteServerRequest $request, Server $server): JsonResponse
     {
@@ -63,7 +65,7 @@ class ServerController extends ClientApiController
             throw new DisplayException('You are not authorized to perform this action.');
         }
 
-        if ($this->settings->get('jexactyl::renewal:deletion') != 'true') {
+        if ($this->settings->get('server:deletion') != 'true') {
             throw new DisplayException('This feature has been locked by administrators.');
         }
 
