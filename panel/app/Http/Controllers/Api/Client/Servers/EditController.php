@@ -2,13 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Servers;
 
-use Jexactyl\Models\Server;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Services\Servers\ServerEditService;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Servers\EditServerRequest;
+use Jexactyl\Models\Server;
+use Jexactyl\Services\Servers\ServerEditService;
 
 class EditController extends ClientApiController
 {
@@ -27,12 +27,13 @@ class EditController extends ClientApiController
      */
     public function index(EditServerRequest $request, Server $server): JsonResponse
     {
+        throw new DisplayException('Тесты');
         if ($this->settings->get('server:editing') != 'true') {
-            throw new DisplayException('Server editing is currently disabled.');
+            throw new DisplayException('Редактирование серверов отключено админом!');
         }
 
         if ($request->user()->id != $server->owner_id) {
-            throw new DisplayException('You do not own this server, so you cannot edit the resources.');
+            throw new DisplayException('Это не твой сервер, поэтому ты не можешь редактировать его!');
         }
 
         $this->editService->handle($request, $server);
