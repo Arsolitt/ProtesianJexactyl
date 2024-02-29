@@ -1,24 +1,20 @@
-import * as Icon from 'react-feather';
 import { Form, Formik } from 'formik';
 import useFlash from '@/plugins/useFlash';
 import { useStoreState } from 'easy-peasy';
 import { number, object, string } from 'yup';
-import Field from '@/components/elements/Field';
-import Select from '@/components/elements/Select';
 import { Egg, getEggs } from '@/api/store/getEggs';
 import createServer from '@/api/store/createServer';
 import Spinner from '@/components/elements/Spinner';
 import { getNodes, Node } from '@/api/store/getNodes';
 import { getNests, Nest } from '@/api/store/getNests';
 import { Costs, getCosts } from '@/api/store/getCosts';
-import { Button } from '@/components/elements/button';
-import InputSpinner from '@/components/elements/InputSpinner';
 import StoreError from '@/components/elements/store/StoreError';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import FlashMessageRender from '@/components/FlashMessageRender';
-import StoreContainer from '@/components/elements/StoreContainer';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+import { getLimits, Limits } from '@/api/store/getLimits';
+import StoreContainer from '@/components/elements/StoreContainer';
+import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import Field from '@/components/elements/Field';
 import {
     faArchive,
     faCoins,
@@ -31,7 +27,12 @@ import {
     faNetworkWired,
     faStickyNote,
 } from '@fortawesome/free-solid-svg-icons';
-import { getLimits, Limits } from '@/api/store/getLimits';
+import { Button } from '@/components/elements/button';
+import InputSpinner from '@/components/elements/InputSpinner';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import * as Icon from 'react-feather';
+import Select from '@/components/elements/Select';
+import tw from 'twin.macro';
 
 interface CreateValues {
     name: string;
@@ -53,13 +54,48 @@ interface Prices {
     allocations: number;
     backups: number;
     databases: number;
-    total: number;
+    monthly: number;
+    daily: number;
+    hourly: number;
 }
 
 export default () => {
     const [loading, setLoading] = useState(false);
-    const [limits, setLimits] = useState<Limits>();
-    const [costs, setCosts] = useState<Costs>();
+    const [enough, setEnough] = useState(false);
+    const [limits, setLimits] = useState<Limits>({
+        min: {
+            memory: 0,
+            disk: 0,
+            allocations: 0,
+            backups: 0,
+            databases: 0,
+        },
+        max: {
+            memory: 0,
+            disk: 0,
+            allocations: 0,
+            backups: 0,
+            databases: 0,
+        },
+    });
+    const [costs, setCosts] = useState<Costs>({
+        memory: 0,
+        disk: 0,
+        allocations: 0,
+        backups: 0,
+        databases: 0,
+        slots: 0,
+    });
+    const prices: Prices = {
+        memory: 0,
+        disk: 0,
+        allocations: 0,
+        backups: 0,
+        databases: 0,
+        monthly: 0,
+        daily: 0,
+        hourly: 0,
+    };
 
     const user = useStoreState((state) => state.user.data!);
     const discount = 1 - user.discount / 100;
@@ -70,18 +106,6 @@ export default () => {
     const [nest, setNest] = useState<number>(0);
     const [nests, setNests] = useState<Nest[]>();
     const [nodes, setNodes] = useState<Node[]>();
-
-    const [values, setValues] = useState<CreateValues>({
-        name: `Крутой сервер от ${user.username} 0_0`,
-        description: 'Напиши его прямо сюда',
-        memory: limits?.min.memory || 512,
-        disk: limits?.min.disk || 1536,
-        allocations: limits?.min.allocations || 1,
-        backups: limits?.min.backups || 0,
-        databases: limits?.min.databases || 0,
-        nest: 1,
-        egg: 1,
-    });
 
     useEffect(() => {
         clearFlashes();
@@ -104,32 +128,6 @@ export default () => {
         getNodes().then((nodes) => setNodes(nodes));
     }, []);
 
-    if (!costs) return <Spinner size={'large'} centered />;
-    if (!limits) return <Spinner size={'large'} centered />;
-
-    const changeNest = (e: ChangeEvent<HTMLSelectElement>) => {
-        setNest(parseInt(e.target.value));
-
-        getEggs(parseInt(e.target.value)).then((eggs) => {
-            setEggs(eggs);
-            setEgg(eggs[0].id);
-        });
-    };
-
-    const finalPrices = (): Prices => {
-        const data: Prices = {
-            memory: values.memory * costs.memory * discount,
-            disk: values.disk * costs.disk * discount,
-            allocations: (values.allocations - 1) * costs.allocations * discount,
-            backups: values.backups * costs.backups * discount,
-            databases: values.databases * costs.databases * discount,
-            total: 0,
-        };
-        data.total = (data.memory + data.disk + data.allocations + data.backups + data.databases) * discount;
-        console.log(values);
-        return data;
-    };
-
     const submit = (values: CreateValues) => {
         setLoading(true);
         clearFlashes('store:create');
@@ -149,6 +147,31 @@ export default () => {
             });
     };
 
+    const changeNest = (e: ChangeEvent<HTMLSelectElement>) => {
+        setNest(parseInt(e.target.value));
+
+        getEggs(parseInt(e.target.value)).then((eggs) => {
+            setEggs(eggs);
+            setEgg(eggs[0].id);
+        });
+    };
+
+    const totalPrice = () => {
+        prices.monthly = prices.memory + prices.disk + prices.allocations + prices.backups + prices.databases;
+        prices.daily = prices.monthly / 30;
+        prices.hourly = prices.monthly / 30 / 24;
+        setEnough(prices.daily <= user.credits);
+    };
+
+    const calcPrice = <T extends keyof Prices & keyof Costs>(field: T, amount: number) => {
+        prices[field] = amount * costs[field] * discount;
+        totalPrice();
+        return prices[field].toFixed();
+    };
+
+    if (!costs) return <Spinner size={'large'} centered />;
+    if (!limits) return <Spinner size={'large'} centered />;
+
     if (!nodes) {
         return (
             <StoreError
@@ -167,11 +190,31 @@ export default () => {
         );
     }
 
+    const incrementValue = (field: keyof Limits['max'], oldValue: number, amount: number): number => {
+        return Number(oldValue) + amount <= limits.max[field] ? Number(oldValue) + amount : limits.max[field];
+    };
+
+    const decrementValue = (field: keyof Limits['min'], oldValue: number, amount: number): number => {
+        return Number(oldValue) - amount >= limits.min[field] ? Number(oldValue) - amount : limits.min[field];
+    };
+
+    // TODO: потом это обязательно переделать почище, пока так сойдёт
+
     return (
         <PageContentBlock title={'Создать сервер'} showFlashKey={'store:create'}>
             <Formik
                 onSubmit={submit}
-                initialValues={values}
+                initialValues={{
+                    name: `Крутой сервер от ${user.username} 0_0`,
+                    description: 'Описание вот сюда',
+                    memory: limits?.min.memory || 512,
+                    disk: limits?.min.disk || 1536,
+                    allocations: limits?.min.allocations || 1,
+                    backups: limits?.min.backups || 0,
+                    databases: limits?.min.databases || 0,
+                    nest: 1,
+                    egg: 1,
+                }}
                 validationSchema={object().shape({
                     name: string().required().min(3),
                     description: string().optional().min(3).max(255),
@@ -187,8 +230,8 @@ export default () => {
                     egg: number().required().default(egg),
                 })}
             >
-                {({ values }) => (
-                    <Form onChange={() => setValues(values)}>
+                {({ values, setFieldValue, validateField, setFieldTouched }) => (
+                    <Form>
                         <h1 className={'text-5xl'}>Основная информация</h1>
                         <h3 className={'text-2xl text-neutral-500'}>Назови свой сервер и придумай ему описание</h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-2 my-10 gap-4'}>
@@ -211,39 +254,208 @@ export default () => {
                         </h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Лимит ОЗУ'} icon={faMemory} className={'mt-8 sm:mt-0'}>
-                                <div className={'relative'}>
-                                    <Field name={'memory'} />
-                                    <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>МБ</p>
+                                <div className={'flex'}>
+                                    <Button.Danger
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'memory';
+                                            setFieldValue(
+                                                field,
+                                                decrementValue(field, values[field], event.shiftKey ? 1024 : 256)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Minus />
+                                    </Button.Danger>
+                                    <div className={'relative mx-2 w-full'}>
+                                        <Field name={'memory'} className={'text-center'} />
+                                        <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
+                                            МБ
+                                        </p>
+                                    </div>
+                                    <Button.Success
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'memory';
+                                            setFieldValue(
+                                                field,
+                                                incrementValue(field, values[field], event.shiftKey ? 1024 : 256)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Plus />
+                                    </Button.Success>
                                 </div>
-                                <p className={'mt-1 text-xs'}>Сколько тебе нужно ОЗУ?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Лимит диска'} icon={faHdd} className={'mt-8 sm:mt-0'}>
-                                <div className={'relative'}>
-                                    <Field name={'disk'} />
-                                    <p className={'absolute text-sm top-1.5 right-2 bg-gray-700 p-2 rounded-lg'}>МБ</p>
+                                <div className={'flex'}>
+                                    <Button.Danger
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'disk';
+                                            setFieldValue(
+                                                field,
+                                                decrementValue(field, values[field], event.shiftKey ? 5120 : 1024)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Minus />
+                                    </Button.Danger>
+                                    <div className={'relative mx-2 w-full'}>
+                                        <Field name={'disk'} className={'text-center'} />
+                                        <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
+                                            МБ
+                                        </p>
+                                    </div>
+                                    <Button.Success
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'disk';
+                                            setFieldValue(
+                                                field,
+                                                incrementValue(field, values[field], event.shiftKey ? 5120 : 1024)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Plus />
+                                    </Button.Success>
                                 </div>
-                                <p className={'mt-1 text-xs'}>Сколько тебе нужно диска?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
                             </TitledGreyBox>
                         </StoreContainer>
                         <h1 className={'text-5xl'}>Дополнительные ништяки</h1>
                         <h3 className={'text-2xl text-neutral-500'}>Базы данных, порты, резервные копии</h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Резервные копии'} icon={faArchive} className={'mt-8 sm:mt-0'}>
-                                <Field name={'backups'} />
-                                <p className={'mt-1 text-xs'}>Сколько тебе нужно резервных копий?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
+                                <div className={'flex'}>
+                                    <Button.Danger
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'backups';
+                                            setFieldValue(
+                                                field,
+                                                decrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Minus />
+                                    </Button.Danger>
+                                    <div className={'relative mx-2 w-full'}>
+                                        <Field name={'backups'} className={'text-center'} />
+                                        <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
+                                            Шт.
+                                        </p>
+                                    </div>
+                                    <Button.Success
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'backups';
+                                            setFieldValue(
+                                                field,
+                                                incrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Plus />
+                                    </Button.Success>
+                                </div>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Базы данных'} icon={faDatabase} className={'mt-8 sm:mt-0'}>
-                                <Field name={'databases'} />
-                                <p className={'mt-1 text-xs'}>Сколько тебе нужно баз данных?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
+                                <div className={'flex'}>
+                                    <Button.Danger
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'databases';
+                                            setFieldValue(
+                                                field,
+                                                decrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Minus />
+                                    </Button.Danger>
+                                    <div className={'relative mx-2 w-full'}>
+                                        <Field name={'databases'} className={'text-center'} />
+                                        <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
+                                            Шт.
+                                        </p>
+                                    </div>
+                                    <Button.Success
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'databases';
+                                            setFieldValue(
+                                                field,
+                                                incrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Plus />
+                                    </Button.Success>
+                                </div>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Порты'} icon={faNetworkWired} className={'mt-8 sm:mt-0'}>
-                                <Field name={'allocations'} />
-                                <p className={'mt-1 text-xs'}>Сколько тебе нужно портов?</p>
-                                <p className={'mt-1 text-xs text-gray-400'}>???</p>
+                                <div className={'flex'}>
+                                    <Button.Danger
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'allocations';
+                                            setFieldValue(
+                                                field,
+                                                decrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Minus />
+                                    </Button.Danger>
+                                    <div className={'relative mx-2 w-full'}>
+                                        <Field name={'allocations'} className={'text-center'} />
+                                        <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
+                                            Шт.
+                                        </p>
+                                    </div>
+                                    <Button.Success
+                                        type={'button'}
+                                        css={tw``}
+                                        onClick={(event) => {
+                                            const field = 'allocations';
+                                            setFieldValue(
+                                                field,
+                                                incrementValue(field, values[field], event.shiftKey ? 5 : 1)
+                                            );
+                                            setFieldTouched(field);
+                                            validateField(field);
+                                        }}
+                                    >
+                                        <Icon.Plus />
+                                    </Button.Success>
+                                </div>
                             </TitledGreyBox>
                         </StoreContainer>
                         <h1 className={'text-5xl'}>Что будешь запускать?</h1>
@@ -281,45 +493,48 @@ export default () => {
                                 className={'mt-8 sm:mt-0 text-lg'}
                             >
                                 <p className={'mt-1'}>
-                                    Оперативная память: {values.memory} МБ - это{' '}
-                                    <span className={'text-green-500'}>{finalPrices().memory.toFixed(2)}р.</span>
+                                    Дисковое пространство: {values.disk} МБ |{' '}
+                                    <span className={'text-green-500'}>{calcPrice('disk', values.disk)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    Место на диске: {values.disk} МБ - это{' '}
-                                    <span className={'text-green-500'}>{finalPrices().disk.toFixed(2)}р.</span>
+                                    Оперативная память: {values.memory} МБ |{' '}
+                                    <span className={'text-green-500'}>{calcPrice('memory', values.memory)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    Резервные копии: {values.backups} Шт. и это{' '}
-                                    <span className={'text-green-500'}>{finalPrices().backups.toFixed(2)}р.</span>
+                                    Резервные копии: {values.backups} Шт. |{' '}
+                                    <span className={'text-green-500'}>{calcPrice('backups', values.backups)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    Базы данных: {values.databases} Шт. - это{' '}
-                                    <span className={'text-green-500'}>{finalPrices().databases.toFixed(2)}р.</span>
+                                    Базы данных: {values.databases} Шт. |{' '}
+                                    <span className={'text-green-500'}>
+                                        {calcPrice('databases', values.databases)}р.
+                                    </span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    Порты: {values.allocations} Шт. - это{' '}
-                                    <span className={'text-green-500'}>{finalPrices().allocations.toFixed(2)}р.</span>
+                                    Порты: {values.allocations} Шт. |{' '}
+                                    <span className={'text-green-500'}>
+                                        {calcPrice('allocations', values.allocations)}р.
+                                    </span>
                                 </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Цены'} icon={faCoins} className={'mt-8 sm:mt-0 text-lg'}>
                                 <p className={'mt-1'}>
-                                    Твоя персональная скидка:{' '}
-                                    <span className={'text-green-500'}>{user.discount.toFixed(2)}%</span>
+                                    Твоя скидка: <span className={'text-green-500'}>{user.discount.toFixed(2)}%</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    В месяц:{' '}
-                                    <span className={'text-green-500'}>{finalPrices().total.toFixed(2)}р.</span>
+                                    В месяц: <span className={'text-green-500'}>{prices.monthly.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    В день:{' '}
-                                    <span className={'text-green-500'}>{(finalPrices().total / 30).toFixed(2)}р.</span>
+                                    В день: <span className={'text-green-500'}>{prices.daily.toFixed(2)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    В час:{' '}
-                                    <span className={'text-green-500'}>
-                                        {(finalPrices().total / 30 / 24).toFixed(2)}р.
-                                    </span>
+                                    В час: <span className={'text-green-500'}>{prices.hourly.toFixed(2)}р.</span>
                                 </p>
+                                {!enough && (
+                                    <p className={'mt-1 text-xs text-red-400'}>
+                                        Для покупки нужно иметь на балансе минимум {prices.daily.toFixed(2)}р.
+                                    </p>
+                                )}
                             </TitledGreyBox>
                         </StoreContainer>
                         <InputSpinner visible={loading}>
@@ -329,7 +544,7 @@ export default () => {
                                     type={'submit'}
                                     className={'w-1/6 mb-4'}
                                     size={Button.Sizes.Large}
-                                    disabled={loading}
+                                    disabled={loading || !enough}
                                 >
                                     <Icon.Server className={'mr-2'} /> Поехали!
                                 </Button>

@@ -57,9 +57,9 @@ class StoreController extends Controller
 
             'limit_min_memory' => $this->settings->get($prefix . 'limit:min:memory', 512),
             'limit_min_disk' => $this->settings->get($prefix . 'limit:min:disk', 1536),
-            'limit_min_allocation' => $this->settings->get($prefix . 'limit:min:allocation', 1),
-            'limit_min_backup' => $this->settings->get($prefix . 'limit:min:backup', 1),
-            'limit_min_database' => $this->settings->get($prefix . 'limit:min:database', 1),
+            'limit_min_allocation' => $this->settings->get($prefix . 'limit:min:allocation', 0),
+            'limit_min_backup' => $this->settings->get($prefix . 'limit:min:backup', 0),
+            'limit_min_database' => $this->settings->get($prefix . 'limit:min:database', 0),
 
             'limit_max_memory' => $this->settings->get($prefix . 'limit:max:memory', 16384),
             'limit_max_disk' => $this->settings->get($prefix . 'limit:max:disk', 102400),

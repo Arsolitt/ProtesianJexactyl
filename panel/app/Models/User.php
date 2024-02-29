@@ -214,7 +214,7 @@ class User extends Model implements
 
     public function totalDiscount(): int
     {
-        return 0;
+        return 15;
     }
 
     /**
