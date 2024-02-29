@@ -44,7 +44,7 @@ class ResourceController extends ClientApiController
     {
         $data = [];
         $prefix = 'store:cost:';
-        $types = ['memory', 'disk', 'slot', 'allocation', 'backup', 'database'];
+        $types = ['memory', 'disk', 'allocation', 'backup', 'database', 'slot'];
 
         foreach ($types as $type) {
             $data[] = $this->settings->get($prefix . $type, 0);
