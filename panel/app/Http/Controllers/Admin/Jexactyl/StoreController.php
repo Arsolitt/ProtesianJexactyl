@@ -56,16 +56,16 @@ class StoreController extends Controller
             'cost_database' => $this->settings->get($prefix . 'cost:database', 10),
 
             'limit_min_memory' => $this->settings->get($prefix . 'limit:min:memory', 512),
-            'limit_min_disk' => $this->settings->get($prefix . 'limit:min:disk', 1536),
-            'limit_min_allocation' => $this->settings->get($prefix . 'limit:min:allocation', 0),
-            'limit_min_backup' => $this->settings->get($prefix . 'limit:min:backup', 0),
-            'limit_min_database' => $this->settings->get($prefix . 'limit:min:database', 0),
+            'limit_min_disk' => $this->settings->get($prefix . 'limit:min:disk', 1024),
+            'limit_min_allocations' => $this->settings->get($prefix . 'limit:min:allocations', 1),
+            'limit_min_backups' => $this->settings->get($prefix . 'limit:min:backups', 0),
+            'limit_min_databases' => $this->settings->get($prefix . 'limit:min:databases', 0),
 
             'limit_max_memory' => $this->settings->get($prefix . 'limit:max:memory', 16384),
             'limit_max_disk' => $this->settings->get($prefix . 'limit:max:disk', 102400),
-            'limit_max_allocation' => $this->settings->get($prefix . 'limit:max:allocation', 25),
-            'limit_max_backup' => $this->settings->get($prefix . 'limit:max:backup', 25),
-            'limit_max_database' => $this->settings->get($prefix . 'limit:max:database', 25),
+            'limit_max_allocations' => $this->settings->get($prefix . 'limit:max:allocations', 25),
+            'limit_max_backups' => $this->settings->get($prefix . 'limit:max:backups', 25),
+            'limit_max_databases' => $this->settings->get($prefix . 'limit:max:databases', 25),
         ]);
     }
 

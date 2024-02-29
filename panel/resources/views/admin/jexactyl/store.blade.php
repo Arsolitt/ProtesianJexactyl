@@ -210,8 +210,8 @@
                                 <label class="control-label">Network Allocation limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:min:allocation"
-                                               value="{{ $limit_min_allocation }}"/>
+                                        <input type="text" class="form-control" name="store:limit:min:allocations"
+                                               value="{{ $limit_min_allocations }}"/>
                                         <span class="input-group-addon">ports</span>
                                     </div>
                                     <p class="text-muted"><small>The minimum amount of ports (allocations) a server can
@@ -222,8 +222,8 @@
                                 <label class="control-label">Backup limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:min:backup"
-                                               value="{{ $limit_min_backup }}"/>
+                                        <input type="text" class="form-control" name="store:limit:min:backups"
+                                               value="{{ $limit_min_backups }}"/>
                                         <span class="input-group-addon">backups</span>
                                     </div>
                                     <p class="text-muted"><small>The minimum amount of backups a server can be deployed
@@ -234,8 +234,8 @@
                                 <label class="control-label">Database limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:min:database"
-                                               value="{{ $limit_min_database }}"/>
+                                        <input type="text" class="form-control" name="store:limit:min:databases"
+                                               value="{{ $limit_min_databases }}"/>
                                         <span class="input-group-addon">databases</span>
                                     </div>
                                     <p class="text-muted"><small>The minimum amount of databases a server can be
@@ -280,8 +280,8 @@
                                 <label class="control-label">Network Allocation limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:max:allocation"
-                                               value="{{ $limit_max_allocation }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:allocations"
+                                               value="{{ $limit_max_allocations }}"/>
                                         <span class="input-group-addon">ports</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of ports (allocations) a server can
@@ -292,8 +292,8 @@
                                 <label class="control-label">Backup limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:max:backup"
-                                               value="{{ $limit_max_backup }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:backups"
+                                               value="{{ $limit_max_backups }}"/>
                                         <span class="input-group-addon">backups</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of backups a server can be deployed
@@ -304,8 +304,8 @@
                                 <label class="control-label">Database limit</label>
                                 <div>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="store:limit:max:database"
-                                               value="{{ $limit_max_database }}"/>
+                                        <input type="text" class="form-control" name="store:limit:max:databases"
+                                               value="{{ $limit_max_databases }}"/>
                                         <span class="input-group-addon">databases</span>
                                     </div>
                                     <p class="text-muted"><small>The maximum amount of databases a server can be

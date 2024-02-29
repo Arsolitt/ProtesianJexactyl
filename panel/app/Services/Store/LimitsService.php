@@ -9,11 +9,11 @@ class LimitsService
         $data = [];
         $prefixMin = 'store:limit:min:';
         $prefixMax = 'store:limit:max:';
-        $types = ['memory', 'disk', 'allocation', 'backup', 'database'];
+        $types = ['memory', 'disk', 'allocations', 'backups', 'databases'];
 
         foreach ($types as $type) {
-            $data['min'][] = settings()->get($prefixMin . $type, 0);
-            $data['max'][] = settings()->get($prefixMax . $type, 0);
+            $data['min'][$type] = settings()->get($prefixMin . $type, 0);
+            $data['max'][$type] = settings()->get($prefixMax . $type, 0);
         }
 
         return $data;
