@@ -23,10 +23,10 @@ class CostTransformer extends BaseClientTransformer
         return [
             'memory' => $model[0],
             'disk' => $model[1],
-            'slots' => $model[2],
-            'allocations' => $model[3],
-            'backups' => $model[4],
-            'databases' => $model[5],
+            'allocations' => $model[2],
+            'backups' => $model[3],
+            'databases' => $model[4],
+            'slots' => $model[5],
         ];
     }
 }
