@@ -8,7 +8,10 @@ use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
 
 class StoreVerificationService
 {
-    public function __construct(private SettingsRepositoryInterface $settings)
+    public function __construct(
+        private SettingsRepositoryInterface $settings,
+        private LimitsService               $limitsService
+    )
     {
     }
 
@@ -47,26 +50,22 @@ class StoreVerificationService
      */
     private function checkResourceLimits(CreateServerRequest $request): void
     {
-        $prefixMin = 'store:limit:min:';
-        $prefixMax = 'store:limit:max:';
-        $types = ['memory', 'disk', 'slot', 'allocation', 'backup', 'database'];
+        if ($request->user()->server_slots <= 0) {
+            throw new DisplayException('У тебя закончились слоты, чтобы создать сервер!');
+        }
 
+        $types = ['memory', 'disk', 'allocations', 'backups', 'databases'];
+
+        $limits = $this->limitsService->getLimits();
+        
         foreach ($types as $type) {
-            $suffix = '';
-            $limitMin = $this->settings->get($prefixMin . $type);
-            $limitMax = $this->settings->get($prefixMax . $type);
+            $amount = $request->input($type);
 
-            if (in_array($type, ['slot', 'allocation', 'backup', 'database'])) {
-                $suffix = 's';
-            }
-
-            $amount = $request->input($type .= $suffix);
-
-            if ($limitMin > $amount) {
+            if ($limits['min'][$type] > $request->input($type)) {
                 throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMin);
             }
 
-            if ($limitMax < $amount) {
+            if ($limits['max'][$type] < $request->input($type)) {
                 throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMax);
             }
         }

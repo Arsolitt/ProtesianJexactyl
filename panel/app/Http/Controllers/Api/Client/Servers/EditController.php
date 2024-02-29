@@ -27,7 +27,6 @@ class EditController extends ClientApiController
      */
     public function index(EditServerRequest $request, Server $server): JsonResponse
     {
-        throw new DisplayException('Тесты');
         if ($this->settings->get('server:editing') != 'true') {
             throw new DisplayException('Редактирование серверов отключено админом!');
         }

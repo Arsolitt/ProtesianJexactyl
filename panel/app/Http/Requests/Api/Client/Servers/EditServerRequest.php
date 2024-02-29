@@ -29,9 +29,11 @@ class EditServerRequest extends ClientApiRequest
     {
         $limits = $this->limitsService->getLimits();
         return [
-            'resource' => 'required|string|in:cpu,memory,disk,allocation_limit,backup_limit,database_limit',
-            'amount' => 'required|int',
-            'memory' => 'required|numeric|'
+            'resources.memory' => 'required|numeric|min:' . $limits['min']['memory'] . '|max:' . $limits['max']['memory'],
+            'resources.disk' => 'required|numeric|min:' . $limits['min']['disk'] . '|max:' . $limits['max']['disk'],
+            'resources.allocations' => 'required|numeric|min:' . $limits['min']['allocations'] . '|max:' . $limits['max']['allocations'],
+            'resources.backups' => 'required|numeric|min:' . $limits['min']['backups'] . '|max:' . $limits['max']['backups'],
+            'resources.databases' => 'required|numeric|min:' . $limits['min']['databases'] . '|max:' . $limits['max']['databases'],
         ];
     }
 }

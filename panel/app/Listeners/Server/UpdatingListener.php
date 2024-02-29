@@ -2,11 +2,10 @@
 
 namespace Jexactyl\Listeners\Server;
 
-use Jexactyl\Events\Server\Creating;
+use Jexactyl\Events\Server\Updating;
 
-class CreatingListener
+class UpdatingListener
 {
-
     /**
      * Create the event listener.
      */
@@ -18,7 +17,7 @@ class CreatingListener
     /**
      * Handle the event.
      */
-    public function handle(Creating $event): bool
+    public function handle(Updating $event): bool
     {
         $event->server->monthly_price = $event->server->actualPrice();
         return true;

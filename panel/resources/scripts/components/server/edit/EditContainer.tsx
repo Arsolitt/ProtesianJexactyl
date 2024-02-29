@@ -87,9 +87,9 @@ export default () => {
         setResources((prevState) => ({
             ...prevState,
             [field]:
-                prevState[field] + amount <= resourceMaxLimits[field]
-                    ? prevState[field] + amount
-                    : resourceMaxLimits[field],
+                Number(prevState[field]) + amount < Number(resourceMaxLimits[field])
+                    ? Number(prevState[field]) + amount
+                    : Number(resourceMaxLimits[field]),
         }));
     };
 
@@ -97,9 +97,9 @@ export default () => {
         setResources((prevState) => ({
             ...prevState,
             [field]:
-                prevState[field] - amount >= resourceMinLimits[field]
-                    ? prevState[field] - amount
-                    : resourceMinLimits[field],
+                Number(prevState[field]) - amount > Number(resourceMinLimits[field])
+                    ? Number(prevState[field]) - amount
+                    : Number(resourceMinLimits[field]),
         }));
     };
 
@@ -129,7 +129,6 @@ export default () => {
 
         editServer(uuid, resources)
             .then(() => {
-                setSubmitting(false);
                 addFlash({
                     key: 'server:edit',
                     type: 'success',
@@ -137,6 +136,7 @@ export default () => {
                 });
             })
             .catch((error) => clearAndAddHttpError({ key: 'server:edit', error }));
+        setSubmitting(false);
     };
 
     return (
@@ -197,7 +197,7 @@ export default () => {
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
-                                increment('disk', event.shiftKey ? 10240 : 1024);
+                                increment('disk', event.shiftKey ? 5120 : 1024);
                             }}
                         >
                             <Icon.Plus />
@@ -205,7 +205,7 @@ export default () => {
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
-                                decrement('disk', event.shiftKey ? 10240 : 1024);
+                                decrement('disk', event.shiftKey ? 5120 : 1024);
                             }}
                         >
                             <Icon.Minus />
