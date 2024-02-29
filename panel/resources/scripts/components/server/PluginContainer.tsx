@@ -25,8 +25,6 @@ export default () => {
 
     const { data, error } = useSWR<Plugin>([uuid, query, '/plugins'], (uuid, query) => getPlugins(uuid, query));
 
-    console.log(data);
-
     useEffect(() => {
         if (!error) {
             clearFlashes('server:plugins');
