@@ -110,18 +110,8 @@ export default () => {
     useEffect(() => {
         clearFlashes();
 
-        getLimits()
-            .then((limits) => setLimits(limits))
-            .catch((error) => {
-                clearAndAddHttpError({ key: 'store:create', error });
-                return <Spinner size={'large'} centered />;
-            });
-        getCosts()
-            .then((costs) => setCosts(costs))
-            .catch((error) => {
-                clearAndAddHttpError({ key: 'store:create', error });
-                return <Spinner size={'large'} centered />;
-            });
+        getLimits().then((limits) => setLimits(limits));
+        getCosts().then((costs) => setCosts(costs));
 
         getEggs().then((eggs) => setEggs(eggs));
         getNests().then((nests) => setNests(nests));
@@ -208,7 +198,7 @@ export default () => {
                     name: `Крутой сервер от ${user.username} 0_0`,
                     description: 'Описание вот сюда',
                     memory: limits?.min.memory || 512,
-                    disk: limits?.min.disk || 1536,
+                    disk: limits?.min.disk || 1024,
                     allocations: limits?.min.allocations || 1,
                     backups: limits?.min.backups || 0,
                     databases: limits?.min.databases || 0,
@@ -463,25 +453,32 @@ export default () => {
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Категория'} icon={faCube} className={'mt-8 sm:mt-0'}>
                                 <Select name={'nest'} onChange={(nest) => changeNest(nest)}>
-                                    {!nest && <option>Выбери категорию...</option>}
+                                    {!nest && (
+                                        <option selected={true} disabled={true}>
+                                            Выбери категорию...
+                                        </option>
+                                    )}
                                     {nests.map((n) => (
                                         <option key={n.id} value={n.id}>
                                             {n.name}
                                         </option>
                                     ))}
                                 </Select>
-                                <p className={'mt-1 text-xs text-gray-400'}>Выбери категорию ПО для своего сервера</p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Исходный образ'} icon={faEgg} className={'mt-8 sm:mt-0'}>
                                 <Select name={'egg'} onChange={(e) => setEgg(parseInt(e.target.value))}>
-                                    {!egg && <option>Выбери исходный образ...</option>}
-                                    {eggs.map((e) => (
-                                        <option key={e.id} value={e.id}>
-                                            {e.name}
+                                    {!egg && (
+                                        <option selected={true} disabled={true}>
+                                            Выбери исходный образ...
                                         </option>
-                                    ))}
+                                    )}
+                                    {nest &&
+                                        eggs.map((e) => (
+                                            <option key={e.id} value={e.id}>
+                                                {e.name}
+                                            </option>
+                                        ))}
                                 </Select>
-                                <p className={'mt-1 text-xs text-gray-400'}>Выбери исходный образ для своего сервера</p>
                             </TitledGreyBox>
                         </StoreContainer>
                         <h1 className={'text-5xl'}>Сводка</h1>
@@ -532,9 +529,11 @@ export default () => {
                                 </p>
                                 {!enough && (
                                     <p className={'mt-1 text-xs text-red-400'}>
-                                        Для покупки нужно иметь на балансе минимум {prices.daily.toFixed(2)}р.
+                                        На балансе должно быть минимум {prices.daily.toFixed(2)}р.
                                     </p>
                                 )}
+                                {!nest && <p className={'mt-1 text-xs text-red-400'}>Нужно выбрать категорию!</p>}
+                                {!egg && <p className={'mt-1 text-xs text-red-400'}>Нужно выбрать стартовый образ!</p>}
                             </TitledGreyBox>
                         </StoreContainer>
                         <InputSpinner visible={loading}>
@@ -544,7 +543,7 @@ export default () => {
                                     type={'submit'}
                                     className={'w-1/6 mb-4'}
                                     size={Button.Sizes.Large}
-                                    disabled={loading || !enough}
+                                    disabled={loading || !enough || !egg || !nest}
                                 >
                                     <Icon.Server className={'mr-2'} /> Поехали!
                                 </Button>
