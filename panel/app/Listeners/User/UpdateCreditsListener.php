@@ -7,7 +7,7 @@ use Jexactyl\Events\User\UpdateCredits;
 
 class UpdateCreditsListener implements ShouldQueue
 {
-    public string $queue = 'payments';
+    public string $queue = 'standard';
 
     /**
      * Create the event listener.

@@ -2,15 +2,15 @@
 
 namespace Jexactyl\Providers;
 
-use Illuminate\Http\Request;
-use Jexactyl\Models\Database;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
-use Jexactyl\Http\Middleware\TrimStrings;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Jexactyl\Http\Middleware\AdminAuthenticate;
 use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
-use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Jexactyl\Http\Middleware\TrimStrings;
+use Jexactyl\Models\Database;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -85,7 +85,7 @@ class RouteServiceProvider extends ServiceProvider
         // Store & Server Creation rate limiting. Stops users from abusing the endpoint(s)
         // associated with creating/deleting servers as well as resources via Storefront.
         RateLimiter::for('storefront', function (Request $request) {
-            return Limit::perMinute(1)->by($request->user()->id);
+            return Limit::perMinute(10)->by($request->user()->id);
         });
 
         // Credit earning ratelimiting.
@@ -95,7 +95,7 @@ class RouteServiceProvider extends ServiceProvider
 
         // Stops users from renewing or editing servers many times in quick succession.
         RateLimiter::for('server-edit', function (Request $request) {
-            return Limit::perMinute(5)->by($request->user()->id);
+            return Limit::perMinute(10)->by($request->user()->id);
         });
 
         // Configure the throttles for both the application and client APIs below.

@@ -31,12 +31,12 @@ class StoreVerificationService
     private function checkUserCredits(CreateServerRequest $request): void
     {
         $discount = 1 - ($request->user()->totalDiscount() / 100);
-        $ram = $request->input('memory') * settings()->get('store:cost:ram');
+        $memory = $request->input('memory') * settings()->get('store:cost:memory');
         $disk = $request->input('disk') * settings()->get('store:cost:disk');
-        $ports = $request->input('ports') * settings()->get('store:cost:port');
+        $allocations = $request->input('ports') * settings()->get('store:cost:allocation');
         $backups = $request->input('backups') * settings()->get('store:cost:backup');
         $databases = $request->input('databases') * settings()->get('store:cost:database');
-        $price = ($ram + $disk + $ports + $backups + $databases) * $discount / 30;
+        $price = ($memory + $disk + $allocations + $backups + $databases) * $discount / 30;
         if ($request->user()->credits < $price) {
             throw new DisplayException('У тебя на балансе недостаточно средств, чтобы создать сервер!');
         }
@@ -47,21 +47,27 @@ class StoreVerificationService
      */
     private function checkResourceLimits(CreateServerRequest $request): void
     {
-        $prefix = 'store:limit:';
-        $types = ['memory', 'disk', 'slot', 'port', 'backup', 'database'];
+        $prefixMin = 'store:limit:min:';
+        $prefixMax = 'store:limit:max:';
+        $types = ['memory', 'disk', 'slot', 'allocation', 'backup', 'database'];
 
         foreach ($types as $type) {
             $suffix = '';
-            $limit = $this->settings->get($prefix . $type);
+            $limitMin = $this->settings->get($prefixMin . $type);
+            $limitMax = $this->settings->get($prefixMax . $type);
 
-            if (in_array($type, ['slot', 'port', 'backup', 'database'])) {
+            if (in_array($type, ['slot', 'allocation', 'backup', 'database'])) {
                 $suffix = 's';
             }
 
             $amount = $request->input($type .= $suffix);
 
-            if ($limit < $amount) {
-                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limit);
+            if ($limitMin > $amount) {
+                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMin);
+            }
+
+            if ($limitMax < $amount) {
+                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMax);
             }
         }
     }
