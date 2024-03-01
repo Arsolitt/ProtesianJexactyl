@@ -80,9 +80,16 @@ export default () => {
     };
 
     return (
-        <ServerContentBlock title={'File Manager'} description={'Create, edit and view files.'} showFlashKey={'files'}>
-            <Input onChange={searchFiles} className={'mb-4 j-up'} placeholder={'Search for files and folders...'} />
-            <div css={tw`flex flex-wrap-reverse md:flex-nowrap justify-center mb-4`}>
+        <ServerContentBlock
+            title={'Файловый менеджер'}
+            description={'Создавай, редактируй и просматривай файлы.'}
+            showFlashKey={'files'}
+        >
+            <Input onChange={searchFiles} className={'mb-4 j-up'} placeholder={'Поиск по файлам и папкам...'} />
+            <div
+                css={tw`flex flex-wrap-reverse
+                    md: flex-nowrap justify-center mb-4`}
+            >
                 <ErrorBoundary>
                     <div className={'j-right'}>
                         <FileManagerBreadcrumbs
@@ -104,7 +111,7 @@ export default () => {
                             <UploadButton />
                             <PullFileModal />
                             <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
-                                <Button>New File</Button>
+                                <Button.Success>Создать файл</Button.Success>
                             </NavLink>
                         </div>
                     </Can>
@@ -122,8 +129,8 @@ export default () => {
                                 {files.length > 250 && (
                                     <div css={tw`rounded bg-yellow-400 mb-px p-3`}>
                                         <p css={tw`text-yellow-900 text-sm text-center`}>
-                                            This directory is too large to display in the browser, limiting the output
-                                            to the first 250 files.
+                                            Эта папка слишком большая для отображения в браузере, поэтому вывод
+                                            ограничен до 250 файлов.
                                         </p>
                                     </div>
                                 )}
@@ -137,15 +144,15 @@ export default () => {
                 </>
             )}
             <Can action={'file.sftp'}>
-                <TitledGreyBox title={'SFTP Details'} className={'mt-8 md:mt-6'}>
+                <TitledGreyBox title={'Данные для SFTP'} className={'mt-8 md:mt-6'}>
                     <div>
-                        <Label>Server Address</Label>
+                        <Label>Адрес сервера</Label>
                         <CopyOnClick text={`sftp://${ip(sftp.ip)}:${sftp.port}`}>
                             <Input type={'text'} value={`sftp://${ip(sftp.ip)}:${sftp.port}`} readOnly />
                         </CopyOnClick>
                     </div>
                     <div css={tw`mt-6`}>
-                        <Label>Username</Label>
+                        <Label>Имя пользователя</Label>
                         <CopyOnClick text={`${username}.${id}`}>
                             <Input type={'text'} value={`${username}.${id}`} readOnly />
                         </CopyOnClick>
@@ -154,13 +161,13 @@ export default () => {
                         <div css={tw`flex-1`}>
                             <div css={tw`border-l-4 border-cyan-500 p-3`}>
                                 <p css={tw`text-xs text-neutral-200`}>
-                                    Your SFTP password is the same as the password you use to access this panel.
+                                    Пароль для SFTP совпадает с твоим паролем на сайте.
                                 </p>
                             </div>
                         </div>
                         <div css={tw`ml-4`}>
                             <a href={`sftp://${username}.${id}@${ip(sftp.ip)}:${sftp.port}`}>
-                                <Button.Text variant={Button.Variants.Secondary}>Launch SFTP</Button.Text>
+                                <Button.Text variant={Button.Variants.Secondary}>Запустить SFTP</Button.Text>
                             </a>
                         </div>
                     </div>
