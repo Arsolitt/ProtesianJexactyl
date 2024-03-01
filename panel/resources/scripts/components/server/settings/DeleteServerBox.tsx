@@ -38,24 +38,24 @@ export default () => {
     };
 
     return (
-        <TitledGreyBox title={'Delete Server'} className={'relative mb-12'}>
+        <TitledGreyBox title={'Удалить сервер'} className={'relative mb-12'}>
             <Dialog.Confirm
                 open={warn}
-                title={'Confirm server deletion'}
-                confirm={'Yes, delete server'}
+                title={'Подтверждение удаления сервера'}
+                confirm={'Да, удалить сервер'}
                 onClose={() => setWarn(false)}
                 onConfirmed={() => {
                     setConfirm(true);
                     setWarn(false);
                 }}
             >
-                Your server will be deleted, with all files being purged and the server&apos;s resources being returned
-                to your account. Are you sure you wish to continue?
+                Твой сервер будет удалён. Все файлы будут уничтожены без возможности восстановления. Ты уверен, что
+                хочешь сделать это?
             </Dialog.Confirm>
             <form id={'delete-server-form'} onSubmit={submit}>
                 <Dialog
                     open={confirm}
-                    title={'Confirm server deletion'}
+                    title={'Подтверждение удаления сервера'}
                     onClose={() => {
                         setConfirm(false);
                         setName('');
@@ -64,7 +64,7 @@ export default () => {
                     {name !== serverName && (
                         <>
                             <p className={'my-2 text-gray-400'}>
-                                Type <Code>{serverName}</Code> below.
+                                Введи <Code>{serverName}</Code> ниже.
                             </p>
                             <Input type={'text'} value={name} onChange={(n) => setName(n.target.value)} />
                         </>
@@ -75,20 +75,21 @@ export default () => {
                         className={'mt-2'}
                         form={'delete-server-form'}
                     >
-                        Yes, delete server
+                        Да, удалить сервер
                     </Button>
                 </Dialog>
             </form>
             <p className={'text-sm'}>
-                Deleting your server will shut down any processes, return the resources to your account and delete all
-                files associated with the instance - as well as backups, databases and settings.{' '}
-                <strong className={'font-medium'}>
-                    All data will be permenantly lost if you continue with this action.
+                Удаление сервера остановит все процессы. Удалит все файлы на сервере, и уничтожит все связанный с
+                сервером ресурсы: бэкапы, базы данных и все остальные настройки.
+                <br />
+                <strong className={'font-bold'}>
+                    Все данные будут потеряны навсегда, если ты удалишь свой сервер.
                 </strong>
             </p>
             <div className={'mt-6 font-medium text-right'}>
                 <Button.Danger variant={Button.Variants.Secondary} onClick={() => setWarn(true)}>
-                    Delete Server
+                    Удалить сервер
                 </Button.Danger>
             </div>
         </TitledGreyBox>

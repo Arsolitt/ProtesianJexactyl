@@ -59,6 +59,7 @@ class ServerController extends ClientApiController
      */
     public function delete(DeleteServerRequest $request, Server $server): JsonResponse
     {
+        // TODO: переделать удаление серверов
         $user = $request->user();
 
         if ($user->id != $server->owner_id) {
