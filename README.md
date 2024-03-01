@@ -1,4 +1,8 @@
-<h1 align="center">Форк панели управления [Pterodactyl Software](https://pterodactyl.io)</h1>
+<h1 align="center">Форк панели управления серверами Pterodactyl</h1>
+
+[Оригинал](https://pterodactyl.io/)
+
+Пишется для хостинга игровых серверов [ProtesiaN](https://protesian.host/)
 
 ## Установка
 
