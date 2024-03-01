@@ -1,24 +1,20 @@
 import tw from 'twin.macro';
-import { ip } from '@/lib/formatters';
 import { hashToPath } from '@/helpers';
 import style from './style.module.css';
 import Can from '@/components/elements/Can';
 import { httpErrorToHuman } from '@/api/http';
 import { ServerContext } from '@/state/server';
 import Input from '@/components/elements/Input';
-import Label from '@/components/elements/Label';
 import Spinner from '@/components/elements/Spinner';
 import { CSSTransition } from 'react-transition-group';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Button } from '@/components/elements/button/index';
-import CopyOnClick from '@/components/elements/CopyOnClick';
 import useFileManagerSwr from '@/plugins/useFileManagerSwr';
 import { FileObject } from '@/api/server/files/loadDirectory';
-import { useStoreActions, useStoreState } from '@/state/hooks';
+import { useStoreActions } from '@/state/hooks';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { ServerError } from '@/components/elements/ScreenBlock';
 import ErrorBoundary from '@/components/elements/ErrorBoundary';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import UploadButton from '@/components/server/files/UploadButton';
 import PullFileModal from '@/components/server/files/PullFileModal';
 import FileObjectRow from '@/components/server/files/FileObjectRow';
@@ -40,8 +36,6 @@ const sortFiles = (files: FileObject[], searchString: string): FileObject[] => {
 
 export default () => {
     const id = ServerContext.useStoreState((state) => state.server.data!.id);
-    const username = useStoreState((state) => state.user.data!.username);
-    const sftp = ServerContext.useStoreState((state) => state.server.data!.sftpDetails);
     const { hash } = useLocation();
     const { data: files, error, mutate } = useFileManagerSwr();
     const directory = ServerContext.useStoreState((state) => state.files.directory);
@@ -143,36 +137,6 @@ export default () => {
                     )}
                 </>
             )}
-            <Can action={'file.sftp'}>
-                <TitledGreyBox title={'Данные для SFTP'} className={'mt-8 md:mt-6'}>
-                    <div>
-                        <Label>Адрес сервера</Label>
-                        <CopyOnClick text={`sftp://${ip(sftp.ip)}:${sftp.port}`}>
-                            <Input type={'text'} value={`sftp://${ip(sftp.ip)}:${sftp.port}`} readOnly />
-                        </CopyOnClick>
-                    </div>
-                    <div css={tw`mt-6`}>
-                        <Label>Имя пользователя</Label>
-                        <CopyOnClick text={`${username}.${id}`}>
-                            <Input type={'text'} value={`${username}.${id}`} readOnly />
-                        </CopyOnClick>
-                    </div>
-                    <div css={tw`mt-6 flex items-center`}>
-                        <div css={tw`flex-1`}>
-                            <div css={tw`border-l-4 border-cyan-500 p-3`}>
-                                <p css={tw`text-xs text-neutral-200`}>
-                                    Пароль для SFTP совпадает с твоим паролем на сайте.
-                                </p>
-                            </div>
-                        </div>
-                        <div css={tw`ml-4`}>
-                            <a href={`sftp://${username}.${id}@${ip(sftp.ip)}:${sftp.port}`}>
-                                <Button.Text variant={Button.Variants.Secondary}>Запустить SFTP</Button.Text>
-                            </a>
-                        </div>
-                    </div>
-                </TitledGreyBox>
-            </Can>
         </ServerContentBlock>
     );
 };
