@@ -55,13 +55,19 @@ export default () => {
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
     const [limits, setLimits] = useState<Limits>();
 
-    const resourcesInitialState: Resources = {
+    useEffect(() => {
+        clearFlashes();
+        getCosts().then((costs: Costs) => setCosts(costs));
+        getLimits().then((limits: Limits) => setLimits(limits));
+    }, []);
+
+    const [resourcesInitialState, setResourcesInitialState] = useState<Resources>({
         memory: currentResources?.memory,
         disk: currentResources?.disk,
         allocations: currentFeatures?.allocations,
         backups: currentFeatures?.backups,
         databases: currentFeatures?.databases,
-    };
+    });
     const [resources, setResources] = useState<Resources>(resourcesInitialState);
     const compareResources = (a: Resources, b: Resources) => {
         return (
@@ -136,12 +142,9 @@ export default () => {
     };
 
     useEffect(() => {
-        clearFlashes();
-        getCosts().then((costs: Costs) => setCosts(costs));
-        getLimits().then((limits: Limits) => setLimits(limits));
         setIsEqual(compareResources(resources, resourcesInitialState));
         setIsEnoughCredits(user.credits >= finalPrices().daily);
-    }, [resources]);
+    }, [resources, resourcesInitialState, user.credits]);
 
     const edit = () => {
         clearFlashes('server:edit');
@@ -154,6 +157,8 @@ export default () => {
                     type: 'success',
                     message: 'Характеристики сервера успешно изменены!',
                 });
+                setResourcesInitialState(resources);
+                user.credits = user.credits - finalPrices().hourly;
             })
             .catch((error) => clearAndAddHttpError({ key: 'server:edit', error }));
         setSubmitting(false);

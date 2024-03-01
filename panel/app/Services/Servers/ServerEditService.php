@@ -92,5 +92,17 @@ class ServerEditService
         if (!$this->nodeRepo->getNodeWithResourceUsage($node->id)->isViable($difference['memory'], $difference['disk'])) {
             throw new noViableNodeException('На узле недостаточно ресурсов для апгрейда! Попробуй позже или обратись в поддержку.');
         }
+
+        $server->fill([
+            'memory' => $newResources['memory'],
+            'disk' => $newResources['disk'],
+            'allocation_limit' => $newResources['allocations'],
+            'backup_limit' => $newResources['backups'],
+            'database_limit' => $newResources['databases'],
+        ]);
+        if ($server->user->credits < $server->actualPrice() / 30) {
+            throw new noViableNodeException('У тебя недостаточно средств для апгрейда сервера! Пополни баланс или умерь аппетиты!');
+        }
+        $server->refresh();
     }
 }
