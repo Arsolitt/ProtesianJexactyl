@@ -53,7 +53,7 @@ return [
     'primary' => 'Primary',
     'make_primary' => 'Make Primary',
     'none' => 'None',
-    'cancel' => 'Cancel',
+    'cancel' => 'Отмена',
     'created_at' => 'Created At',
     'action' => 'Action',
     'data' => 'Data',
