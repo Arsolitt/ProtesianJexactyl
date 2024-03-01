@@ -32,7 +32,11 @@ const BackupContainer = () => {
     }
 
     return (
-        <ServerContentBlock title={'Backups'} description={'Protect your data with backups.'} showFlashKey={'backups'}>
+        <ServerContentBlock
+            title={'Бэкапы'}
+            description={'Делай бэкапы важных файлов, чтобы потом не кусать локти!'}
+            showFlashKey={'backups'}
+        >
             <Pagination data={backups} onPageSelect={setPage}>
                 {({ items }) =>
                     !items.length ? (
@@ -54,18 +58,23 @@ const BackupContainer = () => {
             </Pagination>
             {backupLimit === 0 && (
                 <p css={tw`text-center text-sm text-neutral-300`}>
-                    Backups cannot be created for this server because the backup limit is set to 0.
+                    Для твоего сервера нет бэкапов, но ты всегда можешь их добавить на вкладке{' '}
+                    <strong className={'font-bold'}>Характеристики </strong>
                 </p>
             )}
             <Can action={'backup.create'}>
-                <div css={tw`mt-6 sm:flex items-center justify-end`}>
+                <div css={tw`mt-6 sm: flex items-center justify-end`}>
                     {backupLimit > 0 && backups.backupCount > 0 && (
-                        <p css={tw`text-sm text-neutral-300 mb-4 sm:mr-6 sm:mb-0`}>
-                            {backups.backupCount} of {backupLimit} backups have been created for this server.
+                        <p
+                            css={tw`text-sm text-neutral-300 mb-4
+                                sm: mr-6
+                                sm: mb-0`}
+                        >
+                            {backups.backupCount} из {backupLimit} backups have been created for this server.
                         </p>
                     )}
                     {backupLimit > 0 && backupLimit > backups.backupCount && (
-                        <CreateBackupButton css={tw`w-full sm:w-auto`} />
+                        <CreateBackupButton css={tw`w-full sm: w-auto`} />
                     )}
                 </div>
             </Can>

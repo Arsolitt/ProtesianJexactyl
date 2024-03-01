@@ -167,11 +167,12 @@ export default () => {
     return (
         <ServerContentBlock
             title={'Характеристики сервера'}
-            description={'Добавить или уменьшить доступные серверу ресурсы'}
+            description={'Изменить доступные серверу ресурсы'}
             showFlashKey={'server:edit'}
         >
             <SpinnerOverlay size={'large'} visible={submitting} />
             <Dialog.Confirm
+                confirm={'Изменить'}
                 open={submitting}
                 onClose={() => setSubmitting(false)}
                 title={'Подтвердить изменение характеристик'}
