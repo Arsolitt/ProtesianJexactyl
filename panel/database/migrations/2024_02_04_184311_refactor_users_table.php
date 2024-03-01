@@ -5,8 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Jexactyl\Models\User;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -18,19 +17,8 @@ return new class extends Migration
             $table->string('role')->default(User::USER_LEVEL_USER);
         });
         User::all()->each(function ($user) {
-            $user->update(['credits' => $user->store_balance,
-                'server_slots' => $user->store_slots,
+            $user->update([
                 'role' => $user->root_admin ? User::USER_LEVEL_ADMIN : User::USER_LEVEL_USER]);
-        });
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('store_slots');
-            $table->dropColumn('store_ports');
-            $table->dropColumn('store_backups');
-            $table->dropColumn('store_databases');
-            $table->dropColumn('store_cpu');
-            $table->dropColumn('store_memory');
-            $table->dropColumn('store_disk');
-            $table->dropColumn('store_balance');
         });
     }
 
