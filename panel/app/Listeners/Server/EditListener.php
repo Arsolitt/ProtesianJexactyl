@@ -29,6 +29,6 @@ class EditListener implements ShouldQueue
             'backup_limit' => $resources['backups'],
             'database_limit' => $resources['databases'],
         ]);
-        UpdateCredits::dispatch($event->server->user, (float)$event->server->monthly_price / 30 / 24, 'decrement');
+        UpdateCredits::dispatch($event->server->user, (float)$event->server->monthlyPrice() / 30 / 24, 'decrement');
     }
 }

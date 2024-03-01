@@ -2,17 +2,17 @@
 
 namespace Jexactyl\Transformers\Api\Client;
 
+use Illuminate\Container\Container;
+use Jexactyl\Models\Allocation;
 use Jexactyl\Models\Egg;
+use Jexactyl\Models\EggVariable;
+use Jexactyl\Models\Permission;
 use Jexactyl\Models\Server;
 use Jexactyl\Models\Subuser;
-use Jexactyl\Models\Allocation;
-use Jexactyl\Models\Permission;
-use Jexactyl\Models\EggVariable;
-use League\Fractal\Resource\Item;
-use Illuminate\Container\Container;
-use League\Fractal\Resource\Collection;
-use League\Fractal\Resource\NullResource;
 use Jexactyl\Services\Servers\StartupCommandService;
+use League\Fractal\Resource\Collection;
+use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 
 class ServerTransformer extends BaseClientTransformer
 {
@@ -73,6 +73,7 @@ class ServerTransformer extends BaseClientTransformer
             'is_installing' => !$server->isInstalled(),
             'is_transferring' => !is_null($server->transfer),
             'bg' => $server->bg,
+            'monthly_price' => $server->monthlyPrice(),
         ];
     }
 

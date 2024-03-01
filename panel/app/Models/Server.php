@@ -341,8 +341,7 @@ class Server extends Model
     public function monthlyPrice(): float|int
     {
         return Cache::get('server_monthly_price_' . $this->id, function () {
-            $discount = 1 - ($this->user->totalDiscount() / 100);
-            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price * $discount, 86400);
+            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price, 86400);
             return $this->monthly_price;
         });
     }
