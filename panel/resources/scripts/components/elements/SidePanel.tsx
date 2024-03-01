@@ -4,7 +4,7 @@ import http from '@/api/http';
 import * as Icon from 'react-feather';
 import { useStoreState } from 'easy-peasy';
 import styled from 'styled-components/macro';
-import { NavLink, Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import ProgressBar from '@/components/elements/ProgressBar';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -36,7 +36,7 @@ export default () => {
 
                 &:active,
                 &.active {
-                    ${tw`text-green-600`};
+                    ${tw`text-menuActive-500`};
                 }
             }
         }
@@ -46,7 +46,7 @@ export default () => {
         <PanelDiv>
             <ProgressBar />
             <Link to={'/'}>
-                <img className={'p-2'} src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'} />
+                <img className={'p-2'} src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'} alt={'logo'} />
             </Link>
             <div>
                 <div className={'navigation-link'}>
