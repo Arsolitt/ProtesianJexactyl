@@ -7,16 +7,21 @@ use Illuminate\Http\Response;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Events\Store\ServerEdit;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Jexactyl\Http\Requests\Api\Client\Servers\EditServerRequest;
+use Jexactyl\Models\Allocation;
+use Jexactyl\Models\Node;
 use Jexactyl\Models\Server;
-use Jexactyl\Models\User;
+use Jexactyl\Repositories\Eloquent\NodeRepository;
 use Jexactyl\Services\Store\LimitsService;
 
 class ServerEditService
 {
     public function __construct(
         private SettingsRepositoryInterface $settings,
-        private LimitsService               $limitsService
+        private LimitsService               $limitsService,
+        private NodeRepository              $nodeRepo
     )
     {
     }
@@ -49,7 +54,7 @@ class ServerEditService
      *
      * @throws DisplayException
      */
-    protected function verify(array $newResources, Server $server)
+    protected function verify(array $newResources, Server $server): void
     {
         $currentResources = [
             'memory' => $server->memory,
@@ -60,10 +65,11 @@ class ServerEditService
         ];
 
         if ($newResources === $currentResources) {
-            throw new DisplayException('НИХУЯ НЕ ПОМЕНЯЛОСЬ');
+            throw new DisplayException('Старые характеристики совпадают с новыми. Никаких изменений не требуется.');
         }
 
         $limits = $this->limitsService->getLimits();
+        $difference = [];
 
         foreach ($newResources as $key => $value) {
             if ($limits['min'][$key] > $value) {
@@ -73,65 +79,18 @@ class ServerEditService
                 throw new DisplayException('Значение ' . $key . ' не может быть больше ' . $limits['max'][$key]);
             }
 
-            $difference = $value - $currentResources[$key];
-            if ($difference > 0) {
-                throw new DisplayException('На узле недостаточно ресурсов для апгрейда! Попробуй позже или обратись в поддержку.');
-                // TODO: проверка на доступность ресурсов
-            }
+            $difference[$key] = max($value - $currentResources[$key], 0);
         }
-    }
 
-    /**
-     * Gets the minimum value for a specific resource.
-     *
-     * @throws DisplayException
-     */
-    protected function toMin(string $resource): int
-    {
-        return match ($resource) {
-            'cpu' => 50,
-            'allocation_limit' => 1,
-            'disk', 'memory' => 1024,
-            'backup_limit', 'database_limit' => 0,
-            default => throw new DisplayException('Unable to parse resource type')
-        };
-    }
+        $allocations = Allocation::where('node_id', $server->node_id)->where('server_id', null)->count();
 
-    /**
-     * Get the requested resource type and transform it
-     * so it can be used in a database statement.
-     *
-     * @throws DisplayException
-     */
-    protected function toUser(string $resource, User $user): int
-    {
-        return match ($resource) {
-            'cpu' => $user->store_cpu,
-            'disk' => $user->store_disk,
-            'memory' => $user->store_memory,
-            'backup_limit' => $user->store_backups,
-            'allocation_limit' => $user->store_ports,
-            'database_limit' => $user->store_databases,
-            default => throw new DisplayException('Unable to parse resource type')
-        };
-    }
+        if ($allocations < $difference['allocations']) {
+            throw new NoViableAllocationException('На узле недостаточно портов для апгрейда! Попробуй позже или напиши в поддержку.');
+        }
 
-    /**
-     * Get the requested resource type and transform it
-     * so it can be used in a database statement.
-     *
-     * @throws DisplayException
-     */
-    protected function toServer(string $resource, Server $server): int
-    {
-        return match ($resource) {
-            'cpu' => $server->cpu,
-            'disk' => $server->disk,
-            'memory' => $server->memory,
-            'backup_limit' => $server->backup_limit,
-            'database_limit' => $server->database_limit,
-            'allocation_limit' => $server->allocation_limit,
-            default => throw new DisplayException('Unable to parse resource type')
-        };
+        $node = Node::findOrFail($server->node_id);
+        if (!$this->nodeRepo->getNodeWithResourceUsage($node->id)->isViable($difference['memory'], $difference['disk'])) {
+            throw new noViableNodeException('На узле недостаточно ресурсов для апгрейда! Попробуй позже или обратись в поддержку.');
+        }
     }
 }
