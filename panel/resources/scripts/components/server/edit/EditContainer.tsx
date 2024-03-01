@@ -190,7 +190,7 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.PieChart size={40} />
-                        <Button.Decrement
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('memory', event.shiftKey ? 1024 : 256);
@@ -198,8 +198,8 @@ export default () => {
                             disabled={resources.memory <= resourceMinLimits.memory}
                         >
                             <Icon.Minus />
-                        </Button.Decrement>
-                        <Button.Increment
+                        </Button.Text>
+                        <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('memory', event.shiftKey ? 1024 : 256);
@@ -207,7 +207,7 @@ export default () => {
                             disabled={resources.memory >= resourceMaxLimits.memory}
                         >
                             <Icon.Plus />
-                        </Button.Increment>
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.memory} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -221,7 +221,7 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.HardDrive size={40} />
-                        <Button.Decrement
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('disk', event.shiftKey ? 5120 : 1024);
@@ -229,8 +229,8 @@ export default () => {
                             disabled={resources.disk <= resourceMinLimits.disk}
                         >
                             <Icon.Minus />
-                        </Button.Decrement>
-                        <Button.Increment
+                        </Button.Text>
+                        <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('disk', event.shiftKey ? 5120 : 1024);
@@ -238,7 +238,7 @@ export default () => {
                             disabled={resources.disk >= resourceMaxLimits.disk}
                         >
                             <Icon.Plus />
-                        </Button.Increment>
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.disk} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -248,7 +248,7 @@ export default () => {
                 <TitledGreyBox title={'Доступные порты'} css={tw`mt-8 sm: mt-0`}>
                     <Wrapper>
                         <Icon.Share2 size={40} />
-                        <Button.Decrement
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('allocations', event.shiftKey ? 5 : 1);
@@ -256,8 +256,8 @@ export default () => {
                             disabled={resources.allocations <= resourceMinLimits.allocations}
                         >
                             <Icon.Minus />
-                        </Button.Decrement>
-                        <Button.Increment
+                        </Button.Text>
+                        <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('allocations', event.shiftKey ? 5 : 1);
@@ -265,7 +265,7 @@ export default () => {
                             disabled={resources.allocations >= resourceMaxLimits.allocations}
                         >
                             <Icon.Plus />
-                        </Button.Increment>
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.allocations} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -279,7 +279,7 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Archive size={40} />
-                        <Button.Decrement
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('backups', event.shiftKey ? 5 : 1);
@@ -287,8 +287,8 @@ export default () => {
                             disabled={resources.backups <= resourceMinLimits.backups}
                         >
                             <Icon.Minus />
-                        </Button.Decrement>
-                        <Button.Increment
+                        </Button.Text>
+                        <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('backups', event.shiftKey ? 5 : 1);
@@ -296,7 +296,7 @@ export default () => {
                             disabled={resources.backups >= resourceMaxLimits.backups}
                         >
                             <Icon.Plus />
-                        </Button.Increment>
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.backups} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -310,7 +310,7 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Database size={40} />
-                        <Button.Decrement
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('databases', event.shiftKey ? 5 : 1);
@@ -318,8 +318,8 @@ export default () => {
                             disabled={resources.databases <= resourceMinLimits.databases}
                         >
                             <Icon.Minus />
-                        </Button.Decrement>
-                        <Button.Increment
+                        </Button.Text>
+                        <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('databases', event.shiftKey ? 5 : 1);
@@ -327,7 +327,7 @@ export default () => {
                             disabled={resources.databases >= resourceMaxLimits.databases}
                         >
                             <Icon.Plus />
-                        </Button.Increment>
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.databases} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -342,7 +342,7 @@ export default () => {
                                     Было:{' '}
                                     <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р. / месяц</span>
                                 </p>
-                                <Button.Decrement
+                                <Button.Text
                                     css={tw``}
                                     onClick={() => {
                                         setResources(resourcesInitialState);
@@ -351,7 +351,7 @@ export default () => {
                                 >
                                     <Icon.RotateCcw />
                                     Сбросить
-                                </Button.Decrement>
+                                </Button.Text>
                             </div>
                             <div className={'new-price flex flex-col items-center'}>
                                 <p css={tw`mt-2 text-gray-200 text-xl`}>
@@ -360,7 +360,7 @@ export default () => {
                                         {finalPrices().monthly.toFixed(2)}р. / месяц
                                     </span>
                                 </p>
-                                <Button.Increment
+                                <Button.Success
                                     css={tw``}
                                     onClick={() => {
                                         setSubmitting(true);
@@ -369,7 +369,7 @@ export default () => {
                                 >
                                     <Icon.Check />
                                     Изменить
-                                </Button.Increment>
+                                </Button.Success>
                             </div>
                         </div>
                     </Wrapper>

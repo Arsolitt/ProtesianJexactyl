@@ -48,15 +48,15 @@
 }
 
 .success {
-    @apply bg-green-600 text-green-50;
-    @apply hover:bg-green-500 active:bg-green-500 focus:ring-green-400 focus:ring-opacity-75;
+    @apply bg-main-500 text-green-50;
+    @apply hover:bg-main-400 active:bg-main-400 focus:ring-main-300 focus:ring-opacity-75;
 
     &.secondary {
-        @apply hover:bg-green-600 active:bg-green-600;
+        @apply hover:bg-main-500 active:bg-main-500;
     }
 
     &:disabled {
-        @apply bg-green-500/75 text-green-200/75;
+        @apply bg-main-400/75 text-main-100/75;
     }
 }
 
@@ -74,15 +74,15 @@
 }
 
 .danger {
-    @apply bg-red-600 text-gray-50;
-    @apply hover:bg-red-500 active:bg-red-500 focus:ring-red-400 focus:ring-opacity-75;
+    @apply bg-negative-600 text-gray-50;
+    @apply hover:bg-negative-500 active:bg-negative-500 focus:ring-negative-400 focus:ring-opacity-75;
 
     &.secondary {
-        @apply hover:bg-red-600 active:bg-red-600;
+        @apply hover:bg-negative-600 active:bg-negative-600;
     }
 
     &:disabled {
-        @apply bg-red-600/75 text-red-50/75;
+        @apply bg-negative-600/75 text-negative-50/75;
     }
 }
 
@@ -113,14 +113,14 @@
 }
 
 .text {
-    @apply bg-gray-500 text-gray-50;
-    @apply hover:bg-gray-400 active:bg-gray-400 focus:ring-gray-300 focus:ring-opacity-50;
+    @apply bg-inert-500 text-gray-50;
+    @apply hover:bg-inert-400 active:bg-inert-400 focus:ring-inert-300 focus:ring-opacity-50;
 
     &.secondary {
-        @apply hover:bg-gray-500 active:bg-gray-500;
+        @apply hover:bg-inert-500 active:bg-inert-500;
     }
 
     &:disabled {
-        @apply bg-gray-500/75 text-gray-200/75;
+        @apply bg-inert-500/75 text-inert-200/75;
     }
 }

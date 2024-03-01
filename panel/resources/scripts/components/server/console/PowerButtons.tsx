@@ -68,7 +68,7 @@ export default ({ className }: PowerButtonProps) => {
                     disabled={status === 'offline'}
                     onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
                 >
-                    {killable ? 'Убить' : 'Остановить'}
+                    {killable ? 'Кильнуть' : 'Остановить'}
                 </Button.Danger>
             </Can>
         </div>
