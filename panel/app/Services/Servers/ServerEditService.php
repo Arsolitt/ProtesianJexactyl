@@ -2,17 +2,27 @@
 
 namespace Jexactyl\Services\Servers;
 
-use Jexactyl\Models\User;
-use Jexactyl\Models\Server;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
-use Jexactyl\Exceptions\DisplayException;
+use Illuminate\Http\Response;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Events\Store\ServerEdit;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Jexactyl\Http\Requests\Api\Client\Servers\EditServerRequest;
+use Jexactyl\Models\Allocation;
+use Jexactyl\Models\Node;
+use Jexactyl\Models\Server;
+use Jexactyl\Repositories\Eloquent\NodeRepository;
+use Jexactyl\Services\Store\LimitsService;
 
 class ServerEditService
 {
-    public function __construct(private SettingsRepositoryInterface $settings)
+    public function __construct(
+        private SettingsRepositoryInterface $settings,
+        private LimitsService               $limitsService,
+        private NodeRepository              $nodeRepo
+    )
     {
     }
 
@@ -21,20 +31,19 @@ class ServerEditService
      *
      * @throws DisplayException
      */
-    public function handle(EditServerRequest $request, Server $server)
+    public function handle(EditServerRequest $request, Server $server): JsonResponse
     {
         $user = $request->user();
-        $amount = $request->input('amount');
-        $resource = $request->input('resource');
+        $resources = $request->input('resources');
 
         if ($user->id != $server->owner_id) {
-            throw new DisplayException('You do not own this server, therefore you cannot make changes.');
+            throw new DisplayException('Это не твой сервер, поэтому ты не можешь редактировать его!');
         }
 
-        $this->verify($request, $server, $user);
 
-        $server->update([$resource => $this->toServer($resource, $server) + $amount]);
-        $user->update(['store_' . $resource => $this->toUser($resource, $user) - $amount]);
+        $this->verify($resources, $server);
+
+        ServerEdit::dispatch($resources, $server);
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
@@ -45,79 +54,55 @@ class ServerEditService
      *
      * @throws DisplayException
      */
-    protected function verify(EditServerRequest $request, Server $server, User $user)
+    protected function verify(array $newResources, Server $server): void
     {
-        $amount = $request->input('amount');
-        $resource = $request->input('resource');
-        $limit = $this->settings->get('jexactyl::store:limit:' . $resource);
-
-        // Check if the amount requested goes over defined limits.
-        if (($amount + $this->toServer($resource, $server)) > $limit) {
-            throw new DisplayException('You cannot add this resource because an administrator has set a maximum limit.');
-        }
-
-        // Verify baseline limits. We don't want servers with -4% CPU.
-        if ($this->toServer($resource, $server) <= $this->toMin($resource) && $amount < 0) {
-            throw new DisplayException('You cannot go below this amount.');
-        }
-
-        // Verify that the user has the resource in their account.
-        if ($this->toUser($resource, $user) < $amount) {
-            throw new DisplayException('You do not have the resources available to make this change.');
-        }
-    }
-
-     /**
-      * Gets the minimum value for a specific resource.
-      *
-      * @throws DisplayException
-      */
-     protected function toMin(string $resource): int
-     {
-         return match ($resource) {
-             'cpu' => 50,
-             'allocation_limit' => 1,
-             'disk', 'memory' => 1024,
-             'backup_limit', 'database_limit' => 0,
-             default => throw new DisplayException('Unable to parse resource type')
-         };
-     }
-
-     /**
-      * Get the requested resource type and transform it
-      * so it can be used in a database statement.
-      *
-      * @throws DisplayException
-      */
-     protected function toUser(string $resource, User $user): int
-     {
-         return match ($resource) {
-             'cpu' => $user->store_cpu,
-             'disk' => $user->store_disk,
-             'memory' => $user->store_memory,
-             'backup_limit' => $user->store_backups,
-             'allocation_limit' => $user->store_ports,
-             'database_limit' => $user->store_databases,
-             default => throw new DisplayException('Unable to parse resource type')
-         };
-     }
-
-    /**
-     * Get the requested resource type and transform it
-     * so it can be used in a database statement.
-     *
-     * @throws DisplayException
-     */
-    protected function toServer(string $resource, Server $server): int
-    {
-        return match ($resource) {
-            'cpu' => $server->cpu,
-            'disk' => $server->disk,
+        $currentResources = [
             'memory' => $server->memory,
-            'backup_limit' => $server->backup_limit,
-            'database_limit' => $server->database_limit,
-            'allocation_limit' => $server->allocation_limit,
-            default => throw new DisplayException('Unable to parse resource type')
-        };
+            'disk' => $server->disk,
+            'allocations' => $server->allocation_limit,
+            'backups' => $server->backup_limit,
+            'databases' => $server->database_limit,
+        ];
+
+        if ($newResources === $currentResources) {
+            throw new DisplayException('Старые характеристики совпадают с новыми. Никаких изменений не требуется.');
+        }
+
+        $limits = $this->limitsService->getLimits();
+        $difference = [];
+
+        foreach ($newResources as $key => $value) {
+            if ($limits['min'][$key] > $value) {
+                throw new DisplayException('Значение ' . $key . ' не может быть меньше ' . $limits['min'][$key]);
+            }
+            if ($limits['max'][$key] < $value) {
+                throw new DisplayException('Значение ' . $key . ' не может быть больше ' . $limits['max'][$key]);
+            }
+
+            $difference[$key] = max($value - $currentResources[$key], 0);
+        }
+
+        $allocations = Allocation::where('node_id', $server->node_id)->where('server_id', null)->count();
+
+        if ($allocations < $difference['allocations']) {
+            throw new NoViableAllocationException('На узле недостаточно портов для апгрейда! Попробуй позже или напиши в поддержку.');
+        }
+
+        $node = Node::findOrFail($server->node_id);
+        if (!$this->nodeRepo->getNodeWithResourceUsage($node->id)->isViable($difference['memory'], $difference['disk'])) {
+            throw new noViableNodeException('На узле недостаточно ресурсов для апгрейда! Попробуй позже или обратись в поддержку.');
+        }
+
+        $server->fill([
+            'memory' => $newResources['memory'],
+            'disk' => $newResources['disk'],
+            'allocation_limit' => $newResources['allocations'],
+            'backup_limit' => $newResources['backups'],
+            'database_limit' => $newResources['databases'],
+        ]);
+        if ($server->user->credits < $server->actualPrice() / 30) {
+            throw new noViableNodeException('У тебя недостаточно средств для апгрейда сервера! Пополни баланс или умерь аппетиты!');
+        }
+        $server->refresh();
     }
 }

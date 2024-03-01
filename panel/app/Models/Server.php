@@ -2,16 +2,16 @@
 
 namespace Jexactyl\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Facades\Cache;
-use Znck\Eloquent\Traits\BelongsToThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Query\JoinClause;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 use Jexactyl\Exceptions\Http\Server\ServerStateConflictException;
+use Znck\Eloquent\Traits\BelongsToThrough;
 
 class Server extends Model
 {
@@ -135,6 +135,7 @@ class Server extends Model
         'backup_limit',
         'monthly_price'
     ];
+
     /**
      * Returns the format for server allocations when communicating with the Daemon.
      */
@@ -340,9 +341,19 @@ class Server extends Model
     public function monthlyPrice(): float|int
     {
         return Cache::get('server_monthly_price_' . $this->id, function () {
-            $discount = 1 - ($this->user->totalDiscount() / 100);
-            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price * $discount, 86400);
+            Cache::set('server_monthly_price_' . $this->id, $this->monthly_price, 86400);
             return $this->monthly_price;
         });
+    }
+
+    public function actualPrice(): float
+    {
+        $discount = 1 - ($this->user->totalDiscount() / 100);
+        $memory = $this->memory * settings()->get('store:cost:memory');
+        $disk = $this->disk * settings()->get('store:cost:disk');
+        $allocations = $this->allocation_limit * settings()->get('store:cost:allocation');
+        $backups = $this->backup_limit * settings()->get('store:cost:backup');
+        $databases = $this->database_limit * settings()->get('store:cost:database');
+        return (float)($memory + $disk + $allocations + $backups + $databases) * $discount;
     }
 }

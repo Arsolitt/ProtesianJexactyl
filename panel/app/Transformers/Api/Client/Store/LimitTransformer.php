@@ -22,18 +22,18 @@ class LimitTransformer extends BaseClientTransformer
     {
         return [
             'min' => [
-                'memory' => $model['min'][0],
-                'disk' => $model['min'][1],
-                'allocations' => $model['min'][2],
-                'backups' => $model['min'][3],
-                'databases' => $model['min'][4],
+                'memory' => $model['min']['memory'],
+                'disk' => $model['min']['disk'],
+                'allocations' => $model['min']['allocations'],
+                'backups' => $model['min']['backups'],
+                'databases' => $model['min']['databases'],
             ],
             'max' => [
-                'memory' => $model['max'][0],
-                'disk' => $model['max'][1],
-                'allocations' => $model['max'][2],
-                'backups' => $model['max'][3],
-                'databases' => $model['max'][4],
+                'memory' => $model['max']['memory'],
+                'disk' => $model['max']['disk'],
+                'allocations' => $model['max']['allocations'],
+                'backups' => $model['max']['backups'],
+                'databases' => $model['max']['databases'],
             ],
         ];
     }

@@ -43,10 +43,13 @@ interface Prices {
 
 export default () => {
     const [submitting, setSubmitting] = useState(false);
+    const [isEqual, setIsEqual] = useState(true);
+    const [isEnoughCredits, setIsEnoughCredits] = useState(true);
 
     const user = useStoreState((state) => state.user.data!);
     const [costs, setCosts] = useState<Costs>();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
+    const monthlyPrice = ServerContext.useStoreState((state) => state.server.data!.monthlyPrice);
     const currentResources = ServerContext.useStoreState((state) => state.server.data!.limits);
     const currentFeatures = ServerContext.useStoreState((state) => state.server.data!.featureLimits);
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
@@ -58,14 +61,23 @@ export default () => {
         getLimits().then((limits: Limits) => setLimits(limits));
     }, []);
 
-    const resourcesInitialState: Resources = {
+    const [resourcesInitialState, setResourcesInitialState] = useState<Resources>({
         memory: currentResources?.memory,
         disk: currentResources?.disk,
         allocations: currentFeatures?.allocations,
         backups: currentFeatures?.backups,
         databases: currentFeatures?.databases,
-    };
+    });
     const [resources, setResources] = useState<Resources>(resourcesInitialState);
+    const compareResources = (a: Resources, b: Resources) => {
+        return (
+            a.memory === b.memory &&
+            a.disk === b.disk &&
+            a.allocations === b.allocations &&
+            a.backups === b.backups &&
+            a.databases === b.databases
+        );
+    };
 
     const resourceMinLimits: Resources = {
         memory: limits?.min.memory || 512,
@@ -84,22 +96,28 @@ export default () => {
     };
 
     const increment = (field: keyof Resources, amount: number) => {
+        if (Number(resources[field]) === Number(resourceMaxLimits[field])) {
+            return;
+        }
         setResources((prevState) => ({
             ...prevState,
             [field]:
-                prevState[field] + amount <= resourceMaxLimits[field]
-                    ? prevState[field] + amount
-                    : resourceMaxLimits[field],
+                Number(prevState[field]) + amount < Number(resourceMaxLimits[field])
+                    ? Number(prevState[field]) + amount
+                    : Number(resourceMaxLimits[field]),
         }));
     };
 
     const decrement = (field: keyof Resources, amount: number) => {
+        if (Number(resources[field]) === Number(resourceMinLimits[field])) {
+            return;
+        }
         setResources((prevState) => ({
             ...prevState,
             [field]:
-                prevState[field] - amount >= resourceMinLimits[field]
-                    ? prevState[field] - amount
-                    : resourceMinLimits[field],
+                Number(prevState[field]) - amount > Number(resourceMinLimits[field])
+                    ? Number(prevState[field]) - amount
+                    : Number(resourceMinLimits[field]),
         }));
     };
 
@@ -123,20 +141,27 @@ export default () => {
         };
     };
 
+    useEffect(() => {
+        setIsEqual(compareResources(resources, resourcesInitialState));
+        setIsEnoughCredits(user.credits >= finalPrices().daily);
+    }, [resources, resourcesInitialState, user.credits]);
+
     const edit = () => {
         clearFlashes('server:edit');
         setSubmitting(true);
 
         editServer(uuid, resources)
             .then(() => {
-                setSubmitting(false);
                 addFlash({
                     key: 'server:edit',
                     type: 'success',
                     message: 'Характеристики сервера успешно изменены!',
                 });
+                setResourcesInitialState(resources);
+                user.credits = user.credits - finalPrices().hourly;
             })
             .catch((error) => clearAndAddHttpError({ key: 'server:edit', error }));
+        setSubmitting(false);
     };
 
     return (
@@ -165,14 +190,6 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.PieChart size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={(event) => {
-                                increment('memory', event.shiftKey ? 1024 : 256);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
@@ -181,6 +198,14 @@ export default () => {
                         >
                             <Icon.Minus />
                         </Button.Danger>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={(event) => {
+                                increment('memory', event.shiftKey ? 1024 : 256);
+                            }}
+                        >
+                            <Icon.Plus />
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.memory} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -194,22 +219,22 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.HardDrive size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={(event) => {
-                                increment('disk', event.shiftKey ? 10240 : 1024);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
-                                decrement('disk', event.shiftKey ? 10240 : 1024);
+                                decrement('disk', event.shiftKey ? 5120 : 1024);
                             }}
                         >
                             <Icon.Minus />
                         </Button.Danger>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={(event) => {
+                                increment('disk', event.shiftKey ? 5120 : 1024);
+                            }}
+                        >
+                            <Icon.Plus />
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.disk} МБ</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -219,14 +244,6 @@ export default () => {
                 <TitledGreyBox title={'Доступные порты'} css={tw`mt-8 sm: mt-0`}>
                     <Wrapper>
                         <Icon.Share2 size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={(event) => {
-                                increment('allocations', event.shiftKey ? 5 : 1);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
@@ -235,6 +252,14 @@ export default () => {
                         >
                             <Icon.Minus />
                         </Button.Danger>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={(event) => {
+                                increment('allocations', event.shiftKey ? 5 : 1);
+                            }}
+                        >
+                            <Icon.Plus />
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.allocations} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -248,14 +273,6 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Archive size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={(event) => {
-                                increment('backups', event.shiftKey ? 5 : 1);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
@@ -264,6 +281,14 @@ export default () => {
                         >
                             <Icon.Minus />
                         </Button.Danger>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={(event) => {
+                                increment('backups', event.shiftKey ? 5 : 1);
+                            }}
+                        >
+                            <Icon.Plus />
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.backups} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -277,14 +302,6 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Database size={40} />
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={(event) => {
-                                increment('databases', event.shiftKey ? 5 : 1);
-                            }}
-                        >
-                            <Icon.Plus />
-                        </Button.Success>
                         <Button.Danger
                             css={tw`ml-4`}
                             onClick={(event) => {
@@ -293,6 +310,14 @@ export default () => {
                         >
                             <Icon.Minus />
                         </Button.Danger>
+                        <Button.Success
+                            css={tw`ml-4`}
+                            onClick={(event) => {
+                                increment('databases', event.shiftKey ? 5 : 1);
+                            }}
+                        >
+                            <Icon.Plus />
+                        </Button.Success>
                     </Wrapper>
                     <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.databases} шт.</p>
                     <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
@@ -301,28 +326,46 @@ export default () => {
                 </TitledGreyBox>
                 <TitledGreyBox title={'Итог'} css={tw`mt-8 sm: mt-0`}>
                     <Wrapper>
-                        <Button.Success
-                            css={tw`ml-4`}
-                            onClick={() => {
-                                setSubmitting(true);
-                            }}
-                        >
-                            <Icon.Check />
-                        </Button.Success>
-                        <Button.Danger
-                            css={tw`ml-4`}
-                            onClick={() => {
-                                setResources(resourcesInitialState);
-                            }}
-                        >
-                            <Icon.X />
-                        </Button.Danger>
+                        <div className={'flex justify-around w-full'}>
+                            <div className={'old-price flex flex-col items-center'}>
+                                <p css={tw`mt-2 text-gray-200 text-xl`}>
+                                    Было: <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р.</span>
+                                </p>
+                                <Button.Danger
+                                    css={tw``}
+                                    onClick={() => {
+                                        setResources(resourcesInitialState);
+                                    }}
+                                >
+                                    <Icon.RotateCcw />
+                                    Сбросить
+                                </Button.Danger>
+                            </div>
+                            <div className={'new-price flex flex-col items-center'}>
+                                <p css={tw`mt-2 text-gray-200 text-xl`}>
+                                    Стало:{' '}
+                                    <span className={'text-sm text-gray-300'}>
+                                        {finalPrices().monthly.toFixed(2)}р.
+                                    </span>
+                                </p>
+                                <Button.Success
+                                    css={tw``}
+                                    onClick={() => {
+                                        setSubmitting(true);
+                                    }}
+                                    disabled={isEqual || !isEnoughCredits}
+                                >
+                                    <Icon.Check />
+                                    Изменить
+                                </Button.Success>
+                            </div>
+                        </div>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>Новая цена:</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
-                        В месяц: {finalPrices().monthly.toFixed(2)} <br />В день: {finalPrices().daily.toFixed(2)}
-                        <br /> В час: {finalPrices().hourly.toFixed(2)}
-                    </p>
+                    {!isEnoughCredits && (
+                        <p className={'mt-1 text-xs text-red-400'}>
+                            На балансе должно быть минимум {finalPrices().daily.toFixed(2)}р.
+                        </p>
+                    )}
                 </TitledGreyBox>
             </Container>
         </ServerContentBlock>
