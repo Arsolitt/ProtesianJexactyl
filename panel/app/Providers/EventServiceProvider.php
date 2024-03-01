@@ -41,16 +41,20 @@ class EventServiceProvider extends ServiceProvider
      * The event to listener mappings for the application.
      */
     protected $listen = [
-        ServerInstalledEvent::class => [ServerInstalledNotification::class],
+        // Auth
         OAuthLogin::class => [OAuthLoginListener::class],
+        // Server
+        ServerInstalledEvent::class => [ServerInstalledNotification::class],
         ServerCreatingEvent::class => [ServerCreatingListener::class],
         ServerCreatedEvent::class => [ServerCreatedListener::class],
         ServerUpdatingEvent::class => [ServerUpdatingListener::class],
         ServerUpdatedEvent::class => [ServerUpdatedListener::class],
         ServerDeletedEvent::class => [ServerDeletedListener::class],
         ServerEditEvent::class => [ServerEditListener::class],
+        // Payment
         PaymentPaid::class => [PaidListener::class],
         PaymentCanceled::class => [CanceledListener::class],
+        // User
         UpdateCredits::class => [UpdateCreditsListener::class],
     ];
 
