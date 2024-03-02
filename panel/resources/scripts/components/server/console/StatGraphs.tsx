@@ -12,10 +12,10 @@ export default () => {
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
     const previous = useRef<Record<'tx' | 'rx', number>>({ tx: -1, rx: -1 });
 
-    const cpu = useChartTickLabel('CPU', limits.cpu, '%', 2);
-    const disk = useChartTickLabel('Disk', limits.disk, 'MiB');
-    const memory = useChartTickLabel('Memory', limits.memory, 'MiB');
-    const networkIn = useChart('Network In', {
+    const cpu = useChartTickLabel('Процессор', limits.cpu, '%', 2);
+    const disk = useChartTickLabel('Диск', limits.disk, 'МБ');
+    const memory = useChartTickLabel('Память', limits.memory, 'МБ');
+    const networkIn = useChart('Входящий трафик', {
         sets: 1,
         options: {
             scales: {
@@ -31,11 +31,11 @@ export default () => {
         callback(opts) {
             return {
                 ...opts,
-                label: 'Network In',
+                label: 'Входящий трафик',
             };
         },
     });
-    const networkOut = useChart('Network In', {
+    const networkOut = useChart('Исходящий трафик', {
         sets: 1,
         options: {
             scales: {
@@ -51,7 +51,7 @@ export default () => {
         callback(opts) {
             return {
                 ...opts,
-                label: 'Network Out',
+                label: 'Исходящий трафик',
             };
         },
     });
@@ -85,19 +85,19 @@ export default () => {
 
     return (
         <>
-            <ChartBlock title={'CPU Load'}>
+            <ChartBlock title={'Загрузка процессора'}>
                 <Line {...cpu.props} />
             </ChartBlock>
-            <ChartBlock title={'Disk'}>
+            <ChartBlock title={'Диск'}>
                 <Line {...disk.props} />
             </ChartBlock>
-            <ChartBlock title={'Memory'}>
+            <ChartBlock title={'Оперативная память'}>
                 <Line {...memory.props} />
             </ChartBlock>
-            <ChartBlock title={'Network In'}>
+            <ChartBlock title={'Входящий трафик'}>
                 <Line {...networkIn.props} />
             </ChartBlock>
-            <ChartBlock title={'Network Out'}>
+            <ChartBlock title={'Исходящий трафик'}>
                 <Line {...networkOut.props} />
             </ChartBlock>
         </>
