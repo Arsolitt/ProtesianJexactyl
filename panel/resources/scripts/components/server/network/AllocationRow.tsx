@@ -60,11 +60,11 @@ const AllocationRow = ({ allocation }: Props) => {
 
     return (
         <GreyRowBox $hoverable={false} className={'flex-wrap md:flex-nowrap mt-2'}>
-            <div className={'flex items-center w-full md:w-auto'}>
-                <div className={'pl-4 pr-6 text-neutral-400'}>
+            <div className={'flex w-full md:w-auto'}>
+                <div className={'pl-4 pr-6 text-neutral-400 flex justify-center items-center'}>
                     <Icon.Share2 />
                 </div>
-                <div className={'mr-4 flex-1 md:w-40'}>
+                <div className={'mr-4 flex-1 md:w-40 flex flex-col'}>
                     {allocation.alias ? (
                         <CopyOnClick text={allocation.alias}>
                             <Code dark className={'w-40 truncate'}>
@@ -76,18 +76,18 @@ const AllocationRow = ({ allocation }: Props) => {
                             <Code dark>{ip(allocation.ip)}</Code>
                         </CopyOnClick>
                     )}
-                    <Label>{allocation.alias ? 'Hostname' : 'IP Address'}</Label>
+                    <Label>{allocation.alias ? 'IP адрес' : 'IP адрес'}</Label>
                 </div>
-                <div className={'w-16 md:w-24 overflow-hidden'}>
+                <div className={'w-16 flex-1 overflow-hidden flex flex-col mr-4'}>
                     <Code dark>{allocation.port}</Code>
-                    <Label>Port</Label>
+                    <Label>Порт</Label>
                 </div>
             </div>
             <div className={'mt-4 w-full md:mt-0 md:flex-1 md:w-auto'}>
                 <InputSpinner visible={loading}>
                     <Textarea
                         className={'bg-neutral-800 hover:border-neutral-600 border-transparent'}
-                        placeholder={'Notes'}
+                        placeholder={'Заметка'}
                         defaultValue={allocation.notes || undefined}
                         onChange={(e) => setAllocationNotes(e.currentTarget.value)}
                     />
@@ -95,9 +95,9 @@ const AllocationRow = ({ allocation }: Props) => {
             </div>
             <div className={'flex justify-end space-x-4 mt-4 w-full md:mt-0 md:w-48'}>
                 {allocation.isDefault ? (
-                    <Button size={Button.Sizes.Small} className={'!text-gray-50 !bg-blue-600'} disabled>
-                        Primary
-                    </Button>
+                    <Button.Success size={Button.Sizes.Small} className={'!text-gray-50 !bg-blue-600'} disabled>
+                        Основной
+                    </Button.Success>
                 ) : (
                     <>
                         <Can action={'allocation.delete'}>
@@ -105,7 +105,7 @@ const AllocationRow = ({ allocation }: Props) => {
                         </Can>
                         <Can action={'allocation.update'}>
                             <Button.Text size={Button.Sizes.Small} onClick={setPrimaryAllocation}>
-                                Make Primary
+                                Установить
                             </Button.Text>
                         </Can>
                     </>

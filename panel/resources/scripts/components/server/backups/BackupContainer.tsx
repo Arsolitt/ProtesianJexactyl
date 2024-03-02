@@ -68,7 +68,7 @@ const BackupContainer = () => {
                                 sm: mr-6
                                 sm: mb-0`}
                         >
-                            Создано {backups.backupCount} из {backupLimit} доступных бэкапов.
+                            Использовано {backups.backupCount} из {backupLimit} доступных бэкапов.
                         </p>
                     )}
                     {backupLimit > 0 && backupLimit > backups.backupCount && (
