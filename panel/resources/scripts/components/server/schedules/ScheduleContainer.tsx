@@ -38,8 +38,8 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Schedules'}
-            description={'Manage scheduled functions for your server.'}
+            title={'Планировщик'}
+            description={'Можно создать периодические команды для твоего сервера.'}
             showFlashKey={'schedules'}
         >
             {!schedules.length && loading ? (
@@ -48,7 +48,7 @@ export default () => {
                 <>
                     {schedules.length === 0 ? (
                         <p css={tw`text-sm text-center text-neutral-300`}>
-                            There are no schedules configured for this server.
+                            Кажется, для твоего сервера нет ни одной задачи планировщика :(
                         </p>
                     ) : (
                         schedules.map((schedule) => (
@@ -69,9 +69,9 @@ export default () => {
                     <Can action={'schedule.create'}>
                         <div css={tw`mt-8 flex justify-end`}>
                             <EditScheduleModal visible={visible} onModalDismissed={() => setVisible(false)} />
-                            <Button type={'button'} onClick={() => setVisible(true)}>
-                                Create schedule
-                            </Button>
+                            <Button.Success type={'button'} onClick={() => setVisible(true)}>
+                                Создать задачу
+                            </Button.Success>
                         </div>
                     </Can>
                 </>
