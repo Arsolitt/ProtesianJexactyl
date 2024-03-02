@@ -44,9 +44,7 @@ const BackupContainer = () => {
                         // create additional ones for the server.
                         !backupLimit ? null : (
                             <p css={tw`text-center text-sm text-neutral-300`}>
-                                {page > 1
-                                    ? "Looks like we've run out of backups to show you, try going back a page."
-                                    : 'It looks like there are no backups currently stored for this server.'}
+                                {page > 1 ? 'По всей видимости, тут ничего нет.' : 'Пора создавать бэкапы!'}
                             </p>
                         )
                     ) : (
@@ -70,7 +68,7 @@ const BackupContainer = () => {
                                 sm: mr-6
                                 sm: mb-0`}
                         >
-                            {backups.backupCount} из {backupLimit} backups have been created for this server.
+                            Создано {backups.backupCount} из {backupLimit} доступных бэкапов.
                         </p>
                     )}
                     {backupLimit > 0 && backupLimit > backups.backupCount && (
