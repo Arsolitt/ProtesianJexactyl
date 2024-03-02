@@ -19,13 +19,13 @@ interface Props {
 const getActionDetails = (action: string): [string] => {
     switch (action) {
         case 'command':
-            return ['Send Command'];
+            return ['Отправит команду'];
         case 'power':
-            return ['Send Power Action'];
+            return ['Изменит состояние сервера'];
         case 'backup':
-            return ['Create Backup'];
+            return ['Создаст бэкап'];
         default:
-            return ['Unknown Action'];
+            return ['Неизвестное действие'];
     }
 };
 
@@ -57,7 +57,7 @@ export default ({ schedule, task }: Props) => {
     const [title] = getActionDetails(task.action);
 
     return (
-        <div css={tw`sm:flex items-center p-3 sm:p-6 border-b border-neutral-800`}>
+        <div css={tw`sm:flex items-center p-3 sm:p-6 border-b border-inert-800`}>
             <SpinnerOverlay visible={isLoading} fixed size={'large'} />
             <TaskDetailsModal
                 schedule={schedule}
@@ -67,22 +67,22 @@ export default ({ schedule, task }: Props) => {
             />
             <Dialog.Confirm
                 open={visible}
-                title={'Confirm task deletion'}
-                confirm={'Yes, delete task'}
+                title={'Подтвердить удаление действия'}
+                confirm={'Удалить'}
                 onClose={() => setVisible(false)}
                 onConfirmed={onConfirmDeletion}
             >
-                Are you sure you want to delete this task? This action cannot be undone.
+                Ты уверен, что хочешь удалить это действие? Этот процесс необратим.
             </Dialog.Confirm>
             <div css={tw`flex-none sm:flex-1 w-full sm:w-auto overflow-x-auto`}>
-                <p css={tw`md:ml-6 text-neutral-200 uppercase text-sm`}>{title}</p>
+                <p css={tw`md:ml-6 text-inert-200 uppercase text-sm`}>{title}</p>
                 {task.payload && (
                     <div css={tw`md:ml-6 mt-2`}>
                         {task.action === 'backup' && (
-                            <p css={tw`text-xs uppercase text-neutral-400 mb-1`}>Ignoring files & folders:</p>
+                            <p css={tw`text-xs uppercase text-inert-400 mb-1`}>Игнорируемые файлы и папки:</p>
                         )}
                         <div
-                            css={tw`font-mono bg-neutral-800 rounded py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
+                            css={tw`font-mono bg-inert-800 rounded py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
                         >
                             {task.payload}
                         </div>
@@ -94,15 +94,15 @@ export default ({ schedule, task }: Props) => {
                     <div css={tw`mr-6`}>
                         <div css={tw`flex items-center px-2 py-1 bg-yellow-500 text-yellow-800 text-sm rounded-full`}>
                             <Icon.ChevronDown css={tw`w-3 h-3 mr-2`} />
-                            Continues on Failure
+                            Продолжит при неудаче
                         </div>
                     </div>
                 )}
                 {task.sequenceId > 1 && task.timeOffset > 0 && (
                     <div css={tw`mr-6`}>
-                        <div css={tw`flex items-center px-2 py-1 bg-neutral-500 text-sm rounded-full`}>
+                        <div css={tw`flex items-center px-2 py-1 bg-inert-500 text-sm rounded-full`}>
                             <Icon.Clock css={tw`w-3 h-3 mr-2`} />
-                            {task.timeOffset}s later
+                            На {task.timeOffset}с. позже
                         </div>
                     </div>
                 )}
@@ -110,7 +110,7 @@ export default ({ schedule, task }: Props) => {
                     <button
                         type={'button'}
                         aria-label={'Edit scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-neutral-100 transition-colors duration-150 mr-4 ml-auto sm:ml-0`}
+                        css={tw`block text-sm p-2 text-inert-500 hover:text-inert-100 transition-colors duration-150 mr-4 ml-auto sm:ml-0`}
                         onClick={() => setIsEditing(true)}
                     >
                         <Icon.PenTool />
@@ -120,7 +120,7 @@ export default ({ schedule, task }: Props) => {
                     <button
                         type={'button'}
                         aria-label={'Delete scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-red-600 transition-colors duration-150`}
+                        css={tw`block text-sm p-2 text-inert-500 hover:text-red-600 transition-colors duration-150`}
                         onClick={() => setVisible(true)}
                     >
                         <Icon.Trash />

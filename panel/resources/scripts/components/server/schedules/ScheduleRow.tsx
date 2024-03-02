@@ -4,6 +4,8 @@ import { format } from 'date-fns';
 import * as Icon from 'react-feather';
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
 import ScheduleCronRow from '@/components/server/schedules/ScheduleCronRow';
+import { ru } from 'date-fns/locale';
+import Spinner from '@/components/elements/Spinner';
 
 export default ({ schedule }: { schedule: Schedule }) => (
     <>
@@ -13,28 +15,42 @@ export default ({ schedule }: { schedule: Schedule }) => (
         <div css={tw`flex-1 md:ml-4`}>
             <p>{schedule.name}</p>
             <p css={tw`text-xs text-neutral-400`}>
-                Last run at: {schedule.lastRunAt ? format(schedule.lastRunAt, "MMM do 'at' h:mma") : 'never'}
+                Последний запуск:{' '}
+                {schedule.lastRunAt ? format(schedule.lastRunAt, "MMM do 'в' h:mma", { locale: ru }) : 'никогда'}
             </p>
         </div>
         <div>
             <p
                 css={[
-                    tw`py-1 px-3 rounded text-xs uppercase text-white sm:hidden`,
-                    schedule.isActive ? tw`bg-green-600` : tw`bg-neutral-400`,
+                    tw`py-1 px-3 rounded text-xs uppercase sm:hidden`,
+                    schedule.isActive ? tw`bg-main-500 text-main-100` : tw`bg-negative-500 text-negative-100`,
                 ]}
             >
-                {schedule.isActive ? 'Active' : 'Inactive'}
+                {schedule.isActive ? 'Активна' : 'Выключена'}
             </p>
         </div>
         <ScheduleCronRow cron={schedule.cron} css={tw`mx-auto sm:mx-8 w-full sm:w-auto mt-4 sm:mt-0`} />
         <div>
             <p
                 css={[
-                    tw`py-1 px-3 rounded text-xs uppercase text-white hidden sm:block`,
-                    schedule.isActive && !schedule.isProcessing ? tw`bg-green-600` : tw`bg-neutral-400`,
+                    tw`py-1 px-3 rounded text-xs uppercase sm:flex sm:items-center hidden`,
+                    schedule.isActive
+                        ? !schedule.isProcessing
+                            ? tw`bg-main-500 text-main-50`
+                            : tw`bg-menuActive-600 text-menuActive-50`
+                        : tw`bg-negative-500 text-negative-50`,
                 ]}
             >
-                {schedule.isProcessing ? 'Processing' : schedule.isActive ? 'Active' : 'Inactive'}
+                {schedule.isProcessing ? (
+                    <>
+                        <Spinner css={tw`w-3! h-3! mr-2`} />
+                        Выполняется
+                    </>
+                ) : schedule.isActive ? (
+                    'Активна'
+                ) : (
+                    'Выключена'
+                )}
             </p>
         </div>
     </>
