@@ -80,10 +80,7 @@ export default () => {
             showFlashKey={'files'}
         >
             <Input onChange={searchFiles} className={'mb-4 j-up'} placeholder={'Поиск по файлам и папкам...'} />
-            <div
-                css={tw`flex flex-wrap-reverse
-                    md: flex-nowrap justify-center mb-4`}
-            >
+            <div css={tw`flex flex-wrap-reverse md:flex-nowrap justify-center mb-4`}>
                 <ErrorBoundary>
                     <div className={'j-right'}>
                         <FileManagerBreadcrumbs
@@ -116,7 +113,7 @@ export default () => {
             ) : (
                 <>
                     {!files.length ? (
-                        <p css={tw`text-sm text-neutral-400 text-center`}>This directory seems to be empty.</p>
+                        <p css={tw`text-sm text-neutral-400 text-center`}>Эта папка выглядит пустой :(</p>
                     ) : (
                         <CSSTransition classNames={'fade'} timeout={150} appear in>
                             <>

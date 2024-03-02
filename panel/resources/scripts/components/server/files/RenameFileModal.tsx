@@ -61,27 +61,29 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                 <Modal {...props} dismissable={!isSubmitting} showSpinnerOverlay={isSubmitting}>
                     <Form css={tw`m-0`}>
                         <div css={[tw`flex flex-wrap`, useMoveTerminology ? tw`items-center` : tw`items-end`]}>
-                            <div css={tw`w-full sm:flex-1 sm:mr-4`}>
+                            <div css={tw`w-full sm:flex-1 sm:mr-4 mr-0`}>
                                 <Field
                                     type={'string'}
                                     id={'file_name'}
                                     name={'name'}
-                                    label={'File Name'}
+                                    label={'Имя файла'}
                                     description={
                                         useMoveTerminology
-                                            ? 'Enter the new name and directory of this file or folder, relative to the current directory.'
+                                            ? 'Введи новое имя и папку назначения, относительно текущего расположения.'
                                             : undefined
                                     }
                                     autoFocus
                                 />
                             </div>
-                            <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button css={tw`w-full`}>{useMoveTerminology ? 'Move' : 'Rename'}</Button>
+                            <div css={[tw`w-full sm:w-auto`, useMoveTerminology && tw`mt-2`]}>
+                                <Button.Success css={tw`w-full`}>
+                                    {useMoveTerminology ? 'Переместить' : 'Переименовать'}
+                                </Button.Success>
                             </div>
                         </div>
                         {useMoveTerminology && (
                             <p css={tw`text-xs mt-2 text-neutral-400`}>
-                                <strong css={tw`text-neutral-200`}>New location:</strong>
+                                <strong css={tw`text-neutral-200`}>Новое расположение:</strong>
                                 &nbsp;/home/container/{join(directory, values.name).replace(/^(\.\.\/|\/)+/, '')}
                             </p>
                         )}

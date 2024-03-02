@@ -97,10 +97,7 @@ export default ({ className }: WithClassname) => {
                             <FlashMessageRender key={'files:pull-modal'} />
                             <Form css={tw`m-0`}>
                                 <Field type={'text'} id={'url'} name={'url'} label={'Ссылка'} autoFocus />
-                                <p
-                                    css={tw`mt-2 text-sm
-                                        md: text-base break-all`}
-                                >
+                                <p css={tw`mt-2 text-sm md:text-base break-all`}>
                                     <span css={tw`text-neutral-200`}>Файл будет загружен в&nbsp;</span>
                                     <Code>
                                         /home/container/

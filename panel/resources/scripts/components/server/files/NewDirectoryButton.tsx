@@ -72,10 +72,7 @@ const NewDirectoryDialog = asDialog({
                     <FlashMessageRender key={'files:directory-modal'} />
                     <Form css={tw`m-0`}>
                         <Field autoFocus id={'directoryName'} name={'directoryName'} label={'Название'} />
-                        <p
-                            css={tw`mt-2 text-sm
-                                md: text-base break-all`}
-                        >
+                        <p css={tw`mt-2 text-sm md:text-base break-all`}>
                             <span css={tw`text-neutral-200`}>Папка будет создана в&nbsp;</span>
                             <Code>
                                 /home/container/
