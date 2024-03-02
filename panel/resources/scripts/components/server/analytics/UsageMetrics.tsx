@@ -26,17 +26,17 @@ const getColorFromStatus = (status: string): string => {
 };
 
 const getColorFromUsage = (usage: number): string => {
-    if (usage < 0) return 'text-gray-500';
     if (usage <= 40) return 'text-main-500';
+    if (usage > 40 && usage < 80) return 'text-warning-500';
     if (usage >= 80) return 'text-negative-500';
-    else return 'text-warning-500';
+    else return 'text-gray-500';
 };
 
 const getStatusFromUsage = (usage: number): string => {
-    if (usage < 0) return 'Неизвестно';
     if (usage <= 40) return 'Низкое';
+    if (usage > 40 && usage < 80) return 'Нормальное';
     if (usage >= 80) return 'Высокое';
-    else return 'Нормальное';
+    else return 'Неизвестно';
 };
 
 export default () => {
@@ -130,9 +130,9 @@ export default () => {
                         <p className={'font-bold text-xl'}>
                             <FontAwesomeIcon icon={faMicrochip} size={'1x'} />
                             <br />
-                            Процессор:{' '}
-                            <span className={getColorFromUsage(parseInt(cpuUsed))}>
-                                {getStatusFromUsage(parseInt(cpuUsed))}
+                            CPU:{' '}
+                            <span className={getColorFromUsage(parseFloat(cpuUsed))}>
+                                {getStatusFromUsage(parseFloat(cpuUsed))}
                             </span>
                         </p>
                         <p className={'font-semibold text-sm text-gray-400 mt-1'}>Используется: {cpuUsed}%</p>
