@@ -46,20 +46,20 @@ const ConflictStateRenderer = () => {
 
     return status === 'installing' || status === 'install_failed' ? (
         <ScreenBlock
-            title={'Running Installer'}
+            title={'Запущен установщик'}
             image={ServerInstallSvg}
-            message={'Your server should be ready soon, please try again in a few minutes.'}
+            message={'Твой сервер скоро будет готов, приходи через пару минут.'}
         />
     ) : status === 'suspended' ? (
         <Suspended />
     ) : (
         <ScreenBlock
-            title={isTransferring ? 'Transferring' : 'Restoring from Backup'}
+            title={isTransferring ? 'Перенос' : 'Восстановление из бэкапа'}
             image={ServerRestoreSvg}
             message={
                 isTransferring
-                    ? 'Your server is being transferred to a new node, please check back later.'
-                    : 'Your server is currently being restored from a backup, please check back in a few minutes.'
+                    ? 'Твой сервер переносится на другой узел, приходи через пару минут.'
+                    : 'Твой сервер восстанавливается из бэкапа, приходи через пару минут.'
             }
         />
     );
@@ -73,8 +73,7 @@ export default () => {
     const [error, setError] = useState('');
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const databasesEnabled = useStoreState((state) => state.settings.data!.databases);
-    // TODO: переделать систему редактирования сервера
-    const editEnabled = true;
+    const editEnabled = useStoreState((state) => state.storefront.data!.editing.enabled);
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
     const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
@@ -117,18 +116,20 @@ export default () => {
                             <div>
                                 <NavLink to={match.url} exact>
                                     <div css={tw`flex items-center justify-between`}>
-                                        Console <Icon.Terminal css={tw`ml-1`} size={18} />
+                                        Консоль <Icon.Terminal css={tw`ml-1`} size={18} />
                                     </div>
                                 </NavLink>
-                                <NavLink to={`${match.url}/analytics`} exact>
-                                    <div css={tw`flex items-center justify-between`}>
-                                        Analytics <Icon.BarChart css={tw`ml-1`} size={18} />
-                                    </div>
-                                </NavLink>
-                                <Can action={'activity.*'}>
-                                    <NavLink to={`${match.url}/activity`}>
+                                <Can action={'file.*'}>
+                                    <NavLink to={`${match.url}/files`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Activity <Icon.Eye css={tw`ml-1`} size={18} />
+                                            Файлы <Icon.Folder css={tw`ml-1`} size={18} />
+                                        </div>
+                                    </NavLink>
+                                </Can>
+                                <Can action={'backup.*'}>
+                                    <NavLink to={`${match.url}/backups`}>
+                                        <div css={tw`flex items-center justify-between`}>
+                                            Бэкапы <Icon.Archive css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
@@ -136,23 +137,7 @@ export default () => {
                                     <Can action={'plugin.*'}>
                                         <NavLink to={`${match.url}/plugins`}>
                                             <div css={tw`flex items-center justify-between`}>
-                                                Plugins <Icon.Box css={tw`ml-1`} size={18} />
-                                            </div>
-                                        </NavLink>
-                                    </Can>
-                                )}
-                                <Can action={'file.*'}>
-                                    <NavLink to={`${match.url}/files`}>
-                                        <div css={tw`flex items-center justify-between`}>
-                                            Files <Icon.Folder css={tw`ml-1`} size={18} />
-                                        </div>
-                                    </NavLink>
-                                </Can>
-                                {databasesEnabled && (
-                                    <Can action={'database.*'}>
-                                        <NavLink to={`${match.url}/databases`}>
-                                            <div css={tw`flex items-center justify-between`}>
-                                                Databases <Icon.Database css={tw`ml-1`} size={18} />
+                                                Плагины <Icon.Box css={tw`ml-1`} size={18} />
                                             </div>
                                         </NavLink>
                                     </Can>
@@ -160,42 +145,44 @@ export default () => {
                                 <Can action={'schedule.*'}>
                                     <NavLink to={`${match.url}/schedules`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Tasks <Icon.Clock css={tw`ml-1`} size={18} />
+                                            Планировщик <Icon.Clock css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
+                                {databasesEnabled && (
+                                    <Can action={'database.*'}>
+                                        <NavLink to={`${match.url}/databases`}>
+                                            <div css={tw`flex items-center justify-between`}>
+                                                Базы данных <Icon.Database css={tw`ml-1`} size={18} />
+                                            </div>
+                                        </NavLink>
+                                    </Can>
+                                )}
                                 <Can action={'user.*'}>
                                     <NavLink to={`${match.url}/users`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Users <Icon.Users css={tw`ml-1`} size={18} />
-                                        </div>
-                                    </NavLink>
-                                </Can>
-                                <Can action={'backup.*'}>
-                                    <NavLink to={`${match.url}/backups`}>
-                                        <div css={tw`flex items-center justify-between`}>
-                                            Backups <Icon.Archive css={tw`ml-1`} size={18} />
+                                            Пользователи <Icon.Users css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
                                 <Can action={'allocation.*'}>
                                     <NavLink to={`${match.url}/network`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Network <Icon.Share2 css={tw`ml-1`} size={18} />
+                                            Сеть <Icon.Share2 css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
                                 <Can action={'startup.*'}>
                                     <NavLink to={`${match.url}/startup`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Startup <Icon.Play css={tw`ml-1`} size={18} />
+                                            Запуск <Icon.Play css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
                                 <Can action={['settings.*', 'file.sftp']} matchAny>
                                     <NavLink to={`${match.url}/settings`}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Settings <Icon.Settings css={tw`ml-1`} size={18} />
+                                            Настройки <Icon.Settings css={tw`ml-1`} size={18} />
                                         </div>
                                     </NavLink>
                                 </Can>
@@ -203,15 +190,27 @@ export default () => {
                                     <Can action={['settings.*']} matchAny>
                                         <NavLink to={`${match.url}/edit`}>
                                             <div css={tw`flex items-center justify-between`}>
-                                                Edit <Icon.Edit css={tw`ml-1`} size={18} />
+                                                Характеристики <Icon.Edit css={tw`ml-1`} size={18} />
                                             </div>
                                         </NavLink>
                                     </Can>
                                 )}
+                                <NavLink to={`${match.url}/analytics`} exact>
+                                    <div css={tw`flex items-center justify-between`}>
+                                        Аналитика <Icon.BarChart css={tw`ml-1`} size={18} />
+                                    </div>
+                                </NavLink>
+                                <Can action={'activity.*'}>
+                                    <NavLink to={`${match.url}/activity`}>
+                                        <div css={tw`flex items-center justify-between`}>
+                                            Активность <Icon.Eye css={tw`ml-1`} size={18} />
+                                        </div>
+                                    </NavLink>
+                                </Can>
                                 {rootAdmin && (
                                     <a href={'/admin/servers/view/' + serverId} rel='noreferrer' target={'_blank'}>
                                         <div css={tw`flex items-center justify-between`}>
-                                            Admin <Icon.ExternalLink css={tw`ml-1`} size={18} />
+                                            Админка <Icon.ExternalLink css={tw`ml-1`} size={18} />
                                         </div>
                                     </a>
                                 )}

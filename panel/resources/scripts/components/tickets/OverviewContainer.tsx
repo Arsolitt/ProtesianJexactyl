@@ -21,8 +21,8 @@ export default () => {
 
     return (
         <PageContentBlock
-            title={'Support Tickets'}
-            description={'Create or reply to a support ticket.'}
+            title={'Служба поддержки'}
+            description={'Банальный вопрос - отличный ответ!'}
             showFlashKey={'tickets'}
         >
             <NewTicketDialog open={visible} onClose={() => setVisible(false)} />
@@ -63,7 +63,7 @@ export default () => {
                 ))}
             </div>
             <div className={'w-full flex lg:justify-end lg:items-end mt-2'}>
-                <Button onClick={() => setVisible(true)}>Create New Ticket</Button>
+                <Button.Success onClick={() => setVisible(true)}>Новое обращение</Button.Success>
             </div>
         </PageContentBlock>
     );

@@ -52,7 +52,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                     addFlash({
                         key: 'auth:register',
                         type: 'success',
-                        message: 'Account has been successfully created.',
+                        message: 'Аккаунт успешно создан!',
                     });
                     return;
                 }
@@ -75,32 +75,31 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
             onSubmit={onSubmit}
             initialValues={{ username: '', email: '', password: '' }}
             validationSchema={object().shape({
-                username: string().min(3).required(),
-                email: string().email().required(),
-                password: string().min(8).required(),
+                username: string().min(3, 'Минимальная длина никнейма - 3 символа').required('Никнейм обязателен!'),
+                email: string().email('Некорректный Email').required('Email обязателен!'),
+                password: string().min(8, 'Минимальная длина пароля - 8 символов').required('Пароль обязателен!'),
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Create an Account'} css={tw`w-full flex`}>
+                <LoginFormContainer title={'Создать аккаунт'} css={tw`w-full flex`}>
                     <FlashMessageRender byKey={'auth:register'} css={tw`my-3`} />
-                    <Field type={'text'} label={'Username'} name={'username'} css={tw`my-3`} disabled={isSubmitting} />
-                    <Field
-                        type={'email'}
-                        label={'Email Address'}
-                        name={'email'}
-                        css={tw`my-3`}
-                        disabled={isSubmitting}
-                    />
+                    <Field type={'text'} label={'Никнейм'} name={'username'} css={tw`my-3`} disabled={isSubmitting} />
+                    <Field type={'email'} label={'Email'} name={'email'} css={tw`my-3`} disabled={isSubmitting} />
                     <Field
                         type={'password'}
-                        label={'Password'}
+                        label={'Пароль'}
                         name={'password'}
                         css={tw`my-3`}
                         disabled={isSubmitting}
                     />
-                    <Button type={'submit'} css={tw`my-6 w-full`} size={Button.Sizes.Large} disabled={isSubmitting}>
-                        Register
-                    </Button>
+                    <Button.Success
+                        type={'submit'}
+                        css={tw`my-6 w-full`}
+                        size={Button.Sizes.Large}
+                        disabled={isSubmitting}
+                    >
+                        Зарегистрироваться
+                    </Button.Success>
                     {recaptchaEnabled && (
                         <Reaptcha
                             ref={ref}
@@ -121,7 +120,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                             to={'/auth/login'}
                             css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
                         >
-                            Return to login
+                            На страницу входа
                         </Link>
                     </div>
                 </LoginFormContainer>

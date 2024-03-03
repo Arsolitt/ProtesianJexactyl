@@ -3,14 +3,14 @@
 namespace Jexactyl\Http\Controllers\Api\Client\Servers;
 
 use GuzzleHttp\Client;
-use Jexactyl\Models\Server;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Repositories\Wings\DaemonFileRepository;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Servers\Files\PullFileRequest;
+use Jexactyl\Models\Server;
+use Jexactyl\Repositories\Wings\DaemonFileRepository;
 
 class PluginController extends ClientApiController
 {

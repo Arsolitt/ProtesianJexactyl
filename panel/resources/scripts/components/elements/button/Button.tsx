@@ -47,6 +47,16 @@ const DangerButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ..
     <Button ref={ref} className={classNames(styles.danger, className)} {...props} />
 ));
 
+const IncrementButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
+    // @ts-expect-error not sure how to get this correct
+    <Button ref={ref} className={classNames(styles.increment, className)} {...props} />
+));
+
+const DecrementButton = forwardRef<HTMLButtonElement, ButtonProps>(({ className, ...props }, ref) => (
+    // @ts-expect-error not sure how to get this correct
+    <Button ref={ref} className={classNames(styles.decrement, className)} {...props} />
+));
+
 const _Button = Object.assign(Button, {
     Sizes: Options.Size,
     Shapes: Options.Shape,
@@ -55,6 +65,8 @@ const _Button = Object.assign(Button, {
     Danger: DangerButton,
     Success: SuccessButton,
     Warn: WarnButton,
+    Increment: IncrementButton,
+    Decrement: DecrementButton,
 });
 
 export default _Button;

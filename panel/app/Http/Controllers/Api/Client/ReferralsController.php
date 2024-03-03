@@ -2,14 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client;
 
-use Jexactyl\Models\User;
 use Illuminate\Http\JsonResponse;
-use Jexactyl\Models\ReferralUses;
 use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Services\Referrals\UseReferralService;
 use Jexactyl\Http\Requests\Api\Client\ClientApiRequest;
-use Jexactyl\Transformers\Api\Client\Referrals\ReferralCodeTransformer;
+use Jexactyl\Models\ReferralUses;
+use Jexactyl\Services\Referrals\UseReferralService;
 use Jexactyl\Transformers\Api\Client\Referrals\ReferralActivityTransformer;
+use Jexactyl\Transformers\Api\Client\Referrals\ReferralCodeTransformer;
 
 class ReferralsController extends ClientApiController
 {
@@ -64,7 +63,7 @@ class ReferralsController extends ClientApiController
     public function store(ClientApiRequest $request): array
     {
         if ($request->user()->referralCodes->count() >= 5) {
-            throw new DisplayException('You cannot have more than 5 referral codes.');
+            throw new DisplayException('У тебя не может быть больше 5 реферальных кодов!');
         }
 
         $code = $request->user()->referralCodes()->create([

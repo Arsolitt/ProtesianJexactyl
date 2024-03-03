@@ -31,6 +31,8 @@ class AnalyticsReviewService
         $this->calculate($server->id, $total);
     }
 
+    // TODO: переделать аналитику на 3 уровня - зелёный, жёлтый, красный
+
     /**
      * Calculates the average usage per resource and sends notifications
      * when a conditional statement is true.
@@ -42,11 +44,11 @@ class AnalyticsReviewService
         $size = count($values);
 
         foreach ($values as $key => $value) {
-            if ($value <= 25) {
+            if ($value <= 40) {
                 $this->message($id, $size, $key, $value, false);
             }
 
-            if ($value >= 50) {
+            if ($value > 75) {
                 $this->message($id, $size, $key, $value, true);
             }
         }
@@ -57,13 +59,22 @@ class AnalyticsReviewService
      */
     public function message(int $id, int $size, string $key, int $value, bool $warning): void
     {
-        $suffix = '% usage over past ' . $size . ' checks';
+        $suffix = '% за последние ' . $size . ' проверки';
 
         AnalyticsMessage::create([
             'server_id' => $id,
-            'title' => $key . ' usage was ' . ($warning ? 'over 75' : 'under 25') . '%',
-            'content' => 'Measured ' . $value . $suffix,
+            'title' => 'Использвание ' . $this->getNameBuyType($key). ' ' . ($warning ? 'выше 75' : 'ниже 40') . '%',
+            'content' => 'Средний показатель ' . $value . $suffix,
             'type' => ($warning ? 'warning' : 'success'),
         ]);
+    }
+
+    private function getNameBuyType(string $type): string
+    {
+        return match ($type) {
+            'cpu' => 'процессора',
+            'memory' => 'ОЗУ',
+            'disk' => 'диска',
+        };
     }
 }

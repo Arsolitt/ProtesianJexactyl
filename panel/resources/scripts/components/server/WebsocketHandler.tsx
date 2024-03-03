@@ -53,9 +53,7 @@ export default () => {
             if (reconnectErrors.find((v) => error.toLowerCase().indexOf(v) >= 0)) {
                 updateToken(uuid, socket);
             } else {
-                setError(
-                    'There was an error validating the credentials provided for the websocket. Please refresh the page.'
-                );
+                setError('Ошибка в подключении, обнови страницу, должно починиться!');
             }
         });
 
@@ -111,7 +109,7 @@ export default () => {
                     {error === 'connecting' ? (
                         <>
                             <Spinner size={'small'} />
-                            <p css={tw`ml-2 text-sm text-red-100`}>Please wait while we connect to your instance.</p>
+                            <p css={tw`ml-2 text-sm text-red-100`}>Кажется, потерялось соединение с сервером!</p>
                         </>
                     ) : (
                         <p css={tw`ml-2 text-sm text-white`}>{error}</p>

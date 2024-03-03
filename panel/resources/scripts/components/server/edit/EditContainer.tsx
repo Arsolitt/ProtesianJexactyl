@@ -167,11 +167,12 @@ export default () => {
     return (
         <ServerContentBlock
             title={'Характеристики сервера'}
-            description={'Добавить или уменьшить доступные серверу ресурсы'}
+            description={'Изменить доступные серверу ресурсы'}
             showFlashKey={'server:edit'}
         >
             <SpinnerOverlay size={'large'} visible={submitting} />
             <Dialog.Confirm
+                confirm={'Изменить'}
                 open={submitting}
                 onClose={() => setSubmitting(false)}
                 title={'Подтвердить изменение характеристик'}
@@ -190,19 +191,21 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.PieChart size={40} />
-                        <Button.Danger
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('memory', event.shiftKey ? 1024 : 256);
                             }}
+                            disabled={resources.memory <= resourceMinLimits.memory}
                         >
                             <Icon.Minus />
-                        </Button.Danger>
+                        </Button.Text>
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('memory', event.shiftKey ? 1024 : 256);
                             }}
+                            disabled={resources.memory >= resourceMaxLimits.memory}
                         >
                             <Icon.Plus />
                         </Button.Success>
@@ -219,19 +222,21 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.HardDrive size={40} />
-                        <Button.Danger
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('disk', event.shiftKey ? 5120 : 1024);
                             }}
+                            disabled={resources.disk <= resourceMinLimits.disk}
                         >
                             <Icon.Minus />
-                        </Button.Danger>
+                        </Button.Text>
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('disk', event.shiftKey ? 5120 : 1024);
                             }}
+                            disabled={resources.disk >= resourceMaxLimits.disk}
                         >
                             <Icon.Plus />
                         </Button.Success>
@@ -244,19 +249,21 @@ export default () => {
                 <TitledGreyBox title={'Доступные порты'} css={tw`mt-8 sm: mt-0`}>
                     <Wrapper>
                         <Icon.Share2 size={40} />
-                        <Button.Danger
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('allocations', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.allocations <= resourceMinLimits.allocations}
                         >
                             <Icon.Minus />
-                        </Button.Danger>
+                        </Button.Text>
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('allocations', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.allocations >= resourceMaxLimits.allocations}
                         >
                             <Icon.Plus />
                         </Button.Success>
@@ -273,19 +280,21 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Archive size={40} />
-                        <Button.Danger
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('backups', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.backups <= resourceMinLimits.backups}
                         >
                             <Icon.Minus />
-                        </Button.Danger>
+                        </Button.Text>
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('backups', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.backups >= resourceMaxLimits.backups}
                         >
                             <Icon.Plus />
                         </Button.Success>
@@ -302,19 +311,21 @@ export default () => {
                 >
                     <Wrapper>
                         <Icon.Database size={40} />
-                        <Button.Danger
+                        <Button.Text
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 decrement('databases', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.databases <= resourceMinLimits.databases}
                         >
                             <Icon.Minus />
-                        </Button.Danger>
+                        </Button.Text>
                         <Button.Success
                             css={tw`ml-4`}
                             onClick={(event) => {
                                 increment('databases', event.shiftKey ? 5 : 1);
                             }}
+                            disabled={resources.databases >= resourceMaxLimits.databases}
                         >
                             <Icon.Plus />
                         </Button.Success>
@@ -329,23 +340,25 @@ export default () => {
                         <div className={'flex justify-around w-full'}>
                             <div className={'old-price flex flex-col items-center'}>
                                 <p css={tw`mt-2 text-gray-200 text-xl`}>
-                                    Было: <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р.</span>
+                                    Было:{' '}
+                                    <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р. / месяц</span>
                                 </p>
-                                <Button.Danger
+                                <Button.Text
                                     css={tw``}
                                     onClick={() => {
                                         setResources(resourcesInitialState);
+                                        setTimeout(() => setIsEnoughCredits(true), 50);
                                     }}
                                 >
                                     <Icon.RotateCcw />
                                     Сбросить
-                                </Button.Danger>
+                                </Button.Text>
                             </div>
                             <div className={'new-price flex flex-col items-center'}>
                                 <p css={tw`mt-2 text-gray-200 text-xl`}>
                                     Стало:{' '}
                                     <span className={'text-sm text-gray-300'}>
-                                        {finalPrices().monthly.toFixed(2)}р.
+                                        {finalPrices().monthly.toFixed(2)}р. / месяц
                                     </span>
                                 </p>
                                 <Button.Success

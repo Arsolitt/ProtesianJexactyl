@@ -32,8 +32,8 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Server Activity'}
-            description={'View activity on this server.'}
+            title={'Лог активности'}
+            description={'А тут можно посмотреть, кто и что делал с сервером'}
             showFlashKey={'server:activity'}
         >
             {(filters.filters?.event || filters.filters?.ip) && (
@@ -43,7 +43,7 @@ export default () => {
                         className={classNames(btnStyles.button, btnStyles.text, 'w-full sm:w-auto')}
                         onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
                     >
-                        Clear Filters <Icon.XCircle className={'w-4 h-4 ml-2'} />
+                        Очистить фильтры <Icon.XCircle className={'w-4 h-4 ml-2'} />
                     </Link>
                 </div>
             )}

@@ -50,7 +50,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
             .then((response) => {
                 if (response.complete) {
                     // @ts-expect-error this is valid
-                    window.location = response.intended || '/';
+                    window.location = response.intended || '/home';
                     return;
                 }
 
@@ -72,20 +72,25 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
             onSubmit={onSubmit}
             initialValues={{ username: '', password: '' }}
             validationSchema={object().shape({
-                username: string().required('A username or email must be provided.'),
-                password: string().required('Please enter your account password.'),
+                username: string().required('Нужно указать почту или Email!'),
+                password: string().required('Нужно ввести пароль!'),
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Login to ' + name} css={tw`w-full flex`}>
-                    <Field light type={'text'} label={'Username or Email'} name={'username'} disabled={isSubmitting} />
+                <LoginFormContainer title={'Вход в ' + name} css={tw`w-full flex`}>
+                    <Field light type={'text'} label={'Никнейм или Email'} name={'username'} disabled={isSubmitting} />
                     <div css={tw`mt-6`}>
-                        <Field light type={'password'} label={'Password'} name={'password'} disabled={isSubmitting} />
+                        <Field light type={'password'} label={'Пароль'} name={'password'} disabled={isSubmitting} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} size={Button.Sizes.Large} css={tw`w-full`} disabled={isSubmitting}>
-                            Login
-                        </Button>
+                        <Button.Success
+                            type={'submit'}
+                            size={Button.Sizes.Large}
+                            css={tw`w-full`}
+                            disabled={isSubmitting}
+                        >
+                            Вход
+                        </Button.Success>
                     </div>
                     {recaptchaEnabled && (
                         <Reaptcha
@@ -108,7 +113,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                             css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase
                                 hover: text-neutral-600`}
                         >
-                            Forgot password?
+                            Забыл пароль?
                         </Link>
                     </div>
                     {(email || discord) && (
@@ -119,7 +124,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                                     css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase
                                         hover: text-neutral-600`}
                                 >
-                                    Signup with Email
+                                    Регистрация
                                 </Link>
                             )}
                             {discord && (
@@ -128,7 +133,7 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                                     css={tw`text-xs ml-6 text-neutral-500 tracking-wide no-underline uppercase
                                         hover: text-neutral-600`}
                                 >
-                                    Authenticate with Discord
+                                    Вход с помощью Discord
                                 </Link>
                             )}
                         </div>

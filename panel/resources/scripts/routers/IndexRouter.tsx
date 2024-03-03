@@ -6,11 +6,13 @@ import StoreRouter from '@/routers/StoreRouter';
 import TicketRouter from '@/routers/TicketRouter';
 import ServerRouter from '@/routers/ServerRouter';
 import Spinner from '@/components/elements/Spinner';
-import { Router, Switch, Route } from 'react-router';
+import { Route, Router, Switch } from 'react-router';
 import DashboardRouter from '@/routers/DashboardRouter';
 import AuthenticationRouter from '@/routers/AuthenticationRouter';
 import { NotApproved, NotFound } from '@/components/elements/ScreenBlock';
 import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
+import AccountRouter from '@/routers/AccountRouter';
+import WelcomeRouter from '@/routers/WelcomeRouter';
 
 export default () => {
     const authenticated = useStoreState((state) => state.user?.data);
@@ -22,8 +24,8 @@ export default () => {
     if (approvals && !approved && authenticated) {
         return (
             <NotApproved
-                title={'Awaiting Approval'}
-                message={'Your account is currently pending approval from an administator.'}
+                title={'Ожидание подтверждения'}
+                message={'Твой аккаунт ожидает подтверждения администратором.'}
             />
         );
     }
@@ -57,11 +59,21 @@ export default () => {
                         </Spinner.Suspense>
                     </AuthenticatedRoute>
                 )}
-                <AuthenticatedRoute path={'/'}>
+                <AuthenticatedRoute path={'/account'}>
+                    <Spinner.Suspense>
+                        <AccountRouter />
+                    </Spinner.Suspense>
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path={'/home'}>
                     <Spinner.Suspense>
                         <DashboardRouter />
                     </Spinner.Suspense>
                 </AuthenticatedRoute>
+                <Route path={'/'}>
+                    <Spinner.Suspense>
+                        <WelcomeRouter />
+                    </Spinner.Suspense>
+                </Route>
                 <Route path={'*'} component={NotFound} />
             </Switch>
         </Router>
