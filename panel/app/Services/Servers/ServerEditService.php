@@ -83,9 +83,13 @@ class ServerEditService
         }
 
         $allocations = Allocation::where('node_id', $server->node_id)->where('server_id', null)->count();
-
         if ($allocations < $difference['allocations']) {
             throw new NoViableAllocationException('На узле недостаточно портов для апгрейда! Попробуй позже или напиши в поддержку.');
+        }
+
+        $backups = $server->backups()->count();
+        if ($backups > $newResources['backups']) {
+            throw new NoViableAllocationException('Лимит бэкапов не может быть меньше уже созданного количества!');
         }
 
         $node = Node::findOrFail($server->node_id);

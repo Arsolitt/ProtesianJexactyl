@@ -4,7 +4,7 @@ import getServers from '@/api/getServers';
 import useFlash from '@/plugins/useFlash';
 import { useStoreState } from 'easy-peasy';
 import { PaginatedResult } from '@/api/http';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Server } from '@/api/server/getServer';
 import Switch from '@/components/elements/Switch';
 import React, { useEffect, useState } from 'react';
@@ -55,9 +55,7 @@ export default () => {
                 {rootAdmin ? (
                     <>
                         <div>
-                            <h1 className={'text-5xl'}>
-                                {showOnlyAdmin ? 'Showing other servers' : 'Showing your servers'}
-                            </h1>
+                            <h1 className={'text-5xl'}>{showOnlyAdmin ? 'Другие сервера' : 'Твои сервера'}</h1>
                             {/*<h3 className={'text-2xl mt-2 text-neutral-500'}>*/}
                             {/*    Select a server to view, update or modify.*/}
                             {/*</h3>*/}
@@ -97,7 +95,11 @@ export default () => {
                             </div>
                         ) : (
                             <p className={'text-gray-400 text-lg font-semibold text-center'}>
-                                Doesn&apos;t look like you have any servers here.
+                                Кажется, у тебя ещё нет ни одного сервера :( <br />
+                                Создать его ты можешь{' '}
+                                <NavLink to={`/store/create`} className={'underline text-gray-200'}>
+                                    здесь
+                                </NavLink>
                             </p>
                         )
                     }

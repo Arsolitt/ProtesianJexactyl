@@ -9,11 +9,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import CreateBackupButton from '@/components/server/backups/CreateBackupButton';
 import getServerBackups, { Context as ServerBackupContext } from '@/api/swr/getServerBackups';
+import { NavLink } from 'react-router-dom';
 
 const BackupContainer = () => {
     const { page, setPage } = useContext(ServerBackupContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: backups, error, isValidating } = getServerBackups();
+    const id = ServerContext.useStoreState((state) => state.server.data?.id);
 
     const backupLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.backups);
 
@@ -56,8 +58,10 @@ const BackupContainer = () => {
             </Pagination>
             {backupLimit === 0 && (
                 <p css={tw`text-center text-sm text-neutral-300`}>
-                    Для твоего сервера нет бэкапов, но ты всегда можешь их добавить на вкладке{' '}
-                    <strong className={'font-bold'}>Характеристики </strong>
+                    Для твоего сервера нет доступных бэкапов, но ты всегда можешь их добавить{' '}
+                    <NavLink to={`/server/${id}/edit`} className={'underline text-gray-200'}>
+                        здесь
+                    </NavLink>
                 </p>
             )}
             <Can action={'backup.create'}>
