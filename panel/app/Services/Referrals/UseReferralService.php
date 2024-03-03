@@ -2,12 +2,12 @@
 
 namespace Jexactyl\Services\Referrals;
 
-use Jexactyl\Models\User;
-use Jexactyl\Models\ReferralCode;
-use Jexactyl\Models\ReferralUses;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\ClientApiRequest;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Models\ReferralCode;
+use Jexactyl\Models\ReferralUses;
+use Jexactyl\Models\User;
 
 class UseReferralService
 {
@@ -23,15 +23,16 @@ class UseReferralService
      */
     public function handle(ClientApiRequest $request): void
     {
+        // TODO: переделать реферальную систему
         $user = $request->user();
         $code = $request->input('code');
-        $reward = $this->settings->get('jexactyl::referrals:reward', 0);
+        $reward = $this->settings->get('referrals:reward', 0);
 
         $id = ReferralCode::where('code', $code)->first()->user_id;
         $referrer = User::where('id', $id)->first();
 
         if ($id == $user->id) {
-            throw new DisplayException('You can\'t use your own referral code.');
+            throw new DisplayException('Ты не можешь использовать свой реферальный код!');
         }
 
         $user->update([

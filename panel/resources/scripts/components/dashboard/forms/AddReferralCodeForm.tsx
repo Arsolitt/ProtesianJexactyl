@@ -31,7 +31,7 @@ export default () => {
                 addFlash({
                     type: 'success',
                     key: 'account:referral',
-                    message: 'You are now using a referral code.',
+                    message: 'Код пригласившего добавлен',
                 })
             )
             .catch((error) =>
@@ -55,7 +55,7 @@ export default () => {
         <>
             {code ? (
                 <p className={'my-2 text-gray-400'}>
-                    You have already used a referral code.
+                    У тебя уже добавлен код пригласившего
                     <span className={'bg-gray-800 rounded p-1 ml-2'}>{code}</span>
                 </p>
             ) : (
@@ -63,17 +63,19 @@ export default () => {
                     {({ isSubmitting, isValid }) => (
                         <React.Fragment>
                             <Form className={'m-0'}>
-                                <Field id={'code'} type={'text'} name={'code'} label={'Enter referral code'} />
+                                <Field id={'code'} type={'text'} name={'code'} label={'Введи код'} />
                                 <div className={'mt-6'}>
                                     <Field
                                         id={'confirm_password'}
                                         type={'password'}
                                         name={'password'}
-                                        label={'Confirm Password'}
+                                        label={'Пароль'}
                                     />
                                 </div>
                                 <div className={'mt-6'}>
-                                    <Button disabled={isSubmitting || !isValid}>Use Code</Button>
+                                    <Button.Success disabled={isSubmitting || !isValid}>
+                                        Использовать код
+                                    </Button.Success>
                                 </div>
                             </Form>
                         </React.Fragment>

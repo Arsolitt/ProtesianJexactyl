@@ -2,12 +2,12 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Http\Controllers\Controller;
+use Illuminate\View\View;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Jexactyl\ReferralsFormRequest;
+use Prologue\Alerts\AlertsMessageBag;
 
 class ReferralsController extends Controller
 {
@@ -26,8 +26,8 @@ class ReferralsController extends Controller
     public function index(): View
     {
         return view('admin.jexactyl.referrals', [
-            'enabled' => $this->settings->get('jexactyl::referrals:enabled', false),
-            'reward' => $this->settings->get('jexactyl::referrals:reward', 250),
+            'enabled' => $this->settings->get('referrals:enabled', false),
+            'reward' => $this->settings->get('referrals:reward', 0),
         ]);
     }
 
@@ -40,7 +40,7 @@ class ReferralsController extends Controller
     public function update(ReferralsFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::referrals:' . $key, $value);
+            $this->settings->set('referrals:' . $key, $value);
         }
 
         $this->alert->success('Referral system has been updated.')->flash();

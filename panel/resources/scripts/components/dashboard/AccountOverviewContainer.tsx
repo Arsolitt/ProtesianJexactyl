@@ -49,7 +49,7 @@ export default () => {
                     <UpdateEmailAddressForm />
                 </ContentBox>
                 {referrals && (
-                    <ContentBox title={'Referral Codes'} showFlashes={'account:referral'}>
+                    <ContentBox title={'Код пригласившего'} showFlashes={'account:referral'}>
                         <AddReferralCodeForm />
                     </ContentBox>
                 )}
