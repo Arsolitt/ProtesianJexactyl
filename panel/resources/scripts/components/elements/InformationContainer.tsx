@@ -40,18 +40,22 @@ export default () => {
             {/*    </InformationBox>*/}
             {/*)}*/}
             <InformationBox icon={faCoins}>
-                Баланс: <span className={'text-green-600'}>{user.credits}</span>
+                <span className={'text-gray-50'}>
+                    Баланс: <span className={'text-main-500'}>{user.credits}₽</span>
+                </span>
             </InformationBox>
             <InformationBox icon={faUserLock}>
-                {user.useTotp ? (
-                    <>
-                        2FA <span className={'text-green-600'}>Включена</span>
-                    </>
-                ) : (
-                    <>
-                        2FA <span className={'text-yellow-600'}>Выключена</span>
-                    </>
-                )}
+                <span className={'text-gray-50'}>
+                    {user.useTotp ? (
+                        <>
+                            2FA <span className={'text-main-500'}>Включена</span>
+                        </>
+                    ) : (
+                        <>
+                            2FA <span className={'text-negative-600'}>Выключена</span>
+                        </>
+                    )}
+                </span>
             </InformationBox>
             {!user.verified ? (
                 <InformationBox icon={faTimesCircle} iconCss={'text-yellow-500'}>
@@ -61,21 +65,23 @@ export default () => {
                 </InformationBox>
             ) : (
                 <InformationBox icon={faScroll}>
-                    {activity ? (
-                        <>
-                            <span className={'text-neutral-400'}>
-                                <Translate
-                                    ns={'activity'}
-                                    values={properties}
-                                    i18nKey={activity.event.replace(':', '.')}
-                                />
-                            </span>
-                            {' - '}
-                            {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
-                        </>
-                    ) : (
-                        'Невозможно получить журнал активности.'
-                    )}
+                    <span className={'text-gray-50'}>
+                        {activity ? (
+                            <>
+                                <span className={'text-inert-400'}>
+                                    <Translate
+                                        ns={'activity'}
+                                        values={properties}
+                                        i18nKey={activity.event.replace(':', '.')}
+                                    />
+                                </span>
+                                {' - '}
+                                {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
+                            </>
+                        ) : (
+                            'Невозможно получить журнал активности.'
+                        )}
+                    </span>
                 </InformationBox>
             )}
         </>
