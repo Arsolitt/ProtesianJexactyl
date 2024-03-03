@@ -14,7 +14,7 @@ class RegisteredWithReferrer
     /**
      * Create a new event instance.
      */
-    public function __construct(public User $user)
+    public function __construct(public User $user, public string $code)
     {
         //
     }

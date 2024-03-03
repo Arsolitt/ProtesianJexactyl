@@ -52,7 +52,7 @@ class RegisterController extends AbstractLoginController
             'server_slots' => $this->settings->get($prefix . 'slot', 0),
             'approved' => $approved,
             'verified' => $verified,
-            'referral_code' => $request->input('referral_code') ?? '',
+            'referral_code' => $request->input('referral_code'),
         ]);
 
         return new JsonResponse([
