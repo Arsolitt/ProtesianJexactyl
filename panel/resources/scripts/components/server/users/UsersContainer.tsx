@@ -48,12 +48,12 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Users'}
-            description={'Add and remove users from your server.'}
+            title={'Пользователи'}
+            description={'Можешь дать доступ к этому серверу другим пользователям. Но на свой страх и риск!'}
             showFlashKey={'users'}
         >
             {!subusers.length ? (
-                <p css={tw`text-center text-sm text-neutral-300`}>It looks like you don&apos;t have any subusers.</p>
+                <p css={tw`text-center text-sm text-neutral-300`}>К серверу имеешь доступ только ты</p>
             ) : (
                 subusers.map((subuser) => <UserRow key={subuser.uuid} subuser={subuser} />)
             )}
