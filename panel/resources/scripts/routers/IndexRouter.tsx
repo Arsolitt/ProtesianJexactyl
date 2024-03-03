@@ -11,6 +11,8 @@ import DashboardRouter from '@/routers/DashboardRouter';
 import AuthenticationRouter from '@/routers/AuthenticationRouter';
 import { NotApproved, NotFound } from '@/components/elements/ScreenBlock';
 import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
+import WelcomeRouter from '@/routers/WelcomeRouter';
+import AccountRouter from '@/routers/AccountRouter';
 
 export default () => {
     const authenticated = useStoreState((state) => state.user?.data);
@@ -57,11 +59,21 @@ export default () => {
                         </Spinner.Suspense>
                     </AuthenticatedRoute>
                 )}
-                <AuthenticatedRoute path={'/'}>
+                <AuthenticatedRoute path={'/account'}>
+                    <Spinner.Suspense>
+                        <AccountRouter />
+                    </Spinner.Suspense>
+                </AuthenticatedRoute>
+                <AuthenticatedRoute path={'/home'}>
                     <Spinner.Suspense>
                         <DashboardRouter />
                     </Spinner.Suspense>
                 </AuthenticatedRoute>
+                <Route path={'/'}>
+                    <Spinner.Suspense>
+                        <WelcomeRouter />
+                    </Spinner.Suspense>
+                </Route>
                 <Route path={'*'} component={NotFound} />
             </Switch>
         </Router>
