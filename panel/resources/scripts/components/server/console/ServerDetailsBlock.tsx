@@ -37,7 +37,7 @@ export default ({ className }: { className?: string }) => {
 
     const textLimits = useMemo(
         () => ({
-            cpu: limits?.cpu ? `${limits.cpu}%` : null,
+            cpu: limits?.cpu ? '100%' : null,
             memory: limits?.memory ? bytesToString(mbToBytes(limits.memory)) : null,
             disk: limits?.disk ? bytesToString(mbToBytes(limits.disk)) : null,
         }),
@@ -96,7 +96,7 @@ export default ({ className }: { className?: string }) => {
                 {status === 'offline' ? (
                     <span className={'text-gray-400'}>Выключен</span>
                 ) : (
-                    <Limit limit={textLimits.cpu}>{stats.cpu.toFixed(2)}%</Limit>
+                    <Limit limit={textLimits.cpu}>{(stats.cpu / (limits.cpu / 100)).toFixed(2)}%</Limit>
                 )}
                 {cpuUsed > 100 ? (
                     <Bar style={{ width: '100%' }} css={tw`bg-red-500`} />
