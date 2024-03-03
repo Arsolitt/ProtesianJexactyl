@@ -1,8 +1,16 @@
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 
-const WelcomeContainer = ({ history }: RouteComponentProps) => {
-    return <div>WELCOME PAGE</div>;
+const WelcomeContainer = () => {
+    return (
+        <div>
+            WELCOME PAGE
+            <br />
+            <Link to={'/auth/login'}>Вход</Link>
+            <br />
+            <NavLink to={'/home'}>Home</NavLink>
+        </div>
+    );
 };
 
 export default WelcomeContainer;

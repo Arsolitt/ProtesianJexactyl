@@ -1,5 +1,4 @@
 import React from 'react';
-import { useStoreState } from 'easy-peasy';
 import { useLocation } from 'react-router';
 import TransitionRouter from '@/TransitionRouter';
 import Spinner from '@/components/elements/Spinner';
@@ -15,8 +14,6 @@ import InformationContainer from '@/components/elements/InformationContainer';
 export default () => {
     const location = useLocation();
     const { width } = useWindowDimensions();
-    const coupons = useStoreState((state) => state.settings.data!.coupons);
-    const referrals = useStoreState((state) => state.storefront.data!.referrals.enabled);
 
     return (
         <>
