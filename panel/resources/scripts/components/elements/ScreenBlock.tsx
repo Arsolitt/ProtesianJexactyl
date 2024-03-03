@@ -97,8 +97,12 @@ type NotApprovedProps = (Omit<PropsWithBack, 'image' | 'title'> | Omit<PropsWith
     message: string;
 };
 
+// const ServerError = ({ title, ...props }: ServerErrorProps) => (
+//     <ScreenBlock title={title || 'Что-то пошло не так 0_0'} image={ServerErrorSvg} {...props} />
+// );
+
 const ServerError = ({ title, ...props }: ServerErrorProps) => (
-    <ScreenBlock title={title || 'Something went wrong'} image={ServerErrorSvg} {...props} />
+    <ScreenBlock title={title || 'Что-то пошло не так 0_0'} image={ServerErrorSvg} {...props} />
 );
 
 const NotApproved = ({ title, message }: NotApprovedProps) => (

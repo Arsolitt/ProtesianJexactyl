@@ -96,9 +96,9 @@ export default (props: Props) => {
                     </div>
                 ))}
                 <div css={tw`mt-6`}>
-                    <Button type={'submit'} disabled={submitting}>
+                    <Button.Success type={'submit'} disabled={submitting}>
                         Пополнить баланс!
-                    </Button>
+                    </Button.Success>
                 </div>
             </Form>
         </Formik>

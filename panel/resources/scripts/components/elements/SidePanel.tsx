@@ -14,6 +14,7 @@ export default () => {
     const tickets = useStoreState((state) => state.settings.data!.tickets);
     const store = useStoreState((state) => state.storefront.data!.enabled);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
+    const credits = useStoreState((state) => state.user.data!.credits);
 
     const onTriggerLogout = () => {
         http.post('/auth/logout').finally(() => {
@@ -69,10 +70,17 @@ export default () => {
                     </Tooltip>
                 </NavLink>
                 {store && (
-                    <NavLink to={'/store'} className={'navigation-link'}>
+                    <NavLink to={'/store/credits'} className={'navigation-link'}>
                         <Tooltip placement={'bottom'} content={'Финансы'}>
-                            <div className={'bg-gray-700 rounded-lg p-2 my-8'}>
+                            <div className={'bg-gray-700 rounded-lg p-2 my-8 relative'}>
                                 <Icon.ShoppingCart size={32} />
+                                <span
+                                    className={
+                                        'absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-main-500 whitespace-nowrap bg-gray-700 rounded-lg px-1'
+                                    }
+                                >
+                                    {credits} ₽
+                                </span>
                             </div>
                         </Tooltip>
                     </NavLink>
