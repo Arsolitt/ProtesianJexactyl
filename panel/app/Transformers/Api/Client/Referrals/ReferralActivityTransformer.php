@@ -2,8 +2,8 @@
 
 namespace Jexactyl\Transformers\Api\Client\Referrals;
 
-use Jexactyl\Models\User;
 use Jexactyl\Models\ReferralUses;
+use Jexactyl\Models\User;
 use Jexactyl\Transformers\Api\Client\BaseClientTransformer;
 
 class ReferralActivityTransformer extends BaseClientTransformer
@@ -23,11 +23,12 @@ class ReferralActivityTransformer extends BaseClientTransformer
      */
     public function transform(ReferralUses $model)
     {
+        $user = User::where('id', $model->user_id)->first();
         return [
             'code' => $model->code_used,
             'user_id' => $model->user_id,
             'created_at' => $model->created_at->toIso8601String(),
-            'user_email' => User::where('id', $model->user_id)->first()->email,
+            'user_email' => $user ? $user->username : 'Неизвестно',
         ];
     }
 }

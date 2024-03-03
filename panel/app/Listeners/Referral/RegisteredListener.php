@@ -23,15 +23,16 @@ class RegisteredListener implements ShouldQueue
     public function handle(RegisteredWithReferrer $event): void
     {
         $user = $event->user;
-        $referrerId = ReferralCode::where('code', $user->referral_code)->first()->user_id;
+        $code = $event->code;
+        $referrerId = ReferralCode::where('code', $code)->first()->user_id;
 
         $user->update([
-            'referral_code' => $user->referral_code,
+            'referral_code' => $code,
         ]);
 
         ReferralUses::create([
             'user_id' => $user->id,
-            'code_used' => $user->referral_code,
+            'code_used' => $code,
             'referrer_id' => $referrerId,
         ]);
     }

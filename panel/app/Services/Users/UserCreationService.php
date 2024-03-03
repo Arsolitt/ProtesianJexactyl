@@ -108,8 +108,8 @@ class UserCreationService
             // If the email system isn't active, still let users create accounts.
         }
 
-        if (array_key_exists('referral_code', $data)) {
-            RegisteredWithReferrer::dispatch($user);
+        if (array_key_exists('referral_code', $data) && $this->settings->get('referrals:enabled') === 'true') {
+            RegisteredWithReferrer::dispatch($user, $data['referral_code']);
         }
 
         return $user;
