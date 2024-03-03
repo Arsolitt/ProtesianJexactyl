@@ -33,14 +33,14 @@ export default () => {
                 addFlash({
                     type: 'success',
                     key: 'account:email',
-                    message: 'Your primary email has been updated.',
+                    message: 'Твой основной Email успешно изменён',
                 })
             )
             .catch((error) =>
                 addFlash({
                     type: 'danger',
                     key: 'account:email',
-                    title: 'Error',
+                    title: 'Ошибка',
                     message: httpErrorToHuman(error),
                 })
             )
@@ -56,17 +56,12 @@ export default () => {
                 <React.Fragment>
                     <SpinnerOverlay size={'large'} visible={isSubmitting} />
                     <Form css={tw`m-0`}>
-                        <Field id={'current_email'} type={'email'} name={'email'} label={'Email'} />
+                        <Field id={'current_email'} type={'email'} name={'email'} label={'Новый Email'} />
                         <div css={tw`mt-6`}>
-                            <Field
-                                id={'confirm_password'}
-                                type={'password'}
-                                name={'password'}
-                                label={'Confirm Password'}
-                            />
+                            <Field id={'confirm_password'} type={'password'} name={'password'} label={'Пароль'} />
                         </div>
                         <div css={tw`mt-6`}>
-                            <Button disabled={isSubmitting || !isValid}>Update Email</Button>
+                            <Button.Success disabled={isSubmitting || !isValid}>Изменить Email</Button.Success>
                         </div>
                     </Form>
                 </React.Fragment>

@@ -16,8 +16,8 @@ interface Values {
 }
 
 const schema = Yup.object().shape({
-    username: Yup.string().min(3).required(),
-    password: Yup.string().required('You must provide your current account password.'),
+    username: Yup.string().min(3, 'Никнейм не может быть короче 3 символов!').required('Нужно указать новый никнейм!'),
+    password: Yup.string().required('Нужно указать текущий пароль!'),
 });
 
 export default () => {
@@ -31,14 +31,14 @@ export default () => {
                 addFlash({
                     type: 'success',
                     key: 'account:username',
-                    message: 'Your username has been changed.',
+                    message: 'Твой никнейм успешно изменён',
                 })
             )
             .catch((error) =>
                 addFlash({
                     type: 'danger',
                     key: 'account:username',
-                    title: 'Error',
+                    title: 'Ошибка',
                     message: httpErrorToHuman(error),
                 })
             )
@@ -54,17 +54,12 @@ export default () => {
                 <React.Fragment>
                     <SpinnerOverlay size={'large'} visible={isSubmitting} />
                     <Form css={tw`m-0`}>
-                        <Field id={'new_username'} type={'username'} name={'username'} label={'New Username'} />
+                        <Field id={'new_username'} type={'username'} name={'username'} label={'Новый никнейм'} />
                         <div css={tw`mt-6`}>
-                            <Field
-                                id={'confirm_password'}
-                                type={'password'}
-                                name={'password'}
-                                label={'Confirm Password'}
-                            />
+                            <Field id={'confirm_password'} type={'password'} name={'password'} label={'Пароль'} />
                         </div>
                         <div css={tw`mt-6`}>
-                            <Button disabled={isSubmitting || !isValid}>Update Username</Button>
+                            <Button.Success disabled={isSubmitting || !isValid}>Обновить никнейм</Button.Success>
                         </div>
                     </Form>
                 </React.Fragment>

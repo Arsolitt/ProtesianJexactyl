@@ -12,7 +12,6 @@ import SubNavigation from '@/components/elements/SubNavigation';
 import useWindowDimensions from '@/plugins/useWindowDimensions';
 import MobileNavigation from '@/components/elements/MobileNavigation';
 import ReferralContainer from '@/components/dashboard/ReferralContainer';
-import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import AccountOverviewContainer from '@/components/dashboard/AccountOverviewContainer';
 import AccountSecurityContainer from '@/components/dashboard/AccountSecurityContainer';
@@ -31,35 +30,35 @@ export default () => {
                 <div>
                     <NavLink to={'/account'} exact>
                         <div css={tw`flex items-center justify-between`}>
-                            Account <Icon.User css={tw`ml-1`} size={18} />
+                            Профиль <Icon.User css={tw`ml-1`} size={18} />
                         </div>
                     </NavLink>
                     <NavLink to={'/account/security'}>
                         <div css={tw`flex items-center justify-between`}>
-                            Security <Icon.Key css={tw`ml-1`} size={18} />
+                            Безопасность <Icon.Key css={tw`ml-1`} size={18} />
                         </div>
                     </NavLink>
                     {referrals && (
                         <NavLink to={'/account/referrals'}>
                             <div css={tw`flex items-center justify-between`}>
-                                Referrals <Icon.DollarSign css={tw`ml-1`} size={18} />
+                                Рефералы <Icon.DollarSign css={tw`ml-1`} size={18} />
                             </div>
                         </NavLink>
                     )}
-                    <NavLink to={'/account/api'}>
-                        <div css={tw`flex items-center justify-between`}>
-                            API <Icon.Code css={tw`ml-1`} size={18} />
-                        </div>
-                    </NavLink>
+                    {/*<NavLink to={'/account/api'}>*/}
+                    {/*    <div css={tw`flex items-center justify-between`}>*/}
+                    {/*        API <Icon.Code css={tw`ml-1`} size={18} />*/}
+                    {/*    </div>*/}
+                    {/*</NavLink>*/}
                     <NavLink to={'/account/ssh'}>
                         <div css={tw`flex items-center justify-between`}>
-                            SSH Keys <Icon.Terminal css={tw`ml-1`} size={18} />
+                            SSH ключи <Icon.Terminal css={tw`ml-1`} size={18} />
                         </div>
                     </NavLink>
                     {coupons && (
                         <NavLink to={'/account/coupons'}>
                             <div className={'flex items-center justify-between'}>
-                                Coupons <Icon.DollarSign className={'ml-1'} size={18} />
+                                Купоны <Icon.DollarSign className={'ml-1'} size={18} />
                             </div>
                         </NavLink>
                     )}
@@ -79,9 +78,9 @@ export default () => {
                                 <ReferralContainer />
                             </Route>
                         )}
-                        <Route path={'/account/api'} exact>
-                            <AccountApiContainer />
-                        </Route>
+                        {/*<Route path={'/account/api'} exact>*/}
+                        {/*    <AccountApiContainer />*/}
+                        {/*</Route>*/}
                         <Route path={'/account/ssh'} exact>
                             <AccountSSHContainer />
                         </Route>
