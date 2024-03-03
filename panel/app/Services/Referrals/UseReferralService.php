@@ -24,6 +24,7 @@ class UseReferralService
     public function handle(ClientApiRequest $request): void
     {
         // TODO: переделать реферальную систему
+        throw new DisplayException('Тебе сюда не надо!');
         $user = $request->user();
         $code = $request->input('code');
         $reward = $this->settings->get('referrals:reward', 0);

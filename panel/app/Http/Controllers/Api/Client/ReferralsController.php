@@ -44,8 +44,11 @@ class ReferralsController extends ClientApiController
      *
      * @throws DisplayException
      */
+    // TODO: удалить
     public function use(ClientApiRequest $request): JsonResponse
     {
+        throw new DisplayException('Тебе сюда не надо!');
+        
         if ($request->user()->referral_code) {
             throw new DisplayException('You have already used a referral code.');
         }

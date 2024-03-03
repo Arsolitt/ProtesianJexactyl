@@ -129,6 +129,7 @@ class User extends Model implements
         'verified' => 'boolean',
         'credits' => 'sometimes|numeric|min:0',
         'server_slots' => 'sometimes|int',
+        'referral_code' => 'sometimes|string|min:16|max:16',
     ];
     /**
      * Level of servers to display when using access() on a user.
@@ -168,6 +169,7 @@ class User extends Model implements
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
+        'referral_code' => 'string'
     ];
     /**
      * The attributes excluded from the model's JSON form.

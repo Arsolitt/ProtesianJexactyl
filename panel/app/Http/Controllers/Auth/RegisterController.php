@@ -3,11 +3,11 @@
 namespace Jexactyl\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Http\Requests\Auth\RegisterRequest;
 use Jexactyl\Services\Users\UserCreationService;
-use Jexactyl\Exceptions\Model\DataValidationException;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 
 class RegisterController extends AbstractLoginController
 {
@@ -52,6 +52,7 @@ class RegisterController extends AbstractLoginController
             'server_slots' => $this->settings->get($prefix . 'slot', 0),
             'approved' => $approved,
             'verified' => $verified,
+            'referral_code' => $request->input('referral_code'),
         ]);
 
         return new JsonResponse([

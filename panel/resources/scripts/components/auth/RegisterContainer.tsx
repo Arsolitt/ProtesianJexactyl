@@ -16,11 +16,13 @@ interface Values {
     username: string;
     email: string;
     password: string;
+    referral_code: string;
 }
 
 const RegisterContainer = ({ history }: RouteComponentProps) => {
     const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
+    const referrals = useStoreState((state) => state.storefront.data!.referrals.enabled);
 
     const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
@@ -73,11 +75,12 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
     return (
         <Formik
             onSubmit={onSubmit}
-            initialValues={{ username: '', email: '', password: '' }}
+            initialValues={{ username: '', email: '', password: '', referral_code: '' }}
             validationSchema={object().shape({
                 username: string().min(3, 'Минимальная длина никнейма - 3 символа').required('Никнейм обязателен!'),
                 email: string().email('Некорректный Email').required('Email обязателен!'),
                 password: string().min(8, 'Минимальная длина пароля - 8 символов').required('Пароль обязателен!'),
+                referral_code: string().length(16, 'Код пригласившего должен быть 16 символов длиной!').optional(),
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
@@ -92,6 +95,15 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                         css={tw`my-3`}
                         disabled={isSubmitting}
                     />
+                    {referrals && (
+                        <Field
+                            type={'text'}
+                            label={'Код пригласившего'}
+                            name={'referral_code'}
+                            css={tw`my-3`}
+                            disabled={isSubmitting}
+                        />
+                    )}
                     <Button.Success
                         type={'submit'}
                         css={tw`my-6 w-full`}
