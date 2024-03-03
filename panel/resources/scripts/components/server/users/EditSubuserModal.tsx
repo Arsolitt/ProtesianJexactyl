@@ -111,9 +111,9 @@ const EditSubuserModal = ({ subuser }: Props) => {
                             : 'Добавить нового пользователя'}
                     </h2>
                     <div>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
+                        <Button.Success type={'submit'} css={tw`w-full sm:w-auto`}>
                             {subuser ? 'Сохранить' : 'Пригласить'}
-                        </Button>
+                        </Button.Success>
                     </div>
                 </div>
                 <FlashMessageRender byKey={'user:edit'} css={tw`mt-4`} />

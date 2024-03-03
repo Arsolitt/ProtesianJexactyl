@@ -49,7 +49,7 @@ export default ({ subuser }: Props) => {
                         <button
                             type={'button'}
                             aria-label={'Edit subuser'}
-                            css={tw`block text-sm p-1 md:p-2 text-neutral-500 hover:text-neutral-100 transition-colors duration-150 mx-4`}
+                            css={tw`block text-sm p-1 md:p-2 text-inert-500 hover:text-inert-100 transition-colors duration-150 mx-4`}
                             onClick={() => setVisible(true)}
                         >
                             <Icon.PenTool />
