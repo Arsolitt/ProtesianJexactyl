@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStoreState } from '@/state/hooks';
-import { useHistory, useLocation } from 'react-router';
+import { Redirect, useHistory, useLocation } from 'react-router';
 import { NotFound } from '@/components/elements/ScreenBlock';
 import LoginContainer from '@/components/auth/LoginContainer';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
@@ -16,6 +16,11 @@ export default () => {
     const { path } = useRouteMatch();
     const email = useStoreState((state) => state.settings.data?.registration.email);
     const discord = useStoreState((state) => state.settings.data?.registration.discord);
+    const isAuthenticated = useStoreState((state) => !!state.user.data?.uuid);
+
+    if (isAuthenticated) {
+        return <Redirect to={{ pathname: '/home', state: { from: location } }} />;
+    }
 
     return (
         <div className={'pt-8 xl:pt-32'}>

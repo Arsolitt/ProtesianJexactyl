@@ -81,8 +81,8 @@ export default ({ className }: { className?: string }) => {
     return (
         <div className={classNames('grid grid-cols-6 gap-2 md:gap-4', className)}>
             <StatBlock icon={faClock} title={'Время работы'}>
-                {status === null ? (
-                    'Offline'
+                {status === null || status === 'offline' ? (
+                    'Выключен'
                 ) : stats.uptime > 0 ? (
                     <UptimeDuration uptime={stats.uptime / 1000} />
                 ) : (

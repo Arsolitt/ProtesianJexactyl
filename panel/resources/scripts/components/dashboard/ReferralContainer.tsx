@@ -4,7 +4,7 @@ import { breakpoint } from '@/theme';
 import * as Icon from 'react-feather';
 import styled from 'styled-components/macro';
 import { useStoreState } from '@/state/hooks';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/elements/button';
 import { Dialog } from '@/components/elements/dialog';
 import GreyRowBox from '@/components/elements/GreyRowBox';
@@ -16,6 +16,7 @@ import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import getReferralCodes, { ReferralCode } from '@/api/account/getReferralCodes';
 import getReferralActivity, { ReferralActivity } from '@/api/account/getReferralActivity';
+import { ru } from 'date-fns/locale';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -71,7 +72,7 @@ export default () => {
                 addFlash({
                     type: 'success',
                     key: 'referrals',
-                    message: 'Referral code has been created.',
+                    message: 'Код для приглашения успешно создан',
                 });
             })
             .catch((error) => clearAndAddHttpError(error))
@@ -90,7 +91,7 @@ export default () => {
                 addFlash({
                     type: 'success',
                     key: 'referrals',
-                    message: 'Referral code has been deleted.',
+                    message: 'Код для приглашения удалён',
                 });
             })
             .catch((error) => clearAndAddHttpError(error))
@@ -101,25 +102,23 @@ export default () => {
     };
 
     return (
-        <PageContentBlock
-            title={'Referrals'}
-            description={'Create a code and share it with others.'}
-            showFlashKey={'referrals'}
-        >
+        <PageContentBlock title={'Рефералы'} description={'Создай код и зови друзей!'} showFlashKey={'referrals'}>
             <Container className={'lg:grid lg:grid-cols-3 my-10'}>
-                <ContentBox title={'Your Referral Codes'} css={tw`sm:mt-0`}>
+                <ContentBox title={'Твои реферальные коды'} css={tw`sm:mt-0`}>
                     <Dialog.Confirm
-                        title={'Delete Referral Code'}
-                        confirm={'Delete Code'}
+                        title={'Удалить реферальный код'}
+                        confirm={'Удалить'}
                         open={!!code}
                         onClose={() => setCode('')}
                         onConfirmed={() => doDeletion(code)}
                     >
-                        Users will no longer be able to use this key for signup.
+                        Никто не сможет больше использовать этот код для регистрации.
                     </Dialog.Confirm>
                     <SpinnerOverlay visible={loading} />
                     {codes.length === 0 ? (
-                        <p css={tw`text-center my-2`}>{!loading && 'No referral codes exist for this account.'}</p>
+                        <p css={tw`text-center my-2`}>
+                            {!loading && 'Ни одного реферального кода для твоего аккаунта не существует :('}
+                        </p>
                     ) : (
                         codes.map((code, index) => (
                             <GreyRowBox
@@ -130,8 +129,10 @@ export default () => {
                                 <div css={tw`ml-4 flex-1 overflow-hidden`}>
                                     <p css={tw`text-sm break-words`}>{code.code}</p>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
-                                        Created at:&nbsp;
-                                        {code.createdAt ? format(code.createdAt, 'MMM do, yyyy HH:mm') : 'Never'}
+                                        Создан:&nbsp;
+                                        {code.createdAt
+                                            ? format(code.createdAt, 'MMM do, yyyy HH:mm', { locale: ru })
+                                            : 'Никогда'}
                                     </p>
                                 </div>
                                 <button css={tw`ml-4 p-2 text-sm`} onClick={() => setCode(code.code)}>
@@ -142,20 +143,22 @@ export default () => {
                             </GreyRowBox>
                         ))
                     )}
-                    <Button onClick={() => doCreation()} className={'mt-4'}>
-                        Create
-                    </Button>
+                    <Button.Success onClick={() => doCreation()} className={'mt-4'}>
+                        Создать
+                    </Button.Success>
                 </ContentBox>
-                <ContentBox title={'Available Perks'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <ContentBox title={'Условия программы'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
                     <h1 css={tw`text-xl`}>
-                        You will recieve <span className={'text-green-500'}>{reward}</span> credits for every user you
-                        refer to this Panel.
+                        Ты будешь получать <span className={'text-main-500'}>{reward}</span>% от пополнения твоих
+                        рефералов!
                     </h1>
                 </ContentBox>
-                <ContentBox title={'Users Referred'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <ContentBox title={'Приглашённые пользователи'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
                     <SpinnerOverlay visible={loading} />
                     {activity.length === 0 ? (
-                        <p css={tw`text-center my-2`}>{!loading && 'No referral activity exists for this account.'}</p>
+                        <p css={tw`text-center my-2`}>
+                            {!loading && 'На твоём аккаунте нет реферальной активности :('}
+                        </p>
                     ) : (
                         activity.map((act, index) => (
                             <GreyRowBox
@@ -168,10 +171,14 @@ export default () => {
                                         {act.userEmail} (ID: {act.userId})
                                     </p>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
-                                        Used at:&nbsp;
-                                        {act.createdAt ? format(act.createdAt, 'MMM do, yyyy HH:mm') : 'Never'}
+                                        Использован:&nbsp;
+                                        {act.createdAt
+                                            ? format(act.createdAt, 'MMM do, yyyy HH:mm', { locale: ru })
+                                            : 'Никогда'}
                                     </p>
-                                    <p css={tw`text-2xs text-neutral-300 uppercase`}>Code used:&nbsp;{act.code}</p>
+                                    <p css={tw`text-2xs text-neutral-300 uppercase`}>
+                                        Использованный код:&nbsp;{act.code}
+                                    </p>
                                 </div>
                             </GreyRowBox>
                         ))

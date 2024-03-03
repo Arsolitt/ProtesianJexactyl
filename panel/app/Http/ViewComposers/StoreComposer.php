@@ -42,6 +42,10 @@ class StoreComposer extends Composer
                 'enabled' => $this->setting('referrals:enabled', Composer::TYPE_BOOL),
                 'reward' => $this->setting('referrals:reward', Composer::TYPE_INT),
             ],
+
+            'editing' => [
+                'enabled' => $this->setting('server:editing', Composer::TYPE_BOOL),
+            ]
         ]);
     }
 }

@@ -19,15 +19,15 @@
     @apply flex items-center justify-center w-10 h-10 rounded-full mr-4;
 
     &.danger {
-        @apply bg-red-500 text-red-50;
+        @apply bg-negative-500 text-negative-50;
     }
 
     &.warning {
-        @apply bg-yellow-600 text-yellow-50;
+        @apply bg-warning-500 text-warning-50;
     }
 
     &.success {
-        @apply bg-green-600 text-green-50;
+        @apply bg-main-500 text-main-50;
     }
 
     &.info {

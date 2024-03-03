@@ -8,7 +8,8 @@ import { Button } from '@/components/elements/button';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import NewMessageDialog from '@/components/tickets/forms/NewMessageDialog';
-import { Ticket, getTicket, getMessages, deleteTicket, TicketMessage } from '@/api/account/tickets';
+import { deleteTicket, getMessages, getTicket, Ticket, TicketMessage } from '@/api/account/tickets';
+import { ru } from 'date-fns/locale';
 
 export default () => {
     const { clearFlashes } = useFlash();
@@ -45,17 +46,31 @@ export default () => {
         doRefresh();
     }, []);
 
+    const visibleStatus = (status: string) => {
+        if (status === 'pending') {
+            return 'В ожидании';
+        } else if (status === 'in-progress') {
+            return 'В процессе';
+        } else if (status === 'resolved') {
+            return 'Решено';
+        } else if (status === 'unresolved') {
+            return 'Не решено';
+        } else {
+            return 'Неизвестно :(';
+        }
+    };
+
     if (!ticket) return <Spinner centered />;
 
     return (
         <PageContentBlock title={'View Ticket'} showFlashKey={'tickets'}>
             <NewMessageDialog open={visible} onClose={() => setVisible(false)} />
-            <div className={'mt-6 grid grid-cols-1 sm:grid-cols-2 lg:w-1/4 gap-4'}>
+            <div className={'mt-6 grid grid-cols-1 sm:grid-cols-2 lg:w-1/3 gap-4'}>
                 <Button.Text className={'w-full'} onClick={doRedirect}>
-                    View All Tickets
+                    Посмотреть все обращения
                 </Button.Text>
                 <Button.Danger className={'w-full'} onClick={doDeletion}>
-                    Delete Ticket
+                    Удалить обращение
                 </Button.Danger>
             </div>
             <Alert
@@ -72,18 +87,18 @@ export default () => {
                 }
                 className={'my-4 w-full'}
             >
-                This ticket is marked as&nbsp;<p className={'font-bold'}>{ticket.status ?? 'unknown'}</p>.
+                Обращение находится в статусе: &nbsp;<p className={'font-bold'}>{visibleStatus(ticket.status)}</p>.
             </Alert>
             <TitledGreyBox title={ticket.title}>
                 <p className={'line-clamp-5 truncate'}>{ticket.content}</p>
                 {ticket.createdAt && (
                     <p className={'text-right p-2 text-sm text-gray-400'}>
-                        {format(ticket.createdAt, "MMM do 'at' h:mma")}
+                        {format(ticket.createdAt, "MMM do 'в' h:mma", { locale: ru })}
                     </p>
                 )}
             </TitledGreyBox>
             {!messages ? (
-                <p className={'text-gray-400 text-center'}>No one has replied to this ticket yet.</p>
+                <p className={'text-gray-400 text-center'}>Никто ещё не ответил на твоё обращение :(</p>
             ) : (
                 <>
                     {messages.map((message) => (
@@ -95,11 +110,11 @@ export default () => {
                                             <p className={'text-lg text-center text-gray-400'}>{message.content}</p>
                                         </div>
                                     ) : (
-                                        <TitledGreyBox title={`Response from ${message.userEmail}`} className={'mt-4'}>
+                                        <TitledGreyBox title={`Сообщение от: ${message.userEmail}`} className={'mt-4'}>
                                             <p className={'line-clamp-5 truncate'}>{message.content}</p>
                                             {message.createdAt && (
                                                 <p className={'text-right p-2 text-sm text-gray-400'}>
-                                                    {format(message.createdAt, "MMM do 'at' h:mma")}
+                                                    {format(message.createdAt, "MMM do 'в' h:mma", { locale: ru })}
                                                 </p>
                                             )}
                                         </TitledGreyBox>
@@ -111,7 +126,7 @@ export default () => {
                 </>
             )}
             <div className={'flex justify-center items-center mt-6'}>
-                <Button onClick={() => setVisible(true)}>Create Message</Button>
+                <Button.Success onClick={() => setVisible(true)}>Написать сообщение</Button.Success>
             </div>
         </PageContentBlock>
     );

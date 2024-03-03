@@ -2,17 +2,17 @@
 
 namespace Jexactyl\Services\Backups;
 
-use Ramsey\Uuid\Uuid;
 use Carbon\CarbonImmutable;
+use Illuminate\Database\ConnectionInterface;
+use Jexactyl\Exceptions\Service\Backup\TooManyBackupsException;
+use Jexactyl\Extensions\Backups\BackupManager;
 use Jexactyl\Models\Backup;
 use Jexactyl\Models\Server;
-use Webmozart\Assert\Assert;
-use Illuminate\Database\ConnectionInterface;
-use Jexactyl\Extensions\Backups\BackupManager;
 use Jexactyl\Repositories\Eloquent\BackupRepository;
 use Jexactyl\Repositories\Wings\DaemonBackupRepository;
-use Jexactyl\Exceptions\Service\Backup\TooManyBackupsException;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Webmozart\Assert\Assert;
 
 class InitiateBackupService
 {
@@ -24,12 +24,13 @@ class InitiateBackupService
      * InitiateBackupService constructor.
      */
     public function __construct(
-        private BackupRepository $repository,
-        private ConnectionInterface $connection,
+        private BackupRepository       $repository,
+        private ConnectionInterface    $connection,
         private DaemonBackupRepository $daemonBackupRepository,
-        private DeleteBackupService $deleteBackupService,
-        private BackupManager $backupManager
-    ) {
+        private DeleteBackupService    $deleteBackupService,
+        private BackupManager          $backupManager
+    )
+    {
     }
 
     /**
@@ -112,7 +113,7 @@ class InitiateBackupService
             $backup = $this->repository->create([
                 'server_id' => $server->id,
                 'uuid' => Uuid::uuid4()->toString(),
-                'name' => trim($name) ?: sprintf('Backup at %s', CarbonImmutable::now()->toDateTimeString()),
+                'name' => trim($name) ?: sprintf('Бэкап от %s', CarbonImmutable::now()->toDateTimeString()),
                 'ignored_files' => array_values($this->ignoredFiles ?? []),
                 'disk' => $this->backupManager->getDefaultAdapter(),
                 'is_locked' => $this->isLocked,
