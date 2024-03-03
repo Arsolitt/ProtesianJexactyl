@@ -11,8 +11,8 @@ import DashboardRouter from '@/routers/DashboardRouter';
 import AuthenticationRouter from '@/routers/AuthenticationRouter';
 import { NotApproved, NotFound } from '@/components/elements/ScreenBlock';
 import AuthenticatedRoute from '@/components/elements/AuthenticatedRoute';
-import WelcomeRouter from '@/routers/WelcomeRouter';
 import AccountRouter from '@/routers/AccountRouter';
+import WelcomeRouter from '@/routers/WelcomeRouter';
 
 export default () => {
     const authenticated = useStoreState((state) => state.user?.data);
