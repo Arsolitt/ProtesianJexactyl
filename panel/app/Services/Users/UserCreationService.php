@@ -2,17 +2,18 @@
 
 namespace Jexactyl\Services\Users;
 
-use Ramsey\Uuid\Uuid;
-use Jexactyl\Models\User;
+use Illuminate\Contracts\Auth\PasswordBroker;
+use Illuminate\Contracts\Hashing\Hasher;
+use Illuminate\Database\ConnectionInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Jexactyl\Notifications\VerifyEmail;
-use Illuminate\Contracts\Hashing\Hasher;
-use Jexactyl\Notifications\AccountCreated;
-use Illuminate\Database\ConnectionInterface;
-use Illuminate\Contracts\Auth\PasswordBroker;
-use Jexactyl\Contracts\Repository\UserRepositoryInterface;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Contracts\Repository\UserRepositoryInterface;
+use Jexactyl\Events\User\RegisteredWithReferrer;
+use Jexactyl\Models\User;
+use Jexactyl\Notifications\AccountCreated;
+use Jexactyl\Notifications\VerifyEmail;
+use Ramsey\Uuid\Uuid;
 
 class UserCreationService
 {
@@ -36,7 +37,7 @@ class UserCreationService
      */
     public function handle(array $data): User
     {
-        $name = $this->settings->get('settings::app:name', 'Jexactyl');
+        $name = $this->settings->get('settings::app:name', 'ProtesiaN');
 
         if (array_key_exists('password', $data) && !empty($data['password'])) {
             $data['password'] = $this->hasher->make($data['password']);
@@ -88,7 +89,7 @@ class UserCreationService
             ];
 
             try {
-                Http::withBody(json_encode($webhook_data), 'application/json')->post($this->settings->get('jexactyl::approvals:webhook'));
+                Http::withBody(json_encode($webhook_data), 'application/json')->post($this->settings->get('approvals:webhook'));
             } catch (\Exception $e) {
             }
         }
@@ -105,6 +106,10 @@ class UserCreationService
             $user->notify(new AccountCreated($user, $token ?? null));
         } catch (\Exception $e) {
             // If the email system isn't active, still let users create accounts.
+        }
+
+        if (array_key_exists('referral_code', $data)) {
+            RegisteredWithReferrer::dispatch($user);
         }
 
         return $user;

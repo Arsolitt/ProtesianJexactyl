@@ -13,11 +13,13 @@ use Jexactyl\Events\Server\Updating as ServerUpdatingEvent;
 use Jexactyl\Events\Store\PaymentCanceled;
 use Jexactyl\Events\Store\PaymentPaid;
 use Jexactyl\Events\Store\ServerEdit as ServerEditEvent;
+use Jexactyl\Events\User\RegisteredWithReferrer;
 use Jexactyl\Events\User\UpdateCredits;
 use Jexactyl\Listeners\Auth\AuthenticationListener;
 use Jexactyl\Listeners\Auth\OAuthLoginListener;
 use Jexactyl\Listeners\Payment\CanceledListener;
 use Jexactyl\Listeners\Payment\PaidListener;
+use Jexactyl\Listeners\Referral\RegisteredListener as RegisteredWithReferrerListener;
 use Jexactyl\Listeners\Server\CreatedListener as ServerCreatedListener;
 use Jexactyl\Listeners\Server\CreatingListener as ServerCreatingListener;
 use Jexactyl\Listeners\Server\DeletedListener as ServerDeletedListener;
@@ -54,6 +56,8 @@ class EventServiceProvider extends ServiceProvider
         // Payment
         PaymentPaid::class => [PaidListener::class],
         PaymentCanceled::class => [CanceledListener::class],
+        // Referrals
+        RegisteredWithReferrer::class => [RegisteredWithReferrerListener::class],
         // User
         UpdateCredits::class => [UpdateCreditsListener::class],
     ];
