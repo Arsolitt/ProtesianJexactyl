@@ -491,62 +491,64 @@ export default () => {
                             >
                                 <p className={'mt-1'}>
                                     Дисковое пространство: {values.disk} МБ |{' '}
-                                    <span className={'text-green-500'}>{calcPrice('disk', values.disk)}р.</span>
+                                    <span className={'text-main-500'}>{calcPrice('disk', values.disk)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Оперативная память: {values.memory} МБ |{' '}
-                                    <span className={'text-green-500'}>{calcPrice('memory', values.memory)}р.</span>
+                                    <span className={'text-main-500'}>{calcPrice('memory', values.memory)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Резервные копии: {values.backups} Шт. |{' '}
-                                    <span className={'text-green-500'}>{calcPrice('backups', values.backups)}р.</span>
+                                    <span className={'text-main-500'}>{calcPrice('backups', values.backups)}р.</span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Базы данных: {values.databases} Шт. |{' '}
-                                    <span className={'text-green-500'}>
+                                    <span className={'text-main-500'}>
                                         {calcPrice('databases', values.databases)}р.
                                     </span>
                                 </p>
                                 <p className={'mt-1'}>
                                     Порты: {values.allocations} Шт. |{' '}
-                                    <span className={'text-green-500'}>
+                                    <span className={'text-main-500'}>
                                         {calcPrice('allocations', values.allocations)}р.
                                     </span>
                                 </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Цены'} icon={faCoins} className={'mt-8 sm:mt-0 text-lg'}>
                                 <p className={'mt-1'}>
-                                    Твоя скидка: <span className={'text-green-500'}>{user.discount.toFixed(2)}%</span>
+                                    Твоя скидка: <span className={'text-main-500'}>{user.discount.toFixed(2)}%</span>
                                 </p>
                                 <p className={'mt-1'}>
-                                    В месяц: <span className={'text-green-500'}>{prices.monthly.toFixed(2)}р.</span>
+                                    В месяц: <span className={'text-main-500'}>{prices.monthly.toFixed(2)}р.</span>
                                 </p>
+                                {/*<p className={'mt-1'}>*/}
+                                {/*    В день: <span className={'text-green-500'}>{prices.daily.toFixed(2)}р.</span>*/}
+                                {/*</p>*/}
                                 <p className={'mt-1'}>
-                                    В день: <span className={'text-green-500'}>{prices.daily.toFixed(2)}р.</span>
-                                </p>
-                                <p className={'mt-1'}>
-                                    В час: <span className={'text-green-500'}>{prices.hourly.toFixed(2)}р.</span>
+                                    В час: <span className={'text-main-500'}>{prices.hourly.toFixed(2)}р.</span>
                                 </p>
                                 {!enough && (
-                                    <p className={'mt-1 text-xs text-red-400'}>
+                                    <p className={'mt-1 text-xs text-negative-500'}>
                                         На балансе должно быть минимум {prices.daily.toFixed(2)}р.
                                     </p>
                                 )}
-                                {!nest && <p className={'mt-1 text-xs text-red-400'}>Нужно выбрать категорию!</p>}
-                                {!egg && <p className={'mt-1 text-xs text-red-400'}>Нужно выбрать стартовый образ!</p>}
+                                {!nest && <p className={'mt-1 text-xs text-negative-500'}>Нужно выбрать категорию!</p>}
+                                {!egg && (
+                                    <p className={'mt-1 text-xs text-negative-500'}>Нужно выбрать стартовый образ!</p>
+                                )}
                             </TitledGreyBox>
                         </StoreContainer>
                         <InputSpinner visible={loading}>
                             <FlashMessageRender byKey={'store:create'} className={'my-2'} />
                             <div className={'text-right'}>
-                                <Button
+                                <Button.Success
                                     type={'submit'}
                                     className={'w-1/6 mb-4'}
                                     size={Button.Sizes.Large}
                                     disabled={loading || !enough || !egg || !nest}
                                 >
-                                    <Icon.Server className={'mr-2'} /> Поехали!
-                                </Button>
+                                    <Icon.Server className={'mr-2'} /> Создать
+                                </Button.Success>
                             </div>
                         </InputSpinner>
                     </Form>
