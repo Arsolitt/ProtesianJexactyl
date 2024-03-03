@@ -38,7 +38,7 @@ export default ({ open, onClose }: DialogProps) => {
                 addFlash({
                     key: 'tickets',
                     type: 'success',
-                    message: 'Your message has been sent successfully.',
+                    message: 'Сообщение успешно отправлено',
                 });
             })
             .catch((error) => {
@@ -52,30 +52,26 @@ export default ({ open, onClose }: DialogProps) => {
         <Dialog
             open={open}
             onClose={onClose}
-            title={'Add a message'}
-            description={'This message will be visible to both you and the administrators on this Panel.'}
+            title={'Написать сообщение'}
+            description={'Можно добавить дополнительную информацию к обращению.'}
         >
             <Formik
                 onSubmit={submit}
                 initialValues={{ description: '' }}
                 validationSchema={object().shape({
-                    description: string().required().min(4),
+                    description: string()
+                        .required('У сообщения обязательно должно быть содержимое!')
+                        .min(4, 'Текст сообщения не должен быть меньше 4 символов!'),
                 })}
             >
                 {({ isSubmitting }) => (
                     <Form className={'mt-6'}>
                         <SpinnerOverlay visible={isSubmitting} />
-                        <FormikFieldWrapper
-                            label={'Description'}
-                            name={'description'}
-                            description={
-                                'Provide additional information, images and other content in order to help us fix your issue faster.'
-                            }
-                        >
+                        <FormikFieldWrapper label={'Текст'} name={'description'} description={''}>
                             <Field name={'description'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div className={'flex justify-end mt-6'}>
-                            <Button type={'submit'}>Send</Button>
+                            <Button.Success type={'submit'}>Отправить</Button.Success>
                         </div>
                     </Form>
                 )}

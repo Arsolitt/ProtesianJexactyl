@@ -6,7 +6,7 @@ import StoreRouter from '@/routers/StoreRouter';
 import TicketRouter from '@/routers/TicketRouter';
 import ServerRouter from '@/routers/ServerRouter';
 import Spinner from '@/components/elements/Spinner';
-import { Router, Switch, Route } from 'react-router';
+import { Route, Router, Switch } from 'react-router';
 import DashboardRouter from '@/routers/DashboardRouter';
 import AuthenticationRouter from '@/routers/AuthenticationRouter';
 import { NotApproved, NotFound } from '@/components/elements/ScreenBlock';
