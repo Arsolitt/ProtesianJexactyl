@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class AddReferralCodesTable extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -18,6 +18,9 @@ class AddReferralCodesTable extends Migration
             $table->unsignedInteger('user_id');
             $table->string('code')->unique();
             $table->timestamps();
+
+            $table->index('code');
+            $table->index('user_id');
         });
     }
 
@@ -30,4 +33,4 @@ class AddReferralCodesTable extends Migration
     {
         Schema::dropIfExists('referral_codes');
     }
-}
+};
