@@ -17,7 +17,6 @@ class RegisterRequest extends FormRequest
             'user' => 'required|string|min:3',
             'email' => 'required|email',
             'password' => 'required|string|min:8',
-            'referral_code' => 'sometimes|string|min:16|max:16',
         ];
     }
 }

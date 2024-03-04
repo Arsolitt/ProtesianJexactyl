@@ -19,6 +19,7 @@ use Jexactyl\Listeners\Auth\AuthenticationListener;
 use Jexactyl\Listeners\Auth\OAuthLoginListener;
 use Jexactyl\Listeners\Payment\CanceledListener;
 use Jexactyl\Listeners\Payment\PaidListener;
+use Jexactyl\Listeners\Referral\GiveRewardListener;
 use Jexactyl\Listeners\Referral\RegisteredListener as RegisteredWithReferrerListener;
 use Jexactyl\Listeners\Server\CreatedListener as ServerCreatedListener;
 use Jexactyl\Listeners\Server\CreatingListener as ServerCreatingListener;
@@ -54,7 +55,7 @@ class EventServiceProvider extends ServiceProvider
         ServerDeletedEvent::class => [ServerDeletedListener::class],
         ServerEditEvent::class => [ServerEditListener::class],
         // Payment
-        PaymentPaid::class => [PaidListener::class],
+        PaymentPaid::class => [PaidListener::class, GiveRewardListener::class],
         PaymentCanceled::class => [CanceledListener::class],
         // Referrals
         RegisteredWithReferrer::class => [RegisteredWithReferrerListener::class],

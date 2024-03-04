@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->constrained('users')->nullOnDelete();
             $table->string('referral_code');
             $table->unsignedInteger('payment_amount')->default(0);
-            $table->unsignedInteger('given_percent')->default(0);
-            $table->unsignedFloat('given_amount')->default(0);
+            $table->unsignedInteger('reward_percent')->default(0);
+            $table->unsignedFloat('reward_amount')->default(0);
             $table->timestamps();
 
             $table->index('payment_id');

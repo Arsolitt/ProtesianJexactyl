@@ -2,8 +2,9 @@
 
 namespace Jexactyl\Models;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 /**
  * Jexactyl\Models\ReferralCode.
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ReferralCode extends Model
 {
+    use HasUlids;
     /**
      * The resource name for this model when it is transformed into an
      * API representation using fractal.

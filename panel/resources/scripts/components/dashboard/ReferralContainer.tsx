@@ -42,7 +42,7 @@ export default () => {
     const [codes, setCodes] = useState<ReferralCode[]>([]);
     const [activity, setActivity] = useState<ReferralActivity[]>([]);
     const { clearFlashes, clearAndAddHttpError } = useFlashKey('referrals');
-    const reward = useStoreState((state) => state.storefront.data?.referrals.reward);
+    const reward = useStoreState((state) => state.user.data?.reward);
 
     useEffect(() => {
         clearFlashes();
