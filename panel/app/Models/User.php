@@ -214,10 +214,7 @@ class User extends Model implements
         return Collection::make($this->toArray())->except(['id', 'external_id'])->merge(['discount' => $this->totalDiscount()])->toArray();
     }
 
-    public function totalDiscount(): int
-    {
-        return 15;
-    }
+
 
     /**
      * Send the password reset notification.
@@ -306,5 +303,52 @@ class User extends Model implements
                 $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
+    }
+
+    public function totalDiscount(): int
+    {
+        $partner = Partner::where('user_id', $this->id)->first();
+        if ($partner) {
+            return (int) $partner->partner_discount;
+        }
+
+        $referrer = $this->referrer();
+        if ($referrer) {
+            $discount = $referrer->referralDiscount();
+            if ($discount > 0) {
+                return $discount;
+            }
+        }
+
+        return 0;
+    }
+
+    public function referralReward(): int
+    {
+        $reward = 0;
+        $partner = Partner::where('user_id', $this->id)->first();
+        if ($partner) {
+            $reward = (int) $partner->referral_reward;
+        } else {
+            $reward = (int) settings()->get('referrals:reward');
+        }
+        return $reward;
+    }
+
+    public function referrer(): User | null
+    {
+        if (!$this->referral_code) {
+            return null;
+        }
+        $referrerID = ReferralUses::where('code_used', '=', $this->referral_code)->first()?->referrer_id;
+        $referrer = User::find($referrerID);
+//        \Log::debug(var_export($referrer, true));
+        return $referrer;
+    }
+
+    public function referralDiscount(): int
+    {
+        $partner = Partner::where('user_id', '=', $this->id)->first();
+        return (int)$partner?->referral_discount;
     }
 }

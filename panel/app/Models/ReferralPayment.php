@@ -17,17 +17,16 @@ class ReferralPayment extends Model
         'user_id',
         'referral_code',
         'payment_amount',
-        'given_percent',
-        'given_amount',
-        'referral_code',
+        'reward_percent',
+        'reward_amount',
     ];
 
     public static array $validationRules = [
         'user_id' => 'required|exists:users,id',
         'referral_code' => 'required|string|exists:referral_codes,code',
         'payment_amount' => 'required|numeric',
-        'given_percent' => 'required|numeric',
-        'given_amount' => 'required|numeric',
+        'reward_percent' => 'required|numeric',
+        'reward_amount' => 'required|numeric',
         'payment_id' => 'required|string|exists:payments,id',
     ];
 

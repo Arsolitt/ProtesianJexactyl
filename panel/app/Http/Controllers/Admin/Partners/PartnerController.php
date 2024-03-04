@@ -5,23 +5,15 @@ namespace Jexactyl\Http\Controllers\Admin\Partners;
 use Illuminate\Contracts\Translation\Translator;
 use Illuminate\Http\Request;
 use Illuminate\View\Factory as ViewFactory;
-use Jexactyl\Contracts\Repository\UserRepositoryInterface;
 use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Models\Partner;
-use Jexactyl\Services\Users\UserCreationService;
-use Jexactyl\Services\Users\UserDeletionService;
-use Jexactyl\Services\Users\UserUpdateService;
 use Prologue\Alerts\AlertsMessageBag;
 
 class PartnerController extends Controller
 {
     public function __construct(
         protected AlertsMessageBag $alert,
-        protected UserCreationService $creationService,
-        protected UserDeletionService $deletionService,
         protected Translator $translator,
-        protected UserUpdateService $updateService,
-        protected UserRepositoryInterface $repository,
         protected ViewFactory $view
     ) {
     }

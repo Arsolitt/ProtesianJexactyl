@@ -37,7 +37,7 @@
                             <th>Username</th>
                             <th>Partner discount</th>
                             <th>Referral discount</th>
-                            <th>Referral commission</th>
+                            <th>Referral reward</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,7 +46,7 @@
                                 <td><a href="{{ route('admin.partners.view', $partner->id) }}">{{ $partner->username }}</a></td>
                                 <td>{{ $partner->partner_discount }}</td>
                                 <td>{{ $partner->referral_discount }}</td>
-                                <td>{{ $partner->referral_commission }}</td>
+                                <td>{{ $partner->referral_reward }}</td>
                             </tr>
                         @endforeach
                     </tbody>
