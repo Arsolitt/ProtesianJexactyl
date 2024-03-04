@@ -13,7 +13,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('referral_uses', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->text('code_used');
             $table->unsignedInteger('user_id')->constrained('users')->nullOnDelete();
             $table->unsignedInteger('referrer_id')->constrained('users')->nullOnDelete();

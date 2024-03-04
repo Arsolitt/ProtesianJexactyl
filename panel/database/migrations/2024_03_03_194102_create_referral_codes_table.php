@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('referral_codes', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->unsignedInteger('user_id');
             $table->string('code')->unique();
             $table->timestamps();

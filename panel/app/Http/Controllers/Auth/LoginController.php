@@ -82,6 +82,7 @@ class LoginController extends AbstractLoginController
             'data' => [
                 'complete' => false,
                 'confirmation_token' => $token,
+                'intended' => '/home',
             ],
         ]);
     }
