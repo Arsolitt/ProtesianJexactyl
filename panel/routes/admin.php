@@ -1,7 +1,7 @@
 <?php
 
-use Jexactyl\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Route;
+use Jexactyl\Http\Controllers\Admin;
 use Jexactyl\Http\Controllers\Admin\Jexactyl;
 use Jexactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
@@ -238,6 +238,27 @@ Route::group(['prefix' => 'users'], function () {
     Route::patch('/view/{user:id}/resources', [Admin\Users\ResourceController::class, 'update']);
 
     Route::delete('/view/{user:id}', [Admin\Users\UserController::class, 'delete']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| User Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/partners
+|
+*/
+Route::group(['prefix' => 'partners'], function () {
+    Route::get('/', [Admin\Partners\PartnerController::class, 'index'])->name('admin.partners');
+//    Route::get('/accounts.json', [Admin\Users\UserController::class, 'json'])->name('admin.users.json');
+    Route::get('/new', [Admin\Partners\PartnerController::class, 'create'])->name('admin.partners.new');
+    Route::get('/view/{partner:id}', [Admin\Partners\PartnerController::class, 'show'])->name('admin.partners.view');
+//
+    Route::post('/new', [Admin\Partners\PartnerController::class, 'store']);
+//
+    Route::patch('/view/{user:id}', [Admin\Partners\PartnerController::class, 'update']);
+//
+    Route::delete('/view/{user:id}', [Admin\Partners\PartnerController::class, 'destroy']);
 });
 
 /*
