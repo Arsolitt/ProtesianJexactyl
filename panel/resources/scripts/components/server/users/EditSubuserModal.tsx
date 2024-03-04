@@ -164,9 +164,9 @@ const EditSubuserModal = ({ subuser }: Props) => {
                 </div>
                 <Can action={subuser ? 'user.update' : 'user.create'}>
                     <div css={tw`pb-6 flex justify-end`}>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
+                        <Button.Success type={'submit'} css={tw`w-full sm:w-auto`}>
                             {subuser ? 'Сохранить' : 'Пригласить'}
-                        </Button>
+                        </Button.Success>
                     </div>
                 </Can>
             </Form>
