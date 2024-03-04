@@ -17,6 +17,7 @@ import PageContentBlock from '@/components/elements/PageContentBlock';
 import getReferralCodes, { ReferralCode } from '@/api/account/getReferralCodes';
 import getReferralActivity, { ReferralActivity } from '@/api/account/getReferralActivity';
 import { ru } from 'date-fns/locale';
+import CopyOnClick from '@/components/elements/CopyOnClick';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -127,7 +128,9 @@ export default () => {
                             >
                                 <Icon.GitBranch css={tw`text-neutral-300`} />
                                 <div css={tw`ml-4 flex-1 overflow-hidden`}>
-                                    <p css={tw`text-sm break-words`}>{code.code}</p>
+                                    <CopyOnClick text={code.code}>
+                                        <p css={tw`text-sm break-words`}>{code.code}</p>
+                                    </CopyOnClick>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
                                         Создан:&nbsp;
                                         {code.createdAt
