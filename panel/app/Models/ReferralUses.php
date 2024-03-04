@@ -2,8 +2,8 @@
 
 namespace Jexactyl\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int $id
@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class ReferralUses extends Model
 {
-    use HasFactory;
+    use HasUlids;
 
     /**
      * The resource name for this model when it is transformed into an

@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('partners', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->unsignedInteger('user_id')->constrained('users')->cascadeOnDelete();
+            $table->unsignedInteger('partner_discount')->default(0);
+            $table->unsignedInteger('referral_discount')->default(0);
+            $table->unsignedInteger('referral_reward')->default(0);
             $table->timestamps();
         });
     }
