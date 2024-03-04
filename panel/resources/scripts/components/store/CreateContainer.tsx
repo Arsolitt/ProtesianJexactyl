@@ -515,9 +515,12 @@ export default () => {
                                 </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Цены'} icon={faCoins} className={'mt-8 sm:mt-0 text-lg'}>
-                                <p className={'mt-1'}>
-                                    Твоя скидка: <span className={'text-main-500'}>{user.discount.toFixed(2)}%</span>
-                                </p>
+                                {user.discount > 0 && (
+                                    <p className={'mt-1'}>
+                                        Твоя скидка:{' '}
+                                        <span className={'text-main-500'}>{user.discount.toFixed(2)}%</span>
+                                    </p>
+                                )}
                                 <p className={'mt-1'}>
                                     В месяц: <span className={'text-main-500'}>{prices.monthly.toFixed(2)}р.</span>
                                 </p>

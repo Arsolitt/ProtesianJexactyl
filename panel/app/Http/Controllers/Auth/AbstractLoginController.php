@@ -2,18 +2,18 @@
 
 namespace Jexactyl\Http\Controllers\Auth;
 
-use Jexactyl\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Auth\AuthManager;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Auth\Events\Failed;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Jexactyl\Events\Auth\DirectLogin;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Controllers\Controller;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Jexactyl\Models\User;
 
 abstract class AbstractLoginController extends Controller
 {
@@ -89,7 +89,7 @@ abstract class AbstractLoginController extends Controller
         return new JsonResponse([
             'data' => [
                 'complete' => true,
-                'intended' => $this->redirectPath(),
+                'intended' => '/home',
                 'user' => $user->toVueObject(),
             ],
         ]);

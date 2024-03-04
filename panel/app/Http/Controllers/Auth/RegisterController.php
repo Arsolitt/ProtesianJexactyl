@@ -7,6 +7,7 @@ use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Http\Requests\Auth\RegisterRequest;
+use Jexactyl\Models\ReferralCode;
 use Jexactyl\Services\Users\UserCreationService;
 
 class RegisterController extends AbstractLoginController
@@ -42,6 +43,12 @@ class RegisterController extends AbstractLoginController
             $approved = true;
         }
 
+        $referralCode = $request->input('referral_code');
+
+        if (!ReferralCode::where('code', $referralCode)->exists()) {
+            $referralCode = '';
+        }
+
         $this->creationService->handle([
             'email' => $request->input('email'),
             'username' => $request->input('user'),
@@ -52,7 +59,7 @@ class RegisterController extends AbstractLoginController
             'server_slots' => $this->settings->get($prefix . 'slot', 0),
             'approved' => $approved,
             'verified' => $verified,
-            'referral_code' => $request->input('referral_code'),
+            'referral_code' => $referralCode,
         ]);
 
         return new JsonResponse([

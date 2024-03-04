@@ -102,6 +102,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                             name={'referral_code'}
                             css={tw`my-3`}
                             disabled={isSubmitting}
+                            placeholder={'Необязательно'}
                         />
                     )}
                     <Button.Success
