@@ -59,21 +59,20 @@ class ServerController extends ClientApiController
      */
     public function delete(DeleteServerRequest $request, Server $server): JsonResponse
     {
-        // TODO: переделать удаление серверов
         $user = $request->user();
 
         if ($user->id != $server->owner_id) {
-            throw new DisplayException('You are not authorized to perform this action.');
+            throw new DisplayException('Ты не владелец сервера!');
         }
 
         if ($this->settings->get('server:deletion') != 'true') {
-            throw new DisplayException('This feature has been locked by administrators.');
+            throw new DisplayException('Админ отключил удаление серверов!');
         }
 
         try {
             $this->deletionService->returnResources(true)->handle($server);
         } catch (DisplayException $ex) {
-            throw new DisplayException('Unable to delete the server from the system.');
+            throw new DisplayException('Что-то пошло не так :(');
         }
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

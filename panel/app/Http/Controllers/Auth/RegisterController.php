@@ -56,7 +56,7 @@ class RegisterController extends AbstractLoginController
             'name_last' => $request->input('user'),
             'password' => $request->input('password'),
             'ip' => $request->getClientIp(),
-            'server_slots' => $this->settings->get($prefix . 'slot', 0),
+            'server_slots' => $this->settings->get($prefix . 'slots', 0),
             'approved' => $approved,
             'verified' => $verified,
             'referral_code' => $referralCode,
