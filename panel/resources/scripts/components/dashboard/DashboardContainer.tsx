@@ -4,7 +4,7 @@ import getServers from '@/api/getServers';
 import useFlash from '@/plugins/useFlash';
 import { useStoreState } from 'easy-peasy';
 import { PaginatedResult } from '@/api/http';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Server } from '@/api/server/getServer';
 import Switch from '@/components/elements/Switch';
 import React, { useEffect, useState } from 'react';
@@ -13,6 +13,8 @@ import ServerRow from '@/components/dashboard/ServerRow';
 import Pagination from '@/components/elements/Pagination';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+import * as Icon from 'react-feather';
+import { Button } from '@/components/elements/button';
 
 export default () => {
     const { search } = useLocation();
@@ -67,12 +69,19 @@ export default () => {
                         />
                     </>
                 ) : (
-                    <div>
-                        <h1 className={'text-5xl'}>Привет, {username}!</h1>
-                        <h3 className={'text-2xl mt-2 text-neutral-500'}>
-                            Тут находится то, ради чего мы все здесь собрались
-                        </h3>
-                    </div>
+                    <>
+                        <div>
+                            <h1 className={'text-5xl'}>Привет, {username}!</h1>
+                            <h3 className={'text-2xl mt-2 text-neutral-500'}>
+                                Тут находится то, ради чего мы все здесь собрались
+                            </h3>
+                        </div>
+                        <Link to={'/store/create'}>
+                            <Button.Success type={'button'} className={''}>
+                                <Icon.Server className={'mr-2'} /> Создать сервер
+                            </Button.Success>
+                        </Link>
+                    </>
                 )}
             </div>
             {!servers ? (
@@ -96,10 +105,11 @@ export default () => {
                         ) : (
                             <p className={'text-gray-400 text-lg font-semibold text-center'}>
                                 Кажется, у тебя ещё нет ни одного сервера :( <br />
-                                Создать его ты можешь{' '}
+                                Но создать его ты можешь{' '}
                                 <NavLink to={`/store/create`} className={'underline text-gray-200'}>
                                     здесь
                                 </NavLink>
+                                !
                             </p>
                         )
                     }
