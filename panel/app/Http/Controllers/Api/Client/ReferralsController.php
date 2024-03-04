@@ -6,13 +6,12 @@ use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\ClientApiRequest;
 use Jexactyl\Models\ReferralUses;
-use Jexactyl\Services\Referrals\UseReferralService;
 use Jexactyl\Transformers\Api\Client\Referrals\ReferralActivityTransformer;
 use Jexactyl\Transformers\Api\Client\Referrals\ReferralCodeTransformer;
 
 class ReferralsController extends ClientApiController
 {
-    public function __construct(private UseReferralService $useService)
+    public function __construct()
     {
         parent::__construct();
     }
@@ -37,25 +36,6 @@ class ReferralsController extends ClientApiController
         return $this->fractal->collection($activity)
             ->transformWith($this->getTransformer(ReferralActivityTransformer::class))
             ->toArray();
-    }
-
-    /**
-     * Use a referral code.
-     *
-     * @throws DisplayException
-     */
-    // TODO: удалить
-    public function use(ClientApiRequest $request): JsonResponse
-    {
-        throw new DisplayException('Тебе сюда не надо!');
-        
-        if ($request->user()->referral_code) {
-            throw new DisplayException('You have already used a referral code.');
-        }
-
-        $this->useService->handle($request);
-
-        return new JsonResponse([], JsonResponse::HTTP_NO_CONTENT);
     }
 
     /**
