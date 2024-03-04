@@ -10,7 +10,7 @@ export interface RegisterData {
     username: string;
     email: string;
     password: string;
-    referral_code?: string;
+    referral_code?: string | null;
     recaptchaData?: string | null;
 }
 

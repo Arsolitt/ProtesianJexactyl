@@ -9,7 +9,6 @@ import ContentBox from '@/components/elements/ContentBox';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import DiscordAccountForm from '@/components/dashboard/forms/DiscordAccountForm';
 import UpdateUsernameForm from '@/components/dashboard/forms/UpdateUsernameForm';
-import AddReferralCodeForm from '@/components/dashboard/forms/AddReferralCodeForm';
 import UpdateEmailAddressForm from '@/components/dashboard/forms/UpdateEmailAddressForm';
 
 const Container = styled.div`
@@ -48,11 +47,11 @@ export default () => {
                 <ContentBox title={'Изменить Email'} showFlashes={'account:email'}>
                     <UpdateEmailAddressForm />
                 </ContentBox>
-                {referrals && (
-                    <ContentBox title={'Код пригласившего'} showFlashes={'account:referral'}>
-                        <AddReferralCodeForm />
-                    </ContentBox>
-                )}
+                {/*{referrals && (*/}
+                {/*    <ContentBox title={'Код пригласившего'} showFlashes={'account:referral'}>*/}
+                {/*        <AddReferralCodeForm />*/}
+                {/*    </ContentBox>*/}
+                {/*)}*/}
                 {discord && (
                     <ContentBox title={'Связь с Discord'} showFlashes={'account:discord'}>
                         <DiscordAccountForm />

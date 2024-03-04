@@ -45,7 +45,7 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
         Route::get('/activity', [Client\ReferralsController::class, 'activity']);
 
         Route::post('/', [Client\ReferralsController::class, 'store']);
-        Route::put('/use-code', [Client\ReferralsController::class, 'use']);
+//        Route::put('/use-code', [Client\ReferralsController::class, 'use']);
 
         Route::delete('/{code}', [Client\ReferralsController::class, 'delete']);
     });
