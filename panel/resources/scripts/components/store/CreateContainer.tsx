@@ -245,7 +245,7 @@ export default () => {
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Лимит ОЗУ'} icon={faMemory} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
-                                    <Button.Danger
+                                    <Button.Text
                                         type={'button'}
                                         css={tw``}
                                         onClick={(event) => {
@@ -259,7 +259,7 @@ export default () => {
                                         }}
                                     >
                                         <Icon.Minus />
-                                    </Button.Danger>
+                                    </Button.Text>
                                     <div className={'relative mx-2 w-full'}>
                                         <Field name={'memory'} className={'text-center'} />
                                         <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
@@ -285,7 +285,7 @@ export default () => {
                             </TitledGreyBox>
                             <TitledGreyBox title={'Лимит диска'} icon={faHdd} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
-                                    <Button.Danger
+                                    <Button.Text
                                         type={'button'}
                                         css={tw``}
                                         onClick={(event) => {
@@ -299,7 +299,7 @@ export default () => {
                                         }}
                                     >
                                         <Icon.Minus />
-                                    </Button.Danger>
+                                    </Button.Text>
                                     <div className={'relative mx-2 w-full'}>
                                         <Field name={'disk'} className={'text-center'} />
                                         <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
@@ -329,7 +329,7 @@ export default () => {
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Резервные копии'} icon={faArchive} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
-                                    <Button.Danger
+                                    <Button.Text
                                         type={'button'}
                                         css={tw``}
                                         onClick={(event) => {
@@ -343,7 +343,7 @@ export default () => {
                                         }}
                                     >
                                         <Icon.Minus />
-                                    </Button.Danger>
+                                    </Button.Text>
                                     <div className={'relative mx-2 w-full'}>
                                         <Field name={'backups'} className={'text-center'} />
                                         <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
@@ -369,7 +369,7 @@ export default () => {
                             </TitledGreyBox>
                             <TitledGreyBox title={'Базы данных'} icon={faDatabase} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
-                                    <Button.Danger
+                                    <Button.Text
                                         type={'button'}
                                         css={tw``}
                                         onClick={(event) => {
@@ -383,7 +383,7 @@ export default () => {
                                         }}
                                     >
                                         <Icon.Minus />
-                                    </Button.Danger>
+                                    </Button.Text>
                                     <div className={'relative mx-2 w-full'}>
                                         <Field name={'databases'} className={'text-center'} />
                                         <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>
@@ -409,7 +409,7 @@ export default () => {
                             </TitledGreyBox>
                             <TitledGreyBox title={'Порты'} icon={faNetworkWired} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
-                                    <Button.Danger
+                                    <Button.Text
                                         type={'button'}
                                         css={tw``}
                                         onClick={(event) => {
@@ -423,7 +423,7 @@ export default () => {
                                         }}
                                     >
                                         <Icon.Minus />
-                                    </Button.Danger>
+                                    </Button.Text>
                                     <div className={'relative mx-2 w-full'}>
                                         <Field name={'allocations'} className={'text-center'} />
                                         <p className={'absolute text-sm top-1 right-2 bg-gray-700 p-2 rounded-lg'}>

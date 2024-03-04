@@ -97,9 +97,9 @@ const EditSubuserModal = ({ subuser }: Props) => {
             }
             validationSchema={object().shape({
                 email: string()
-                    .max(191, 'Email addresses must not exceed 191 characters.')
-                    .email('A valid email address must be provided.')
-                    .required('A valid email address must be provided.'),
+                    .max(191, 'Email не должен превышать 191 знаков')
+                    .email('Email должен быть действительным адресом электронной почты')
+                    .required('Email должен быть действительным адресом электронной почты'),
                 permissions: array().of(string()),
             })}
         >
@@ -107,21 +107,21 @@ const EditSubuserModal = ({ subuser }: Props) => {
                 <div css={tw`flex justify-between`}>
                     <h2 css={tw`text-2xl`} ref={ref}>
                         {subuser
-                            ? `${canEditUser ? 'Modify' : 'View'} permissions for ${subuser.email}`
-                            : 'Create new subuser'}
+                            ? `${canEditUser ? 'Изменить' : 'Посмотреть'} разрешения для ${subuser.email}`
+                            : 'Добавить нового пользователя'}
                     </h2>
                     <div>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
-                            {subuser ? 'Save' : 'Invite User'}
-                        </Button>
+                        <Button.Success type={'submit'} css={tw`w-full sm:w-auto`}>
+                            {subuser ? 'Сохранить' : 'Пригласить'}
+                        </Button.Success>
                     </div>
                 </div>
                 <FlashMessageRender byKey={'user:edit'} css={tw`mt-4`} />
                 {!isRootAdmin && loggedInPermissions[0] !== '*' && (
                     <div css={tw`mt-4 pl-4 py-2 border-l-4 border-cyan-400`}>
                         <p css={tw`text-sm text-neutral-300`}>
-                            Only permissions which your account is currently assigned may be selected when creating or
-                            modifying other users.
+                            При создании или изменении других пользователей могут быть выбраны только те разрешения,
+                            которые доступны тебе в данный момент.
                         </p>
                     </div>
                 )}
@@ -129,16 +129,14 @@ const EditSubuserModal = ({ subuser }: Props) => {
                     <div css={tw`mt-6`}>
                         <Field
                             name={'email'}
-                            label={'User Email'}
-                            description={
-                                'Enter the email address of the user you wish to invite as a subuser for this server.'
-                            }
+                            label={'Email пользователя'}
+                            description={'Введи email пользователя, которого ты хочешь пригласить к себе.'}
                         />
                     </div>
                 )}
                 <div css={tw`my-6`}>
                     <div css={tw`flex items-center mb-4 p-2 bg-gray-800 rounded shadow-sm`}>
-                        <p css={tw`flex-1 ml-1`}>Select all permissions?</p>
+                        <p css={tw`flex-1 ml-1`}>Выбрать все разрешения?</p>
                         {canEditUser && (
                             <SelectAllPermissions isEditable={canEditUser} permissions={editablePermissions} />
                         )}
@@ -166,9 +164,9 @@ const EditSubuserModal = ({ subuser }: Props) => {
                 </div>
                 <Can action={subuser ? 'user.update' : 'user.create'}>
                     <div css={tw`pb-6 flex justify-end`}>
-                        <Button type={'submit'} css={tw`w-full sm:w-auto`}>
-                            {subuser ? 'Save' : 'Invite User'}
-                        </Button>
+                        <Button.Success type={'submit'} css={tw`w-full sm:w-auto`}>
+                            {subuser ? 'Сохранить' : 'Пригласить'}
+                        </Button.Success>
                     </div>
                 </Can>
             </Form>
