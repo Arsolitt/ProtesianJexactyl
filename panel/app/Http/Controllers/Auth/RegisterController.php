@@ -3,6 +3,7 @@
 namespace Jexactyl\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Cookie;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
@@ -49,7 +50,7 @@ class RegisterController extends AbstractLoginController
             $referralCode = '';
         }
 
-        $this->creationService->handle([
+        $data = [
             'email' => $request->input('email'),
             'username' => $request->input('user'),
             'name_first' => $request->input('user'),
@@ -59,8 +60,13 @@ class RegisterController extends AbstractLoginController
             'server_slots' => $this->settings->get($prefix . 'slots', 0),
             'approved' => $approved,
             'verified' => $verified,
-            'referral_code' => $referralCode,
-        ]);
+        ];
+
+        if (ReferralCode::where('code', '=', Cookie::get('referral_code'))->exists()) {
+            $data['referral_code'] = Cookie::get('referral_code');
+        }
+
+        $this->creationService->handle($data);
 
         return new JsonResponse([
             'data' => [

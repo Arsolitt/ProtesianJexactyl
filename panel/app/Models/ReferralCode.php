@@ -50,7 +50,7 @@ class ReferralCode extends Model
      */
     public static array $validationRules = [
         'user_id' => 'required|exists:users,id',
-        'code' => 'present|string|size:16',
+        'code' => 'present|string|min:5',
     ];
 
     protected $casts = [
