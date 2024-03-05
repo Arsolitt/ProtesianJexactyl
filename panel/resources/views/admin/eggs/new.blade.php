@@ -36,6 +36,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="control-label">Egg Visibility</label>
+                                <div>
+                                    <select name="private" class="form-control">
+                                        <option selected value="0">Public</option>
+                                        <option value="1">Private</option>
+                                    </select>
+                                    <p class="text-muted"><small>Determines whether users can deploy with this egg.</small></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="pName" class="form-label">Name</label>
                                 <input type="text" id="pName" name="name" value="{{ old('name') }}" class="form-control" />
                                 <p class="text-muted small">A simple, human-readable name to use as an identifier for this Egg. This is what users will see as their game server type.</p>
