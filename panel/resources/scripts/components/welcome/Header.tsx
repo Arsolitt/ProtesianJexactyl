@@ -18,7 +18,13 @@ export default (props: Props) => {
                     src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'}
                     alt={'logo'}
                 />
-                <span className={'font-bold text-4xl text-main-400 ml-5 hidden md:inline'}>ProtesiaN</span>
+                <span
+                    className={
+                        'font-bold text-4xl ml-5 hidden md:inline bg-gradient-to-l from-main-400 to-main-600 bg-clip-text text-transparent'
+                    }
+                >
+                    ProtesiaN
+                </span>
             </Link>
             {(!user && (
                 <Link to={'/auth/login'}>
