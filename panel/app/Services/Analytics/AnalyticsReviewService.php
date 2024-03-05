@@ -31,8 +31,6 @@ class AnalyticsReviewService
         $this->calculate($server->id, $total);
     }
 
-    // TODO: переделать аналитику на 3 уровня - зелёный, жёлтый, красный
-
     /**
      * Calculates the average usage per resource and sends notifications
      * when a conditional statement is true.
@@ -44,7 +42,7 @@ class AnalyticsReviewService
         $size = count($values);
 
         foreach ($values as $key => $value) {
-            if ($value <= 40) {
+            if ($value <= 30) {
                 $this->message($id, $size, $key, $value, false);
             }
 
@@ -63,7 +61,7 @@ class AnalyticsReviewService
 
         AnalyticsMessage::create([
             'server_id' => $id,
-            'title' => 'Использвание ' . $this->getNameBuyType($key). ' ' . ($warning ? 'выше 75' : 'ниже 40') . '%',
+            'title' => 'Использвание ' . $this->getNameBuyType($key). ' ' . ($warning ? 'выше 75' : 'ниже 30') . '%',
             'content' => 'Средний показатель ' . $value . $suffix,
             'type' => ($warning ? 'warning' : 'success'),
         ]);

@@ -22,7 +22,7 @@ class CreatedListener
     {
         $user = $event->server->user;
         $server = $event->server;
-        // TODO: implement UserUpdateSlots
+        // TODO: сделать событие UserUpdateSlots
         $user->update([
             'server_slots' => $user->server_slots - 1,
         ]);
