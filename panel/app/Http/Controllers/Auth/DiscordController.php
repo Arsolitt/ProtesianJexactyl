@@ -81,6 +81,8 @@ class DiscordController extends AbstractLoginController
                 return response()->json(['error' => 'Вход по дискорду отключен Администрацией!'], 403);
             }
 
+            // TODO: брать из кука реферальный код
+
             $data = [
                 'approved' => !$this->settings->get('approvals:enabled'),
                 'email' => $discord->email,

@@ -30,7 +30,7 @@ const Container = styled.div`
 export default () => {
     const { state } = useLocation<undefined | { twoFactorRedirect?: boolean }>();
     const discord = useStoreState((state) => state.settings.data!.registration.discord);
-    const referrals = useStoreState((state) => state.storefront.data!.referrals.enabled);
+    // const referrals = useStoreState((state) => state.storefront.data!.referrals.enabled);
 
     return (
         <PageContentBlock title={'Профиль'} description={'Можно посмотреть на себя любимого'}>

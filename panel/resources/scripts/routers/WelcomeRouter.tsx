@@ -8,7 +8,7 @@ export default () => {
     const location = useLocation();
 
     return (
-        <div className={'pt-8 xl:pt-32'}>
+        <div className={'w-11/12 mx-auto'}>
             <Switch location={location}>
                 <Route path={`/`} component={WelcomeContainer} exact />
                 <Route path={'*'}>
