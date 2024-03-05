@@ -8,14 +8,13 @@ interface Props {
 }
 export default (props: Props) => {
     const user = useStoreState((state) => state.user.data!);
-    const logo = useStoreState((state) => state.settings.data?.logo);
 
     return (
         <div className={'w-full h-[calc(100vh)] flex justify-center items-center flex-col' + ' ' + props.className}>
             <p className={'flex flex-col items-center'}>
                 <span
                     className={
-                        'font-bold text-9xl ml-5 hidden md:inline bg-gradient-to-l from-main-400 to-main-600 bg-clip-text text-transparent'
+                        'font-bold text-center text-[calc(12vw)] lg:text-9xl bg-gradient-to-l from-main-400 to-main-600 bg-clip-text text-transparent'
                     }
                 >
                     ProtesiaN Host
@@ -30,7 +29,7 @@ export default (props: Props) => {
                     <Button.Danger size={Button.Sizes.Large}>Профиль {user.username}</Button.Danger>
                 </Link>
             )}
-            <span className={'font-bold text-sm text-gray-400'}>
+            <span className={'font-bold text-sm text-gray-400 text-center'}>
                 Админ не успел доделать лендинг, поэтому бегом в панельку тестить новый функционал!
             </span>
         </div>
