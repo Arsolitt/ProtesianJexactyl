@@ -5,12 +5,14 @@ namespace Jexactyl\Http\Controllers\Auth;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Events\Auth\OAuthLogin;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Model\DataValidationException;
+use Jexactyl\Models\ReferralCode;
 use Jexactyl\Models\User;
 use Jexactyl\Services\Users\UserCreationService;
 use Throwable;
@@ -95,13 +97,21 @@ class DiscordController extends AbstractLoginController
                 'server_slots' => $this->settings->get('registration:slots', 2),
             ];
 
+            if (ReferralCode::where('code', '=', Cookie::get('referral_code'))->exists()) {
+                $data['referral_code'] = Cookie::get('referral_code');
+            }
+
+            \Log::debug($data);
+
             try {
                 $this->creationService->handle($data);
             } catch (DataValidationException $e) {
-                return response()->json(['error' => 'Никнейм уже занят! Попробуй зайти с помощью почты и привязать аккаунт.'], 403);
+                return response()->json(['error' => 'Username already taken! Try to login with email and link your Discord.'], 403);
             }
             $user = User::where('email', $discord->email)->first();
         }
+
+        \Log::debug($user);
 
         if ($user) {
             Auth::loginUsingId($user->id, true);

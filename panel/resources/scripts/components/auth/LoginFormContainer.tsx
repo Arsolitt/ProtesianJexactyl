@@ -38,8 +38,7 @@ export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => 
             </div>
         </Form>
         <p css={tw`text-neutral-500 text-xs mt-6 sm:float-left`}>
-            &copy; <a href={'https://protesian.host'}>ProtesiaN,</a> на основе{' '}
-            <a href={'https://pterodactyl.io'}>Pterodactyl.</a>
+            &copy; <a href={'/'}>ProtesiaN,</a> на основе <a href={'https://pterodactyl.io'}>Pterodactyl.</a>
         </p>
         <p css={tw`text-neutral-500 text-xs mt-6 sm:float-right`}>
             2021-{new Date().getFullYear()} &bull; Все права защищены.

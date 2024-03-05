@@ -11,6 +11,7 @@ import { Button } from '@/components/elements/button/index';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import Cookies from 'js-cookie';
 
 interface Values {
     username: string;
@@ -26,6 +27,8 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
 
     const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
+
+    const referralCode = Cookies.get('referral_code');
 
     useEffect(() => {
         clearFlashes();
@@ -103,6 +106,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                             css={tw`my-3`}
                             disabled={isSubmitting}
                             placeholder={'Необязательно'}
+                            value={referralCode}
                         />
                     )}
                     <Button.Success
