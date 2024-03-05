@@ -129,7 +129,7 @@ class User extends Model implements
         'verified' => 'boolean',
         'credits' => 'sometimes|numeric|min:0',
         'server_slots' => 'sometimes|int',
-        'referral_code' => 'sometimes|string|min:16|max:16',
+        'referral_code' => 'sometimes|string',
     ];
     /**
      * Level of servers to display when using access() on a user.

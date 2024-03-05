@@ -2,10 +2,14 @@
 
 namespace Jexactyl\Http\Controllers\Base;
 
-use Illuminate\View\View;
-use Jexactyl\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\View;
 use Jexactyl\Contracts\Repository\ServerRepositoryInterface;
+use Jexactyl\Http\Controllers\Controller;
+use Jexactyl\Models\ReferralCode;
 
 class IndexController extends Controller
 {
@@ -21,8 +25,14 @@ class IndexController extends Controller
     /**
      * Returns listing of user's servers.
      */
-    public function index(): View
+    public function index(Request $request): Response|View
     {
+        $code = $request->query('ref');
+        $response = new Response();
+        $response->header('Location', '/');
+        if ($code ?? ReferralCode::where('code', '=', $code)->exists()) {
+            return $response->withCookie(Cookie::make('referral_code', $code, 60 * 24 * 365, '/', null, false, false, true, 'Lax'));
+        }
         return $this->view->make('templates/base.core');
     }
 }
