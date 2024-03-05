@@ -20,6 +20,7 @@ class EggFormRequest extends AdminFormRequest
             'config_startup' => 'required_without:config_from|nullable|json',
             'config_logs' => 'required_without:config_from|nullable|json',
             'config_files' => 'required_without:config_from|nullable|json',
+            'private' => 'required|boolean',
         ];
 
         if ($this->method() === 'POST') {
