@@ -71,7 +71,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                 clearAndAddHttpError({ error });
             });
     };
-
+    // TODO: ловить реф код из гет запроса и сохранять в кук или локал сторедж.
     return (
         <Formik
             onSubmit={onSubmit}
