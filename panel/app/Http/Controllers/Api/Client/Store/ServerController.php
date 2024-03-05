@@ -10,6 +10,7 @@ use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
 use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
+use Jexactyl\Models\Egg;
 use Jexactyl\Models\Nest;
 use Jexactyl\Models\Node;
 use Jexactyl\Repositories\Eloquent\NodeRepository;
@@ -55,12 +56,10 @@ class ServerController extends ClientApiController
     /**
      * Get all available eggs for server deployment.
      */
-
-    // TODO: добавить сортировку для яичек, чтобы отключать каждое по отдельности
     public function eggs(Request $request): array
     {
         $id = $request->input('id') ?? Nest::where('private', false)->first()->id;
-        $eggs = Nest::query()->where('id', $id)->where('private', false)->first()->eggs;
+        $eggs = Nest::query()->where('id', $id)->where('private', false)->first()->eggs()->where('private', '=', false)->get();
 
         return $this->fractal->collection($eggs)
             ->transformWith($this->getTransformer(EggTransformer::class))
@@ -82,17 +81,16 @@ class ServerController extends ClientApiController
             throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей!');
         }
 
-        if (Nest::find($request->input('nest'))->private) {
+        if (Nest::find($request->input('nest'))->private ?? true) {
             throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
         }
 
-        // TODO: реализовать приватные яйца
-//        if (Egg::find($request->input('egg'))->private) {
-//            throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
-//        }
+        if (Egg::find($request->input('egg'))->private ?? true) {
+            throw new DisplayException('Выбранный образ является приватным и размещение невозможно!');
+        }
 
         if ($user->server_slots < 1) {
-            throw new DisplayException('У вас недостаточно слотов для создания сервера.');
+            throw new DisplayException('У тебя недостаточно слотов для создания сервера.');
         }
 
         $node_id = $this->getPreferredNode($request->input('memory'), $request->input('disk'));
