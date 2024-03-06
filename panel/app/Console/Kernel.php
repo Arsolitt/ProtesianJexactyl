@@ -2,15 +2,14 @@
 
 namespace Jexactyl\Console;
 
-use Jexactyl\Models\ActivityLog;
 use Illuminate\Console\Scheduling\Schedule;
-use Illuminate\Database\Console\PruneCommand;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Jexactyl\Console\Commands\Schedule\AnalyticsReviewCommand;
-use Jexactyl\Console\Commands\Schedule\ProcessRunnableCommand;
-use Jexactyl\Console\Commands\Schedule\AnalyticsCollectionCommand;
-use Jexactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Jexactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
+use Jexactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
+use Jexactyl\Console\Commands\Schedule\AnalyticsCollectionCommand;
+use Jexactyl\Console\Commands\Schedule\AnalyticsReviewCommand;
+use Jexactyl\Console\Commands\Schedule\ChargeCreditsCommand;
+use Jexactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -42,5 +41,7 @@ class Kernel extends ConsoleKernel
         // Run analysis commands to collect and process data.
         $schedule->command(AnalyticsCollectionCommand::class)->everyFifteenMinutes();
         $schedule->command(AnalyticsReviewCommand::class)->everyThreeHours();
+
+        $schedule->command(ChargeCreditsCommand::class)->hourly();
     }
 }
