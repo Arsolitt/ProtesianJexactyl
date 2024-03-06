@@ -42,6 +42,14 @@
                         <p class="text-muted small">You can change the owner of this server by changing this field to an email matching another use on this system. If you do this a new daemon security token will be generated automatically.</p>
                     </div>
                     <div class="form-group">
+                        <label for="delete_on_suspend" class="control-label">Action on suspend<span class="field-required"></span></label>
+                        <select name="delete_on_suspend" class="form-control" id="delete_on_suspend">
+                            <option @if ($server->delete_on_suspend) selected @endif value="1">Delete after 30 days</option>
+                            <option @if (!$server->delete_on_suspend) selected @endif value="0">Keep</option>
+                        </select>
+                        <p class="text-muted small">You can change the owner of this server by changing this field to an email matching another use on this system. If you do this a new daemon security token will be generated automatically.</p>
+                    </div>
+                    <div class="form-group">
                         <label for="description" class="control-label">Server Description</label>
                         <textarea name="description" rows="3" class="form-control">{{ old('description', $server->description) }}</textarea>
                         <p class="text-muted small">A brief description of this server.</p>

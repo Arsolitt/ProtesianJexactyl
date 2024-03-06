@@ -43,5 +43,6 @@ class Kernel extends ConsoleKernel
 
 //        $schedule->command(ChargeCreditsCommand::class)->hourly();
 //        $schedule->command(DeleteOpenPayments::class)->hourly();
+//        $schedule->command(DeleteSuspendedServers::class)->hourly();
     }
 }

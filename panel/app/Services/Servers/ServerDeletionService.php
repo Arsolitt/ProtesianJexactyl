@@ -86,7 +86,7 @@ class ServerDeletionService
                     // @see https://github.com/pterodactyl/panel/issues/2085
                     $database->delete();
 
-                    Log::warning($exception);
+                    Log::warning($exception->getMessage());
                 }
             }
 

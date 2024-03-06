@@ -2,37 +2,37 @@
 
 namespace Jexactyl\Http\Controllers\Admin;
 
-use Jexactyl\Models\User;
-use Jexactyl\Models\Mount;
-use Jexactyl\Models\Server;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Jexactyl\Models\Database;
-use Jexactyl\Models\MountServer;
-use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
-use Jexactyl\Services\Servers\SuspensionService;
-use Jexactyl\Repositories\Eloquent\MountRepository;
-use Jexactyl\Services\Servers\ServerDeletionService;
-use Jexactyl\Services\Servers\ReinstallServerService;
-use Jexactyl\Exceptions\Model\DataValidationException;
-use Jexactyl\Repositories\Wings\DaemonServerRepository;
-use Jexactyl\Services\Servers\BuildModificationService;
-use Jexactyl\Services\Databases\DatabasePasswordService;
-use Jexactyl\Services\Servers\DetailsModificationService;
-use Jexactyl\Services\Servers\StartupModificationService;
-use Jexactyl\Contracts\Repository\NestRepositoryInterface;
-use Jexactyl\Repositories\Eloquent\DatabaseHostRepository;
-use Jexactyl\Services\Databases\DatabaseManagementService;
-use Jexactyl\Contracts\Repository\ServerRepositoryInterface;
-use Jexactyl\Contracts\Repository\DatabaseRepositoryInterface;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
 use Jexactyl\Contracts\Repository\AllocationRepositoryInterface;
-use Jexactyl\Services\Servers\ServerConfigurationStructureService;
+use Jexactyl\Contracts\Repository\DatabaseRepositoryInterface;
+use Jexactyl\Contracts\Repository\NestRepositoryInterface;
+use Jexactyl\Contracts\Repository\ServerRepositoryInterface;
+use Jexactyl\Exceptions\DisplayException;
+use Jexactyl\Exceptions\Model\DataValidationException;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Servers\Databases\StoreServerDatabaseRequest;
+use Jexactyl\Models\Database;
+use Jexactyl\Models\Mount;
+use Jexactyl\Models\MountServer;
+use Jexactyl\Models\Server;
+use Jexactyl\Models\User;
+use Jexactyl\Repositories\Eloquent\DatabaseHostRepository;
+use Jexactyl\Repositories\Eloquent\MountRepository;
+use Jexactyl\Repositories\Wings\DaemonServerRepository;
+use Jexactyl\Services\Databases\DatabaseManagementService;
+use Jexactyl\Services\Databases\DatabasePasswordService;
+use Jexactyl\Services\Servers\BuildModificationService;
+use Jexactyl\Services\Servers\DetailsModificationService;
+use Jexactyl\Services\Servers\ReinstallServerService;
+use Jexactyl\Services\Servers\ServerConfigurationStructureService;
+use Jexactyl\Services\Servers\ServerDeletionService;
+use Jexactyl\Services\Servers\StartupModificationService;
+use Jexactyl\Services\Servers\SuspensionService;
+use Prologue\Alerts\AlertsMessageBag;
 
 class ServersController extends Controller
 {
@@ -70,7 +70,7 @@ class ServersController extends Controller
     public function setDetails(Request $request, Server $server): RedirectResponse
     {
         $this->detailsModificationService->handle($server, $request->only([
-            'owner_id', 'external_id', 'name', 'description',
+            'owner_id', 'external_id', 'name', 'description', 'delete_on_suspend'
         ]));
 
         $this->alert->success(trans('admin/server.alerts.details_updated'))->flash();
