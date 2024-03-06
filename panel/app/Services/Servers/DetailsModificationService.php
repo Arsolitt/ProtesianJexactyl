@@ -2,12 +2,12 @@
 
 namespace Jexactyl\Services\Servers;
 
-use Illuminate\Support\Arr;
-use Jexactyl\Models\Server;
 use Illuminate\Database\ConnectionInterface;
-use Jexactyl\Traits\Services\ReturnsUpdatedModels;
-use Jexactyl\Repositories\Wings\DaemonServerRepository;
+use Illuminate\Support\Arr;
 use Jexactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Jexactyl\Models\Server;
+use Jexactyl\Repositories\Wings\DaemonServerRepository;
+use Jexactyl\Traits\Services\ReturnsUpdatedModels;
 
 class DetailsModificationService
 {
@@ -35,6 +35,7 @@ class DetailsModificationService
                 'owner_id' => Arr::get($data, 'owner_id'),
                 'name' => Arr::get($data, 'name'),
                 'description' => Arr::get($data, 'description') ?? '',
+                'delete_on_suspend' => Arr::get($data, 'delete_on_suspend') ?? true,
             ])->saveOrFail();
 
             // If the owner_id value is changed we need to revoke any tokens that exist for the server

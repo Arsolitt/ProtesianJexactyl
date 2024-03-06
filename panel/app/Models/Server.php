@@ -79,6 +79,7 @@ class Server extends Model
         'allocation_limit' => 'sometimes|nullable|integer|min:0',
         'backup_limit' => 'present|nullable|integer|min:0',
         'monthly_price' => 'sometimes|numeric|min:0',
+        'delete_on_suspend' => 'sometimes|boolean'
     ];
 
     /**
@@ -107,6 +108,7 @@ class Server extends Model
         'deleted_at' => 'datetime',
         'installed_at' => 'datetime',
         'suspended_at' => 'datetime',
+        'delete_on_suspend' => 'boolean',
     ];
 
     protected $fillable = [
@@ -136,6 +138,7 @@ class Server extends Model
         'backup_limit',
         'monthly_price',
         'suspended_at',
+        'delete_on_suspend',
     ];
 
     /**
