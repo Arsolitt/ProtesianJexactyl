@@ -3,6 +3,11 @@
 namespace Jexactyl\Console\Commands;
 
 use Illuminate\Console\Command;
+use Jexactyl\Events\Store\PaymentPaid;
+use Jexactyl\Events\User\UpdateCredits;
+use Jexactyl\Models\Payment;
+use Jexactyl\Models\ReferralUses;
+use Jexactyl\Models\User;
 
 class ImportUsersFromJson extends Command
 {
@@ -25,38 +30,66 @@ class ImportUsersFromJson extends Command
      */
     public function handle()
     {
-        $filename = storage_path('export/users.json');
+        $filename = storage_path('import/users.json');
 
         $fileContents = file_get_contents($filename);
-        $users = json_decode($fileContents, true);
+        $importedUsers = json_decode($fileContents, true);
 
-//        $usersArray = [];
-//        foreach ($users as $userData) {
-//            $referralCodes = $userData['referral_codes'] ?? [];
-//            unset($userData['referral_codes']);
-//
-//            $user = $userData;
-//            $user['referral_codes'] = $referralCodes;
-//
-//            $usersArray[] = $user;
-//        }
+        foreach ($importedUsers as $importedUser) {
+            try {
 
-//        \Log::debug($users);
 
-        foreach ($users as $user) {
-            $this->line($user['email']);
-            $payments = $user['payments'] ?? [];
-            foreach ($payments as $payment) {
-                $this->line($payment['amount']);
-            }
-            $codes = $user['referral_codes'] ?? [];
-            foreach ($codes as $code) {
-                $this->line($code['code']);
+                $this->line('Processing: ' . $importedUser['email']);
+                $user = User::where('email', '=', $importedUser['email'])->first();
+                if (!$user) {
+                    continue;
+                }
+                UpdateCredits::dispatch($user, $importedUser['credits'], 'set');
+                $user->referralCodes()->create(['user_id' => $user->id, 'code' => $importedUser['referral_code']]);
+
+                foreach ($importedUser['referrals'] as $email) {
+                    $referral = User::where('email', '=', $email)->first();
+                    if (!$referral) {
+                        continue;
+                    }
+                    ReferralUses::create([
+                        'user_id' => $referral->id,
+                        'referrer_id' => $user->id,
+                        'code_used' => $importedUser['referral_code'],
+                    ]);
+                    $referral->update(['referral_code' => $importedUser['referral_code']]);
+                }
+            } catch (\Exception $e) {
+                $this->line($e->getMessage());
             }
         }
 
-        // Выполнить дальнейшую обработку данных массива $usersArray
+        foreach ($importedUsers as $importedUser) {
+            $this->line('Processing: '.$importedUser['email']);
+            $user = User::where('email', '=', $importedUser['email'])->first();
+            if (!$user) {
+                continue;
+            }
 
-        $this->info('The data has been read from users.json and saved to an array');
+
+            foreach ($importedUser['payments'] as $paymentData) {
+                try {
+                $payment = Payment::create([
+                    'user_id' => $user->id,
+                    'amount' => $paymentData['amount'],
+                    'external_id' => $paymentData['payment_id'],
+                    'status' => Payment::STATUS_OPEN,
+                    'currency' => 'RUB',
+                    'gateway' => 'yookassa',
+                    'url' => 'imported',
+                ]);
+                PaymentPaid::dispatch($payment);
+                } catch (\Exception $e) {
+                    $this->line($e->getMessage());
+                }
+            }
+        }
+
+        $this->info('Data has been imported from users.json');
     }
 }
