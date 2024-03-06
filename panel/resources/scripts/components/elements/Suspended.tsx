@@ -114,7 +114,7 @@ export default () => {
                     >
                         <img src={ServerErrorSvg} css={tw`w-2/3 h-auto select-none mx-auto`} />
                         <h2 css={tw`mt-10 font-bold text-4xl`}>Заморожен</h2>
-                        {true ? (
+                        {
                             <>
                                 <p css={tw`text-sm my-2`}>
                                     Твой сервер заморожен за неуплату! Ты можешь его разморозить или удалить. Для
@@ -136,9 +136,7 @@ export default () => {
                                     Удалить
                                 </Button.Danger>
                             </>
-                        ) : (
-                            <>Сервер заморожен и к нему нет доступа</>
-                        )}
+                        }
                     </div>
                 </div>
             </PageContentBlock>
