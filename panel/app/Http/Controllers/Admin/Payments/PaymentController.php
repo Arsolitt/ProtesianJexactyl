@@ -26,7 +26,8 @@ class PaymentController extends Controller
         $payments = Payment::with('user')
             ->select('payments.*', 'users.username')
             ->leftJoin('users', 'users.id', '=', 'payments.user_id')
-            ->orderByRaw("FIELD(status, 'paid', 'canceled', 'open')")
+//            ->orderByRaw("FIELD(status, 'paid', 'canceled', 'open')")
+            ->orderBy('created_at', 'desc')
             ->paginate(50);
 
 //        dd($payments);
