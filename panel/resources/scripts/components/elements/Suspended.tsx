@@ -35,7 +35,7 @@ export default () => {
             .then(() => {
                 setSubmit(false);
                 // @ts-expect-error this is valid
-                window.location = '/';
+                window.location = '/home';
             })
             .catch((error) => {
                 clearAndAddHttpError({ key: 'server:renewal', error });
@@ -104,40 +104,39 @@ export default () => {
                     </Button>
                 </Dialog>
             </form>
-            <PageContentBlock title={'Server Suspended'}>
+            <PageContentBlock title={'Сервер заморожен!'}>
                 <FlashMessageRender byKey={'server:renewal'} css={tw`mb-1`} />
                 <div css={tw`flex justify-center`}>
                     <div
                         css={tw`w-full sm:w-3/4 md:w-1/2 p-12 md:p-20 bg-neutral-900 rounded-lg shadow-lg text-center relative`}
                     >
                         <img src={ServerErrorSvg} css={tw`w-2/3 h-auto select-none mx-auto`} />
-                        <h2 css={tw`mt-10 font-bold text-4xl`}>Suspended</h2>
-                        {/*{true ? (*/}
-                        {/*    <>*/}
-                        {/*        <p css={tw`text-sm my-2`}>*/}
-                        {/*            Your server has been suspended due to it not being renewed on time. Please click the*/}
-                        {/*            &apos;Renew&apos; button in order to reactivate your server. If you want to delete*/}
-                        {/*            your server, the resources will automatically be added back to your account so you*/}
-                        {/*            can re-deploy a new server easily.*/}
-                        {/*        </p>*/}
-                        {/*        <Button*/}
-                        {/*            className={'mx-2 my-1'}*/}
-                        {/*            onClick={() => setRenewDialog(true)}*/}
-                        {/*            disabled={isSubmit}*/}
-                        {/*        >*/}
-                        {/*            Renew Now*/}
-                        {/*        </Button>*/}
-                        {/*        <Button.Danger*/}
-                        {/*            className={'mx-2 my-1'}*/}
-                        {/*            onClick={() => setDeleteDialog(true)}*/}
-                        {/*            disabled={isSubmit}*/}
-                        {/*        >*/}
-                        {/*            Delete Server*/}
-                        {/*        </Button.Danger>*/}
-                        {/*    </>*/}
-                        {/*) : (*/}
-                        {/*    <>This server is suspended and cannot be accessed.</>*/}
-                        {/*)}*/}
+                        <h2 css={tw`mt-10 font-bold text-4xl`}>Заморожен</h2>
+                        {true ? (
+                            <>
+                                <p css={tw`text-sm my-2`}>
+                                    Твой сервер заморожен за неуплату! Ты можешь его разморозить или удалить. Для
+                                    разморозки потребуется иметь на балансе сумму для оплаты на сутки. Но оплата будет
+                                    снята за час.
+                                </p>
+                                <Button.Success
+                                    className={'mx-2 my-1'}
+                                    onClick={() => setRenewDialog(true)}
+                                    disabled={isSubmit}
+                                >
+                                    Разморозить
+                                </Button.Success>
+                                <Button.Danger
+                                    className={'mx-2 my-1'}
+                                    onClick={() => setDeleteDialog(true)}
+                                    disabled={isSubmit}
+                                >
+                                    Удалить
+                                </Button.Danger>
+                            </>
+                        ) : (
+                            <>Сервер заморожен и к нему нет доступа</>
+                        )}
                     </div>
                 </div>
             </PageContentBlock>
