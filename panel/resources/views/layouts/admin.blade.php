@@ -88,6 +88,11 @@
                                 <i data-feather="users" style="margin-left: 12px;"></i>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.payments') ?: 'active' }}">
+                            <a href="{{ route('admin.payments') }}">
+                                <i data-feather="credit-card" style="margin-left: 12px;"></i>
+                            </a>
+                        </li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.mounts') ?: 'active' }}">
                             <a href="{{ route('admin.mounts') }}">
                                 <i data-feather="hard-drive" style="margin-left: 12px;"></i>

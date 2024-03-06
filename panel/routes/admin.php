@@ -242,7 +242,7 @@ Route::group(['prefix' => 'users'], function () {
 
 /*
 |--------------------------------------------------------------------------
-| User Controller Routes
+| Partner Controller Routes
 |--------------------------------------------------------------------------
 |
 | Endpoint: /admin/partners
@@ -259,6 +259,27 @@ Route::group(['prefix' => 'partners'], function () {
     Route::patch('/view/{user:id}', [Admin\Partners\PartnerController::class, 'update']);
 //
     Route::delete('/view/{user:id}', [Admin\Partners\PartnerController::class, 'destroy']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Payment Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/payments
+|
+*/
+Route::group(['prefix' => 'payments'], function () {
+    Route::get('/', [Admin\Payments\PaymentController::class, 'index'])->name('admin.payments');
+//    Route::get('/accounts.json', [Admin\Users\UserController::class, 'json'])->name('admin.users.json');
+//    Route::get('/new', [Admin\Partners\PartnerController::class, 'create'])->name('admin.partners.new');
+    Route::get('/view/{partner:id}', [Admin\Payments\PaymentController::class, 'show'])->name('admin.payments.view');
+//
+//    Route::post('/new', [Admin\Partners\PartnerController::class, 'store']);
+//
+//    Route::patch('/view/{user:id}', [Admin\Partners\PartnerController::class, 'update']);
+//
+//    Route::delete('/view/{user:id}', [Admin\Partners\PartnerController::class, 'destroy']);
 });
 
 /*
