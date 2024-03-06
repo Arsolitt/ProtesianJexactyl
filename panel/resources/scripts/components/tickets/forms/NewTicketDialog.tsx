@@ -43,14 +43,7 @@ export default ({ open, onClose }: DialogProps) => {
     };
 
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            title={'Create a new ticket'}
-            description={
-                'This ticket will be registered under your account and accessible to all administrators on the Panel.'
-            }
-        >
+        <Dialog open={open} onClose={onClose} title={'Создать новое обращение'} description={''}>
             <Formik
                 onSubmit={submit}
                 initialValues={{ title: '', description: '' }}
@@ -63,24 +56,24 @@ export default ({ open, onClose }: DialogProps) => {
                     <Form className={'mt-6'}>
                         <SpinnerOverlay visible={isSubmitting} />
                         <FormikFieldWrapper
-                            label={'Title'}
+                            label={'Тема'}
                             name={'title'}
-                            description={'A title for this ticket.'}
+                            description={'Кратко укажи суть обращения'}
                             className={'mb-6'}
                         >
                             <Field name={'title'} as={Input} />
                         </FormikFieldWrapper>
                         <FormikFieldWrapper
-                            label={'Description'}
+                            label={'Описание'}
                             name={'description'}
                             description={
-                                'Provide additional information, images and other content in order to help us fix your issue faster.'
+                                'А вот тут уже нужно как можно больше подробностей. Картинки, видео, ссылки. Всё, что может помочь в решении проблемы.'
                             }
                         >
                             <Field name={'description'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div className={'flex justify-end mt-6'}>
-                            <Button type={'submit'}>Create</Button>
+                            <Button.Success type={'submit'}>Создать</Button.Success>
                         </div>
                     </Form>
                 )}

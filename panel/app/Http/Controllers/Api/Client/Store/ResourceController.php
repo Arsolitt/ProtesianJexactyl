@@ -2,22 +2,27 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client\Store;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
-use Jexactyl\Services\Store\ResourcePurchaseService;
-use Jexactyl\Transformers\Api\Client\Store\CostTransformer;
-use Jexactyl\Transformers\Api\Client\Store\UserTransformer;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
+use Jexactyl\Services\Store\LimitsService;
+use Jexactyl\Services\Store\ResourcePurchaseService;
+use Jexactyl\Transformers\Api\Client\Store\CostTransformer;
+use Jexactyl\Transformers\Api\Client\Store\LimitTransformer;
+use Jexactyl\Transformers\Api\Client\Store\UserTransformer;
 
 class ResourceController extends ClientApiController
 {
     /**
      * ResourceController constructor.
      */
-    public function __construct(private ResourcePurchaseService $purchaseService)
+    public function __construct(
+        private ResourcePurchaseService $purchaseService,
+        private LimitsService           $limitsService
+    )
     {
         parent::__construct();
     }
@@ -43,7 +48,7 @@ class ResourceController extends ClientApiController
     {
         $data = [];
         $prefix = 'store:cost:';
-        $types = ['cpu', 'memory', 'disk', 'slot', 'port', 'backup', 'database'];
+        $types = ['memory', 'disk', 'allocation', 'backup', 'database', 'slot'];
 
         foreach ($types as $type) {
             $data[] = $this->settings->get($prefix . $type, 0);
@@ -54,26 +59,12 @@ class ResourceController extends ClientApiController
             ->toArray();
     }
 
-    /**
-     * Allows a user to earn credits via passive earning.
-     *
-     * @throws DisplayException
-     */
-    public function earn(Request $request)
+    public function limits(Request $request)
     {
-        $amount = $this->settings->get('jexactyl::earn:amount', 0);
-
-        if ($this->settings->get('jexactyl::earn:enabled') != 'true') {
-            throw new DisplayException('Credit earning is currently disabled.');
-        }
-
-        try {
-            $request->user()->update(['store_balance' => $request->user()->store_balance + $amount]);
-        } catch (DisplayException $ex) {
-            throw new DisplayException('Unable to passively earn coins.');
-        }
-
-        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+        $data = $this->limitsService->getLimits();
+        return $this->fractal->item($data)
+            ->transformWith($this->getTransformer(LimitTransformer::class))
+            ->toArray();
     }
 
     /**

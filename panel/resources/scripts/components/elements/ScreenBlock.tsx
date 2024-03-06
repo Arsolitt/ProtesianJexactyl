@@ -80,7 +80,7 @@ const ScreenBlock = ({ title, image, message, onBack, onRetry, noContainer }: Sc
                         )}
                         <img src={image} css={tw`w-2/3 h-auto select-none mx-auto`} />
                         <h2 css={tw`mt-10 font-bold text-4xl`}>{title}</h2>
-                        <p css={tw`text-sm text-neutral-400 mt-2`}>{message}</p>
+                        {/*<p css={tw`text-sm text-neutral-400 mt-2`}>{message}</p>*/}
                     </div>
                 </div>
             </PageContentBlock>
@@ -97,8 +97,12 @@ type NotApprovedProps = (Omit<PropsWithBack, 'image' | 'title'> | Omit<PropsWith
     message: string;
 };
 
+// const ServerError = ({ title, ...props }: ServerErrorProps) => (
+//     <ScreenBlock title={title || 'Что-то пошло не так 0_0'} image={ServerErrorSvg} {...props} />
+// );
+
 const ServerError = ({ title, ...props }: ServerErrorProps) => (
-    <ScreenBlock title={title || 'Something went wrong'} image={ServerErrorSvg} {...props} />
+    <ScreenBlock title={title || 'Что-то пошло не так 0_0'} image={ServerErrorSvg} {...props} />
 );
 
 const NotApproved = ({ title, message }: NotApprovedProps) => (
@@ -109,7 +113,7 @@ const NotFound = ({ title, message, onBack }: Partial<Pick<ScreenBlockProps, 'ti
     <ScreenBlock
         title={title || '404'}
         image={NotFoundSvg}
-        message={message || 'The requested resource was not found.'}
+        message={message || 'Кажется, тут ничего нет...'}
         onBack={onBack}
     />
 );

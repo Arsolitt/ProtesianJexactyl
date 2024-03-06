@@ -1,12 +1,16 @@
 import { action, Action } from 'easy-peasy';
 
+export interface Gateway {
+    id: string;
+    name: string;
+    enabled: boolean;
+    min: number;
+    max: number;
+}
+
 export interface StorefrontSettings {
     enabled: boolean;
     currency: string;
-    renewals: {
-        cost: number;
-        days: number;
-    };
     editing: {
         enabled: boolean;
     };
@@ -24,14 +28,7 @@ export interface StorefrontSettings {
         backup: number;
         database: number;
     };
-    gateways: {
-        paypal: boolean;
-        stripe: boolean;
-    };
-    earn: {
-        enabled: boolean;
-        amount: number;
-    };
+    gateways: Gateway[];
 }
 
 export interface StorefrontStore {

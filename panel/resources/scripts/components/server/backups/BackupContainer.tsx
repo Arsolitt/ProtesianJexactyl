@@ -9,11 +9,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import CreateBackupButton from '@/components/server/backups/CreateBackupButton';
 import getServerBackups, { Context as ServerBackupContext } from '@/api/swr/getServerBackups';
+import { NavLink } from 'react-router-dom';
 
 const BackupContainer = () => {
     const { page, setPage } = useContext(ServerBackupContext);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const { data: backups, error, isValidating } = getServerBackups();
+    const id = ServerContext.useStoreState((state) => state.server.data?.id);
 
     const backupLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.backups);
 
@@ -32,7 +34,11 @@ const BackupContainer = () => {
     }
 
     return (
-        <ServerContentBlock title={'Backups'} description={'Protect your data with backups.'} showFlashKey={'backups'}>
+        <ServerContentBlock
+            title={'Бэкапы'}
+            description={'Делай бэкапы важных файлов, чтобы потом не кусать локти!'}
+            showFlashKey={'backups'}
+        >
             <Pagination data={backups} onPageSelect={setPage}>
                 {({ items }) =>
                     !items.length ? (
@@ -40,9 +46,7 @@ const BackupContainer = () => {
                         // create additional ones for the server.
                         !backupLimit ? null : (
                             <p css={tw`text-center text-sm text-neutral-300`}>
-                                {page > 1
-                                    ? "Looks like we've run out of backups to show you, try going back a page."
-                                    : 'It looks like there are no backups currently stored for this server.'}
+                                {page > 1 ? 'По всей видимости, тут ничего нет.' : 'Пора создавать бэкапы!'}
                             </p>
                         )
                     ) : (
@@ -54,18 +58,25 @@ const BackupContainer = () => {
             </Pagination>
             {backupLimit === 0 && (
                 <p css={tw`text-center text-sm text-neutral-300`}>
-                    Backups cannot be created for this server because the backup limit is set to 0.
+                    Для твоего сервера нет доступных бэкапов, но ты всегда можешь их добавить{' '}
+                    <NavLink to={`/server/${id}/edit`} className={'underline text-gray-200'}>
+                        здесь
+                    </NavLink>
                 </p>
             )}
             <Can action={'backup.create'}>
-                <div css={tw`mt-6 sm:flex items-center justify-end`}>
+                <div css={tw`mt-6 sm: flex items-center justify-end`}>
                     {backupLimit > 0 && backups.backupCount > 0 && (
-                        <p css={tw`text-sm text-neutral-300 mb-4 sm:mr-6 sm:mb-0`}>
-                            {backups.backupCount} of {backupLimit} backups have been created for this server.
+                        <p
+                            css={tw`text-sm text-neutral-300 mb-4
+                                sm: mr-6
+                                sm: mb-0`}
+                        >
+                            Использовано {backups.backupCount} из {backupLimit} доступных бэкапов.
                         </p>
                     )}
                     {backupLimit > 0 && backupLimit > backups.backupCount && (
-                        <CreateBackupButton css={tw`w-full sm:w-auto`} />
+                        <CreateBackupButton css={tw`w-full sm: w-auto`} />
                     )}
                 </div>
             </Can>

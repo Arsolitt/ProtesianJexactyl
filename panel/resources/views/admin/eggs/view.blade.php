@@ -62,6 +62,16 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
+                                <label class="control-label">Egg Visibility</label>
+                                <div>
+                                    <select name="private" class="form-control">
+                                        <option @if (!$egg->private) selected @endif value="0">Public</option>
+                                        <option @if ($egg->private) selected @endif value="1">Private</option>
+                                    </select>
+                                    <p class="text-muted"><small>Determines whether users can deploy with this egg.</small></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="pName" class="control-label">Name <span class="field-required"></span></label>
                                 <input type="text" id="pName" name="name" value="{{ $egg->name }}" class="form-control" />
                                 <p class="text-muted small">A simple, human-readable name to use as an identifier for this Egg.</p>

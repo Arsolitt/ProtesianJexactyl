@@ -2,19 +2,19 @@
 
 namespace Jexactyl\Services\Store;
 
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
 use Jexactyl\Exceptions\Service\Deployment\NoViableNodeException;
+use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
+use Jexactyl\Models\Allocation;
 use Jexactyl\Models\Egg;
+use Jexactyl\Models\EggVariable;
 use Jexactyl\Models\Nest;
 use Jexactyl\Models\Node;
 use Jexactyl\Models\Server;
-use Jexactyl\Models\Allocation;
-use Jexactyl\Models\EggVariable;
-use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Services\Servers\ServerCreationService;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
-use Jexactyl\Exceptions\Service\Deployment\NoViableAllocationException;
 use Throwable;
 
 class StoreCreationService
@@ -23,7 +23,8 @@ class StoreCreationService
         private SettingsRepositoryInterface       $settings,
         private readonly ServerCreationService    $creationService,
         private readonly StoreVerificationService $verifyService
-    ) {
+    )
+    {
     }
 
     /**
@@ -81,7 +82,7 @@ class StoreCreationService
         $allocation = Allocation::where('node_id', $node)->where('server_id', null)->first();
 
         if (!$allocation) {
-            throw new NoViableAllocationException('No allocations are available for deployment.');
+            throw new NoViableAllocationException('На ноде нет свободного места для создания сервера, попробуй позже или напиши в поддержку!');
         }
 
         return $allocation->id;

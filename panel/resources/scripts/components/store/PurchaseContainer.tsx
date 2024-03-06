@@ -2,13 +2,11 @@ import tw from 'twin.macro';
 import { breakpoint } from '@/theme';
 import styled from 'styled-components/macro';
 import { useStoreState } from '@/state/hooks';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Spinner from '@/components/elements/Spinner';
 import ContentBox from '@/components/elements/ContentBox';
-import { getResources, Resources } from '@/api/store/getResources';
 import PageContentBlock from '@/components/elements/PageContentBlock';
-import StripePurchaseForm from '@/components/store/forms/StripePurchaseForm';
-import PaypalPurchaseForm from '@/components/store/forms/PaypalPurchaseForm';
+import PurchaseForm from '@/components/store/forms/PurchaseForm';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -27,39 +25,27 @@ const Container = styled.div`
 `;
 
 export default () => {
-    const [resources, setResources] = useState<Resources>();
-    const paypal = useStoreState((state) => state.storefront.data!.gateways?.paypal);
-    const stripe = useStoreState((state) => state.storefront.data!.gateways?.stripe);
+    const user = useStoreState((state) => state.user.data!);
+    const gateways = useStoreState((state) => state.storefront.data!.gateways);
 
-    useEffect(() => {
-        getResources().then((resources) => setResources(resources));
-    }, []);
-
-    if (!resources) return <Spinner size={'large'} centered />;
+    if (!user) return <Spinner size={'large'} centered />;
 
     return (
-        <PageContentBlock title={'Account Balance'} description={'Purchase credits easily via Stripe or PayPal.'}>
+        <PageContentBlock title={'Биллинг'} description={'Пополнение баланса. Тут можно отдать свои денюжки.'}>
             <Container className={'lg:grid lg:grid-cols-2 my-10'}>
-                <ContentBox title={'Account Balance'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
-                    <h1 css={tw`text-7xl flex justify-center items-center`}>
-                        {resources.balance} <span className={'text-base ml-4'}>credits</span>
-                    </h1>
+                <ContentBox title={'Текущий баланс'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
+                    <h1 css={tw`text-7xl flex justify-center items-center`}>{user.credits} ₽</h1>
                 </ContentBox>
                 <ContentBox
-                    title={'Purchase credits'}
+                    title={'Пополнение баланса'}
                     showFlashes={'account:balance'}
                     css={tw`mt-8 sm: mt-0
-                    sm: ml-8`}
+                        sm: ml-8`}
                 >
-                    {!paypal && !stripe ? (
-                        <p className={'text-gray-400 text-sm text-center'}>
-                            Payment gateways are unavailable at this time.
-                        </p>
+                    {gateways.length < 1 ? (
+                        <p className={'text-gray-400 text-sm text-center'}>Нет доступных платёжных шлюзов :(</p>
                     ) : (
-                        <>
-                            {paypal && <PaypalPurchaseForm />}
-                            {stripe && <StripePurchaseForm />}
-                        </>
+                        <>{<PurchaseForm gateways={gateways} />}</>
                     )}
                 </ContentBox>
             </Container>

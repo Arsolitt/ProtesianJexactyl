@@ -129,6 +129,7 @@ class User extends Model implements
         'verified' => 'boolean',
         'credits' => 'sometimes|numeric|min:0',
         'server_slots' => 'sometimes|int',
+        'referral_code' => 'sometimes|string',
     ];
     /**
      * Level of servers to display when using access() on a user.
@@ -168,6 +169,7 @@ class User extends Model implements
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
+        'referral_code' => 'string'
     ];
     /**
      * The attributes excluded from the model's JSON form.
@@ -199,18 +201,20 @@ class User extends Model implements
         return $rules;
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'user', 'id');
+    }
+
     /**
      * Return the user model in a format that can be passed over to React templates.
      */
     public function toVueObject(): array
     {
-        return Collection::make($this->toArray())->except(['id', 'external_id'])->merge(['discount' => $this->totalDiscount()])->toArray();
+        return Collection::make($this->toArray())->except(['id', 'external_id'])->merge(['discount' => $this->totalDiscount(), 'reward' => $this->referralReward()])->toArray();
     }
 
-    public function totalDiscount(): int
-    {
-        return 0;
-    }
+
 
     /**
      * Send the password reset notification.
@@ -299,5 +303,52 @@ class User extends Model implements
                 $builder->where('servers.owner_id', $this->id)->orWhere('subusers.user_id', $this->id);
             })
             ->groupBy('servers.id');
+    }
+
+    public function totalDiscount(): int
+    {
+        $partner = Partner::where('user_id', $this->id)->first();
+        if ($partner) {
+            return (int) $partner->partner_discount;
+        }
+
+        $referrer = $this->referrer();
+        if ($referrer) {
+            $discount = $referrer->referralDiscount();
+            if ($discount > 0) {
+                return $discount;
+            }
+        }
+
+        return 0;
+    }
+
+    public function referralReward(): int
+    {
+        $reward = 0;
+        $partner = Partner::where('user_id', $this->id)->first();
+        if ($partner) {
+            $reward = (int) $partner->referral_reward;
+        } else {
+            $reward = (int) settings()->get('referrals:reward');
+        }
+        return $reward;
+    }
+
+    public function referrer(): User | null
+    {
+        if (!$this->referral_code) {
+            return null;
+        }
+        $referrerID = ReferralUses::where('code_used', '=', $this->referral_code)->first()?->referrer_id;
+        $referrer = User::find($referrerID);
+//        \Log::debug(var_export($referrer, true));
+        return $referrer;
+    }
+
+    public function referralDiscount(): int
+    {
+        $partner = Partner::where('user_id', '=', $this->id)->first();
+        return (int)$partner?->referral_discount;
     }
 }

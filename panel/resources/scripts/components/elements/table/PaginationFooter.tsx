@@ -40,13 +40,13 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
     return (
         <div className={classNames('flex items-center justify-between my-2', className)}>
             <p className={'text-sm text-neutral-500'}>
-                Showing&nbsp;
+                Показано с&nbsp;
                 <span className={'font-semibold text-neutral-400'}>
                     {Math.max(start, Math.min(pagination.total, 1))}
                 </span>
-                &nbsp;to&nbsp;
-                <span className={'font-semibold text-neutral-400'}>{end}</span> of&nbsp;
-                <span className={'font-semibold text-neutral-400'}>{pagination.total}</span> results.
+                &nbsp;по&nbsp;
+                <span className={'font-semibold text-neutral-400'}>{end}</span> из&nbsp;
+                <span className={'font-semibold text-neutral-400'}>{pagination.total}</span> результатов.
             </p>
             {pagination.totalPages > 1 && (
                 <div className={'flex space-x-1'}>
@@ -58,9 +58,9 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
                             {value}
                         </Button.Text>
                     ))}
-                    <Button size={Button.Sizes.Small} shape={Button.Shapes.IconSquare}>
+                    <Button.Success size={Button.Sizes.Small} shape={Button.Shapes.IconSquare}>
                         {current}
-                    </Button>
+                    </Button.Success>
                     {pages.next.map((value) => (
                         <Button.Text key={`next-${value}`} {...buttonProps(value)}>
                             {value}

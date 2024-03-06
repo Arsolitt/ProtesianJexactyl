@@ -67,9 +67,10 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        CONF: 'www.conf'
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_app
+    image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_app
     depends_on:
       - redis
@@ -87,10 +88,11 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        CONF: 'www.conf'
     stdin_open: true
     tty: true
     restart: unless-stopped
-    image: ${PROJECT_NAME}_tools
+    image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_scheduler
     entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
@@ -111,10 +113,11 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        CONF: 'www.conf'
     stdin_open: true
     tty: true
     restart: unless-stopped
-    image: ${PROJECT_NAME}_tools
+    image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_queue
     entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
@@ -135,9 +138,10 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        CONF: 'www.conf'
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_tools
+    image: ${PROJECT_NAME}_php
     entrypoint: [ "/home/tools/composer" ]
     volumes:
       - "./panel:/home/app"
@@ -151,9 +155,10 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
+        CONF: 'www.conf'
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_tools
+    image: ${PROJECT_NAME}_php
     entrypoint: [ "php", "/home/app/artisan" ]
     volumes:
       - "./panel:/home/app"

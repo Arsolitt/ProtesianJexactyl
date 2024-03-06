@@ -44,6 +44,7 @@ export interface Server {
     variables: ServerEggVariable[];
     allocations: Allocation[];
     bg: string;
+    monthlyPrice: number;
 }
 
 export const rawDataToServerObject = ({ attributes: data }: FractalResponseData): Server => ({
@@ -72,6 +73,7 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
         rawDataToServerAllocation
     ),
     bg: data.bg,
+    monthlyPrice: data.monthly_price,
 });
 
 export default (uuid: string): Promise<[Server, string[]]> => {

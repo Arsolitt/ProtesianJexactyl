@@ -2,12 +2,13 @@
 
 namespace Jexactyl\Http\Requests\Api\Client;
 
-use Jexactyl\Models\Server;
 use Jexactyl\Contracts\Http\ClientPermissionsRequest;
 use Jexactyl\Http\Requests\Api\Application\ApplicationApiRequest;
+use Jexactyl\Models\Server;
+use Jexactyl\Models\User;
 
 /**
- * @method \Jexactyl\Models\User user($guard = null)
+ * @method User user($guard = null)
  */
 class ClientApiRequest extends ApplicationApiRequest
 {
@@ -23,7 +24,7 @@ class ClientApiRequest extends ApplicationApiRequest
                 return $this->user()->can($this->permission(), $server);
             }
 
-            // If there is no server available on the reqest, trigger a failure since
+            // If there is no server available on the request, trigger a failure since
             // we expect there to be one at this point.
             return false;
         }

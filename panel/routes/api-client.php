@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use Jexactyl\Http\Controllers\Api\Client;
-use Jexactyl\Http\Middleware\Activity\ServerSubject;
 use Jexactyl\Http\Middleware\Activity\AccountSubject;
-use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
-use Jexactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
+use Jexactyl\Http\Middleware\Activity\ServerSubject;
 use Jexactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
+use Jexactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
+use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
         Route::get('/activity', [Client\ReferralsController::class, 'activity']);
 
         Route::post('/', [Client\ReferralsController::class, 'store']);
-        Route::put('/use-code', [Client\ReferralsController::class, 'use']);
+//        Route::put('/use-code', [Client\ReferralsController::class, 'use']);
 
         Route::delete('/{code}', [Client\ReferralsController::class, 'delete']);
     });
@@ -89,6 +89,7 @@ Route::group([
 ], function () {
     Route::get('/', [Client\Store\ResourceController::class, 'user'])->name('api:client:store.user');
     Route::get('/costs', [Client\Store\ResourceController::class, 'costs'])->name('api:client:store.costs');
+    Route::get('/limits', [Client\Store\ResourceController::class, 'limits'])->name('api:client:store.limits');
     Route::get('/nodes', [Client\Store\ServerController::class, 'nodes'])->name('api:client:store.nests');
     Route::get('/nests', [Client\Store\ServerController::class, 'nests'])->name('api:client:store.nests');
 
@@ -97,17 +98,9 @@ Route::group([
     });
 
     Route::post('/eggs', [Client\Store\ServerController::class, 'eggs'])->name('api:client:store.eggs');
-    Route::post('/stripe', [Client\Store\StripeController::class, 'purchase'])->name('api:client:store.stripe');
     Route::post('/resources', [Client\Store\ResourceController::class, 'purchase'])->name('api:client:store.resources');
 
-    Route::group(['prefix' => '/earn', 'middleware' => 'throttle:earn'], function () {
-        Route::post('/', [Client\Store\ResourceController::class, 'earn'])->name('api:client:store.earn');
-    });
-
-    Route::group(['prefix' => '/paypal'], function () {
-        Route::get('/callback', [Client\Store\PayPalController::class, 'callback'])->name('api:client:store.paypal.callback');
-        Route::post('/', [Client\Store\PayPalController::class, 'purchase'])->name('api:client:store.paypal');
-    });
+    Route::post('/purchase', [Client\Store\PaymentController::class, 'purchase'])->name('api:client:store.purchase');
 });
 
 /*

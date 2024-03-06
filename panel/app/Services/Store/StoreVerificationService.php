@@ -2,15 +2,16 @@
 
 namespace Jexactyl\Services\Store;
 
-use Jexactyl\Models\Node;
-use Illuminate\Support\Facades\DB;
-use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\Store\CreateServerRequest;
 
 class StoreVerificationService
 {
-    public function __construct(private SettingsRepositoryInterface $settings)
+    public function __construct(
+        private SettingsRepositoryInterface $settings,
+        private LimitsService               $limitsService
+    )
     {
     }
 
@@ -33,13 +34,12 @@ class StoreVerificationService
     private function checkUserCredits(CreateServerRequest $request): void
     {
         $discount = 1 - ($request->user()->totalDiscount() / 100);
-        $cpu = $request->input('cpu') * settings()->get('store:cost:cpu');
-        $ram = $request->input('memory') * settings()->get('store:cost:ram');
+        $memory = $request->input('memory') * settings()->get('store:cost:memory');
         $disk = $request->input('disk') * settings()->get('store:cost:disk');
-        $ports = $request->input('ports') * settings()->get('store:cost:port');
+        $allocations = $request->input('ports') * settings()->get('store:cost:allocation');
         $backups = $request->input('backups') * settings()->get('store:cost:backup');
         $databases = $request->input('databases') * settings()->get('store:cost:database');
-        $price = ($cpu + $ram + $disk + $ports + $backups + $databases) * $discount / 30;
+        $price = ($memory + $disk + $allocations + $backups + $databases) * $discount / 30;
         if ($request->user()->credits < $price) {
             throw new DisplayException('У тебя на балансе недостаточно средств, чтобы создать сервер!');
         }
@@ -50,21 +50,23 @@ class StoreVerificationService
      */
     private function checkResourceLimits(CreateServerRequest $request): void
     {
-        $prefix = 'store:limit:';
-        $types = ['cpu', 'memory', 'disk', 'slot', 'port', 'backup', 'database'];
+        if ($request->user()->server_slots <= 0) {
+            throw new DisplayException('У тебя закончились слоты, чтобы создать сервер!');
+        }
 
+        $types = ['memory', 'disk', 'allocations', 'backups', 'databases'];
+
+        $limits = $this->limitsService->getLimits();
+        
         foreach ($types as $type) {
-            $suffix = '';
-            $limit = $this->settings->get($prefix . $type);
+            $amount = $request->input($type);
 
-            if (in_array($type, ['slot', 'port', 'backup', 'database'])) {
-                $suffix = 's';
+            if ($limits['min'][$type] > $request->input($type)) {
+                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMin);
             }
 
-            $amount = $request->input($type .= $suffix);
-
-            if ($limit < $amount) {
-                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limit);
+            if ($limits['max'][$type] < $request->input($type)) {
+                throw new DisplayException('You cannot deploy with ' . $amount . ' ' . $type . ', as an admin has set a limit of ' . $limitMax);
             }
         }
     }

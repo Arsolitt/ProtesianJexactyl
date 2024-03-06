@@ -16,4 +16,7 @@ RUN mkdir -p /var/www/panel
 RUN chown -R $UID:$GID /var/www/panel \
     && chmod -R 755 /var/www/panel
 
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

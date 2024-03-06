@@ -47,14 +47,12 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({
                     {children}
                 </ContentContainer>
                 <ContentContainer css={tw`text-sm text-center my-4 pb-8`}>
-                    <p css={tw`text-neutral-500 sm:float-left`}>
-                        &copy; <a href={'https://jexactyl.com'}>Jexactyl,</a> built on{' '}
+                    <p css={tw`text-neutral-500 sm: float-left`}>
+                        &copy; <a href={'https://protesian.host'}>ProtesiaN,</a> на основе{' '}
                         <a href={'https://pterodactyl.io'}>Pterodactyl.</a>
                     </p>
-                    <p css={tw`text-neutral-500 sm:float-right`}>
-                        <a href={'https://jexactyl.com'}> Site </a>
-                        &bull;
-                        <a href={'https://github.com/jexactyl/jexactyl'}> GitHub </a>
+                    <p css={tw`text-neutral-500 sm: float-right`}>
+                        2021-{new Date().getFullYear()} &bull; Все права защищены.
                     </p>
                 </ContentContainer>
             </div>

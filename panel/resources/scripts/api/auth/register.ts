@@ -10,10 +10,17 @@ export interface RegisterData {
     username: string;
     email: string;
     password: string;
+    referral_code?: string | null;
     recaptchaData?: string | null;
 }
 
-export default ({ username, email, password, recaptchaData }: RegisterData): Promise<RegisterResponse> => {
+export default ({
+    username,
+    email,
+    password,
+    referral_code,
+    recaptchaData,
+}: RegisterData): Promise<RegisterResponse> => {
     return new Promise((resolve, reject) => {
         http.get('/sanctum/csrf-cookie')
             .then(() =>
@@ -21,12 +28,13 @@ export default ({ username, email, password, recaptchaData }: RegisterData): Pro
                     user: username,
                     email: email,
                     password: password,
+                    referral_code: referral_code,
                     'g-recaptcha-response': recaptchaData,
                 })
             )
             .then((response) => {
                 if (!(response.data instanceof Object)) {
-                    return reject(new Error('Unable to register account. Please contact an administrator.'));
+                    return reject(new Error('Не получается создать аккаунт :('));
                 }
 
                 return resolve({

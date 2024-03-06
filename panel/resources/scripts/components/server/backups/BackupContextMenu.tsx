@@ -114,44 +114,42 @@ export default ({ backup }: Props) => {
             <Dialog.Confirm
                 open={modal === 'unlock'}
                 onClose={() => setModal('')}
-                title={`Unlock "${backup.name}"`}
+                confirm={'Разблокировать'}
+                title={`Разблокировать "${backup.name}"`}
                 onConfirmed={onLockToggle}
             >
-                This backup will no longer be protected from automated or accidental deletions.
+                Этот бэкап больше не будет защищён от случайного или запланированного удаления.
             </Dialog.Confirm>
             <Dialog.Confirm
                 open={modal === 'restore'}
                 onClose={() => setModal('')}
-                confirm={'Restore'}
-                title={`Restore "${backup.name}"`}
+                confirm={'Восстановить'}
+                title={`Восстановить "${backup.name}"`}
                 onConfirmed={() => doRestorationAction()}
             >
-                <p>
-                    Your server will be stopped. You will not be able to control the power state, access the file
-                    manager, or create additional backups until completed.
-                </p>
+                <p>Твой сервер будет остановлен и останется недоступен до завершения процесса восстановления.</p>
                 <p css={tw`mt-4 -mb-2 bg-gray-700 p-3 rounded`}>
                     <label htmlFor={'restore_truncate'} css={tw`text-base flex items-center cursor-pointer`}>
                         <Input
                             type={'checkbox'}
-                            css={tw`text-red-500! w-5! h-5! mr-2`}
+                            className={'text-red-500! w-5! h-5! mr-2'}
                             id={'restore_truncate'}
                             value={'true'}
                             checked={truncate}
                             onChange={() => setTruncate((s) => !s)}
                         />
-                        Delete all files before restoring backup.
+                        Удалить текущие файлы, перед восстановлением
                     </label>
                 </p>
             </Dialog.Confirm>
             <Dialog.Confirm
-                title={`Delete "${backup.name}"`}
-                confirm={'Continue'}
+                title={`Удалить "${backup.name}"`}
+                confirm={'Удалить'}
                 open={modal === 'delete'}
                 onClose={() => setModal('')}
                 onConfirmed={doDeletion}
             >
-                This is a permanent operation. The backup cannot be recovered once deleted.
+                Это необратимая операция, бэкап будет удалён без возможности восстановления.
             </Dialog.Confirm>
             <SpinnerOverlay visible={loading} fixed />
             {backup.isSuccessful ? (
@@ -159,7 +157,8 @@ export default ({ backup }: Props) => {
                     renderToggle={(onClick) => (
                         <button
                             onClick={onClick}
-                            css={tw`text-gray-200 transition-colors duration-150 hover:text-gray-100 p-2`}
+                            css={tw`text-gray-200 transition-colors duration-150
+                                hover: text-gray-100 p-2`}
                         >
                             <Icon.MoreHorizontal />
                         </button>
@@ -169,13 +168,13 @@ export default ({ backup }: Props) => {
                         <Can action={'backup.download'}>
                             <DropdownButtonRow onClick={doDownload}>
                                 <Icon.DownloadCloud css={tw`text-xs`} />
-                                <span css={tw`ml-2`}>Download</span>
+                                <span css={tw`ml-2`}>Скачать</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.restore'}>
                             <DropdownButtonRow onClick={() => setModal('restore')}>
                                 <Icon.Upload css={tw`text-xs`} />
-                                <span css={tw`ml-2`}>Restore</span>
+                                <span css={tw`ml-2`}>Восстановить</span>
                             </DropdownButtonRow>
                         </Can>
                         <Can action={'backup.delete'}>
@@ -184,19 +183,19 @@ export default ({ backup }: Props) => {
                                     {backup.isLocked ? (
                                         <>
                                             <Icon.Unlock css={tw`text-xs mr-2`} />
-                                            Unlock
+                                            Разблокировать
                                         </>
                                     ) : (
                                         <>
                                             <Icon.Lock css={tw`text-xs mr-2`} />
-                                            Lock
+                                            Заблокировать
                                         </>
                                     )}
                                 </DropdownButtonRow>
                                 {!backup.isLocked && (
                                     <DropdownButtonRow danger onClick={() => setModal('delete')}>
                                         <Icon.Trash css={tw`text-xs`} />
-                                        <span css={tw`ml-2`}>Delete</span>
+                                        <span css={tw`ml-2`}>Удалить</span>
                                     </DropdownButtonRow>
                                 )}
                             </>
@@ -206,7 +205,8 @@ export default ({ backup }: Props) => {
             ) : (
                 <button
                     onClick={() => setModal('delete')}
-                    css={tw`text-gray-200 transition-colors duration-150 hover:text-gray-100 p-2`}
+                    css={tw`text-gray-200 transition-colors duration-150
+                        hover: text-gray-100 p-2`}
                 >
                     <Icon.Trash />
                 </button>

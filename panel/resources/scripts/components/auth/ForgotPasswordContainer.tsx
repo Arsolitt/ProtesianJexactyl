@@ -1,5 +1,6 @@
 import tw from 'twin.macro';
 import * as React from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Reaptcha from 'reaptcha';
 import { object, string } from 'yup';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,6 @@ import { useStoreState } from 'easy-peasy';
 import { httpErrorToHuman } from '@/api/http';
 import { Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/elements/button/index';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
 import requestPasswordResetEmail from '@/api/auth/requestPasswordResetEmail';
@@ -72,20 +72,23 @@ export default () => {
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Request Password Reset'} css={tw`w-full flex`}>
+                <LoginFormContainer title={'Восстановление пароля'} css={tw`w-full flex`}>
                     <Field
                         light
                         label={'Email'}
-                        description={
-                            'Enter your account email address to receive instructions on resetting your password.'
-                        }
+                        description={'Введи свой Email. На него будут отправлены инструкции по восстановлению пароля.'}
                         name={'email'}
                         type={'email'}
                     />
                     <div css={tw`mt-6`}>
-                        <Button size={Button.Sizes.Large} css={tw`w-full`} type={'submit'} disabled={isSubmitting}>
-                            Send Email
-                        </Button>
+                        <Button.Success
+                            size={Button.Sizes.Large}
+                            css={tw`w-full`}
+                            type={'submit'}
+                            disabled={isSubmitting}
+                        >
+                            Отправить
+                        </Button.Success>
                     </div>
                     {recaptchaEnabled && (
                         <Reaptcha
@@ -107,7 +110,7 @@ export default () => {
                             to={'/auth/login'}
                             css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
                         >
-                            Return to Login
+                            На страницу входа
                         </Link>
                     </div>
                 </LoginFormContainer>
