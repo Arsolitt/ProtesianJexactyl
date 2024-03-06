@@ -8,7 +8,6 @@ use Jexactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
 use Jexactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Jexactyl\Console\Commands\Schedule\AnalyticsCollectionCommand;
 use Jexactyl\Console\Commands\Schedule\AnalyticsReviewCommand;
-use Jexactyl\Console\Commands\Schedule\ChargeCreditsCommand;
 use Jexactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 
 class Kernel extends ConsoleKernel
@@ -42,6 +41,6 @@ class Kernel extends ConsoleKernel
         $schedule->command(AnalyticsCollectionCommand::class)->everyFifteenMinutes();
         $schedule->command(AnalyticsReviewCommand::class)->everyThreeHours();
 
-        $schedule->command(ChargeCreditsCommand::class)->hourly();
+//        $schedule->command(ChargeCreditsCommand::class)->hourly();
     }
 }

@@ -106,6 +106,7 @@ class Server extends Model
         self::UPDATED_AT => 'datetime',
         'deleted_at' => 'datetime',
         'installed_at' => 'datetime',
+        'suspended_at' => 'datetime',
     ];
 
     protected $fillable = [
@@ -133,7 +134,8 @@ class Server extends Model
         'database_limit',
         'allocation_limit',
         'backup_limit',
-        'monthly_price'
+        'monthly_price',
+        'suspended_at',
     ];
 
     /**

@@ -33,6 +33,10 @@ class ServerRenewalService
         $user = $request->user();
         $cost = $server->dailyPrice();
 
+        if ($server->user->id !== $user->id) {
+            throw new DisplayException('Ты не владелец сервера!');
+        }
+
         if ($user->credits < $cost) {
             throw new DisplayException('У тебя недостаточно средств для разморозки сервера!');
         }
