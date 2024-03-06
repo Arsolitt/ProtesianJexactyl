@@ -2,10 +2,13 @@
 
 namespace Jexactyl\Console\Commands\Schedule;
 
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Jexactyl\Models\Server;
 use Jexactyl\Services\Servers\ServerDeletionService;
+use Symfony\Component\Console\Command\Command as CommandAlias;
 
 class DeleteSuspendedServers extends Command
 {
@@ -37,8 +40,13 @@ class DeleteSuspendedServers extends Command
             ->where('suspended_at', '<', Carbon::now()->subDays(30))
             ->chunk(10, function ($servers) {
             foreach ($servers as $server) {
-                $this->deletionService->handle($server);
+                try {
+                    $this->deletionService->handle($server);
+                } catch (Exception $ex) {
+                    Log::error($ex->getMessage());
+                }
             }
         });
+        return CommandAlias::SUCCESS;
     }
 }
