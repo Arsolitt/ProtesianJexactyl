@@ -54,7 +54,7 @@ export default () => {
             .then(() => {
                 setSubmit(false);
                 // @ts-expect-error this is valid
-                window.location = '/store';
+                window.location = '/home';
             })
             .catch((error) => {
                 clearAndAddHttpError({ key: 'server:renewal', error });
