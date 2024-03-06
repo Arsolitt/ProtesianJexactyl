@@ -85,7 +85,7 @@ const StartupContainer = () => {
     ) : (
         <ServerContentBlock
             title={'Параметры запуска'}
-            description={'Тут ты можешь изменить парамтеры запуска для своего сервера'}
+            description={'Тут ты можешь изменить параметры запуска и версию сервера!'}
             showFlashKey={'startup:image'}
         >
             <div className={'md:flex j-up'}>
