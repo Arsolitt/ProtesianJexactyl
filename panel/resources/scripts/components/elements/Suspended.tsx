@@ -26,6 +26,8 @@ export default () => {
     // const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const serverName = ServerContext.useStoreState((state) => state.server.data!.name);
+    const subusers = ServerContext.useStoreState((state) => state.subusers!.data);
+    console.log(subusers);
 
     const doRenewal = () => {
         clearFlashes('server:renewal');
@@ -67,41 +69,41 @@ export default () => {
             <Dialog.Confirm
                 open={renewDialog}
                 onClose={() => setRenewDialog(false)}
-                title={'Confirm server renewal'}
-                confirm={'Continue'}
+                title={'Подтвердить разморозку'}
+                confirm={'Разморозить'}
                 onConfirmed={() => doRenewal()}
             >
                 <SpinnerOverlay visible={isSubmit} />
-                Are you sure you want to spend 666 credits to renew your server?
+                Ты уверен, что хочешь разморозить сервер?
             </Dialog.Confirm>
             <Dialog.Confirm
                 open={deleteDialog}
                 onClose={() => setDeleteDialog(false)}
-                title={'Confirm server deletion'}
-                confirm={'Continue'}
+                title={'Подтвердить удаление'}
+                confirm={'Удалить'}
                 onConfirmed={() => setConfirmDialog(true)}
             >
                 <SpinnerOverlay visible={isSubmit} />
-                This action will remove your server from the system, along with all files and configurations.
+                Это действие удалит твой сервер из системы. Действие необратимо!
             </Dialog.Confirm>
             <form id={'delete-suspended-server-form'} onSubmit={doDeletion}>
-                <Dialog open={confirmDialog} title={'Confirm server deletion'} onClose={() => setConfirmDialog(false)}>
+                <Dialog open={confirmDialog} title={'Подтвердить удаление'} onClose={() => setConfirmDialog(false)}>
                     {name !== serverName && (
                         <>
                             <p className={'my-2 text-gray-400'}>
-                                Type <Code>{serverName}</Code> below.
+                                Введи <Code>{serverName}</Code> ниже.
                             </p>
                             <Input type={'text'} value={name} onChange={(n) => setName(n.target.value)} />
                         </>
                     )}
-                    <Button
+                    <Button.Danger
                         disabled={name !== serverName}
                         type={'submit'}
                         className={'mt-2'}
                         form={'delete-suspended-server-form'}
                     >
-                        Confirm
-                    </Button>
+                        Подтвердить
+                    </Button.Danger>
                 </Dialog>
             </form>
             <PageContentBlock title={'Сервер заморожен!'}>
