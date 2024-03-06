@@ -42,5 +42,6 @@ class Kernel extends ConsoleKernel
         $schedule->command(AnalyticsReviewCommand::class)->everyThreeHours();
 
 //        $schedule->command(ChargeCreditsCommand::class)->hourly();
+//        $schedule->command(DeleteOpenPayments::class)->hourly();
     }
 }
