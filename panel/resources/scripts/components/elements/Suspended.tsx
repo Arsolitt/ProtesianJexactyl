@@ -26,8 +26,6 @@ export default () => {
     // const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const serverName = ServerContext.useStoreState((state) => state.server.data!.name);
-    const subusers = ServerContext.useStoreState((state) => state.subusers!.data);
-    console.log(subusers);
 
     const doRenewal = () => {
         clearFlashes('server:renewal');
