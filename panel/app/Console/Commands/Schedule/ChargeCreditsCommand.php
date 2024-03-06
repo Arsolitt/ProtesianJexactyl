@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Console\Command;
 use Jexactyl\Events\User\UpdateCredits;
 use Jexactyl\Models\Server;
-use Jexactyl\Repositories\Wings\DaemonServerRepository;
 use Jexactyl\Services\Servers\SuspensionService;
 use Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
@@ -20,12 +19,10 @@ class ChargeCreditsCommand extends Command
      * @var string
      */
     protected $signature = 'credits:charge';
-    protected $suspensionService;
 
-    public function __construct()
+    public function __construct(private SuspensionService $suspensionService)
     {
         parent::__construct();
-        $this->suspensionService = new SuspensionService(new DaemonServerRepository(app()));
     }
 
     /**
