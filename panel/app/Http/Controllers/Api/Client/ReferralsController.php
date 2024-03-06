@@ -48,8 +48,7 @@ class ReferralsController extends ClientApiController
         if ($request->user()->referralCodes->count() >= 5) {
             throw new DisplayException('У тебя не может быть больше 5 реферальных кодов!');
         }
-
-        // TODO: создание реф кода (подсказка для трансфера)
+        
         $code = $request->user()->referralCodes()->create([
             'user_id' => $request->user()->id,
             'code' => $this->generate(),

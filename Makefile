@@ -14,3 +14,6 @@ up:
 # выключить контейнер
 down:
 	docker-compose down
+
+backup:
+	docker exec -ti ${PROJECT_NAME}_database mariadb-dump -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} > panel/storage/files/backup.sql && echo "Success!"
