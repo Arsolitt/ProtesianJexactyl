@@ -1,0 +1,120 @@
+version: "3.8"
+
+networks:
+  panel:
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        CONF: 'www.prod.conf'
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_php
+    container_name: ${PROJECT_NAME}_app
+    restart: always
+    ports:
+      - "${FPM_PORT}:9000"
+    volumes:
+      - "./panel:/var/www/panel"
+    networks:
+      - panel
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        CONF: 'www.prod.conf'
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_php
+    container_name: ${PROJECT_NAME}_scheduler
+    restart: always
+    entrypoint: [ "/home/tools/role.sh" ]
+    depends_on:
+      - app
+    environment:
+      CONTAINER_ROLE: scheduler
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        CONF: 'www.prod.conf'
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_php
+    container_name: ${PROJECT_NAME}_queue
+    restart: always
+    entrypoint: [ "/home/tools/role.sh" ]
+    depends_on:
+      - app
+    environment:
+      CONTAINER_ROLE: queue
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  composer:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        CONF: 'www.prod.conf'
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_php
+    entrypoint: [ "/home/tools/composer" ]
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  artisan:
+    build:
+      context: .
+      dockerfile: docker/php.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+        CONF: 'www.prod.conf'
+    stdin_open: true
+    tty: true
+    image: ${PROJECT_NAME}_php
+    entrypoint: [ "php", "/home/app/artisan" ]
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel
+
+  yarn:
+    build:
+      context: .
+      dockerfile: docker/node.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    image: ${PROJECT_NAME}_node
+    stdin_open: true
+    tty: true
+    volumes:
+      - "./panel:/home/app"
+    networks:
+      - panel

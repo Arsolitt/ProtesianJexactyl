@@ -10,26 +10,32 @@ class StoreFormRequest extends AdminFormRequest
     {
         return [
             'store:enabled' => 'required|in:true,false',
-            'store:paypal:enabled' => 'required|in:true,false',
-            'store:stripe:enabled' => 'required|in:true,false',
+
             'store:yookassa:enabled' => 'required|in:true,false',
-            'store:lava:enabled' => 'required|in:true,false',
+            'store:yookassa:name' => 'required|string|min:1|max:15',
+            'store:yookassa:min' => 'required|int|min:1',
+            'store:yookassa:max' => 'required|int|min:9999',
+
             'store:currency' => 'required|min:1|max:10',
 
-            'store:cost:cpu' => 'required|int|min:1',
             'store:cost:memory' => 'required|int|min:1',
             'store:cost:disk' => 'required|int|min:1',
             'store:cost:slot' => 'required|int|min:1',
-            'store:cost:port' => 'required|int|min:1',
+            'store:cost:allocation' => 'required|int|min:1',
             'store:cost:backup' => 'required|int|min:1',
             'store:cost:database' => 'required|int|min:1',
 
-            'store:limit:cpu' => 'required|int|min:50',
-            'store:limit:memory' => 'required|int|min:256',
-            'store:limit:disk' => 'required|int|min:1024',
-            'store:limit:port' => 'required|int|min:1',
-            'store:limit:backup' => 'required|int|min:1',
-            'store:limit:database' => 'required|int|min:1',
+            'store:limit:min:memory' => 'required|int|min:256',
+            'store:limit:min:disk' => 'required|int|min:1024',
+            'store:limit:min:allocations' => 'required|int|min:1',
+            'store:limit:min:backups' => 'required|int|min:0',
+            'store:limit:min:databases' => 'required|int|min:0',
+
+            'store:limit:max:memory' => 'required|int|min:256',
+            'store:limit:max:disk' => 'required|int|min:1024',
+            'store:limit:max:allocations' => 'required|int|min:1',
+            'store:limit:max:backups' => 'required|int|min:0',
+            'store:limit:max:databases' => 'required|int|min:0',
         ];
     }
 }

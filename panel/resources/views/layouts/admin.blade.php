@@ -45,12 +45,17 @@
                     <ul class="sidebar-menu">
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.index') ?: 'active' }}">
                             <a href="{{ route('admin.index')}}">
-                                <i data-feather="tool" style="margin-left: 12px;"></i> 
+                                <i data-feather="tool" style="margin-left: 12px;"></i>
                             </a>
                         </li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.tickets') ?: 'active' }}">
                             <a href="{{ route('admin.tickets.index')}}">
                                 <i data-feather="help-circle" style="margin-left: 12px;"></i>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.partners') ?: 'active' }}">
+                            <a href="{{ route('admin.partners') }}">
+                                <i data-feather="gift" style="margin-left: 12px;"></i>
                             </a>
                         </li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.api') ?: 'active' }}">
@@ -81,6 +86,11 @@
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.users') ?: 'active' }}">
                             <a href="{{ route('admin.users') }}">
                                 <i data-feather="users" style="margin-left: 12px;"></i>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.payments') ?: 'active' }}">
+                            <a href="{{ route('admin.payments') }}">
+                                <i data-feather="credit-card" style="margin-left: 12px;"></i>
                             </a>
                         </li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.mounts') ?: 'active' }}">

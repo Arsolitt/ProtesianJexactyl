@@ -3,32 +3,22 @@ import apiVerify from '@/api/account/verify';
 import { useStoreState } from '@/state/hooks';
 import React, { useEffect, useState } from 'react';
 import { formatDistanceToNowStrict } from 'date-fns';
-import { getResources } from '@/api/store/getResources';
 import Translate from '@/components/elements/Translate';
 import InformationBox from '@/components/elements/InformationBox';
 import getLatestActivity, { Activity } from '@/api/account/getLatestActivity';
 import { wrapProperties } from '@/components/elements/activity/ActivityLogEntry';
-import {
-    // faCircle,
-    faCoins,
-    // faExclamationCircle,
-    faScroll,
-    faTimesCircle,
-    faUserLock,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCoins, faScroll, faTimesCircle, faUserLock } from '@fortawesome/free-solid-svg-icons';
 import { ru } from 'date-fns/locale';
 
 export default () => {
     const { addFlash } = useFlash();
-    const [bal, setBal] = useState(0);
     const [activity, setActivity] = useState<Activity>();
     const properties = wrapProperties(activity?.properties);
     const user = useStoreState((state) => state.user.data!);
     // const store = useStoreState((state) => state.storefront.data!);
 
     useEffect(() => {
-        getResources().then((d) => setBal(d.balance));
-        getLatestActivity().then((d) => setActivity(d));
+        getLatestActivity().then((activity) => setActivity(activity));
     }, []);
 
     const verify = () => {
@@ -50,42 +40,48 @@ export default () => {
             {/*    </InformationBox>*/}
             {/*)}*/}
             <InformationBox icon={faCoins}>
-                Баланс: <span className={'text-green-600'}>{bal}</span>
+                <span className={'text-gray-50'}>
+                    Баланс: <span className={'text-main-500'}>{user.credits}₽</span>
+                </span>
             </InformationBox>
             <InformationBox icon={faUserLock}>
-                {user.useTotp ? (
-                    <>
-                        2FA <span className={'text-green-600'}>Включена</span>
-                    </>
-                ) : (
-                    <>
-                        2FA <span className={'text-yellow-600'}>Выключена</span>
-                    </>
-                )}
+                <span className={'text-gray-50'}>
+                    {user.useTotp ? (
+                        <>
+                            2FA <span className={'text-main-500'}>Включена</span>
+                        </>
+                    ) : (
+                        <>
+                            2FA <span className={'text-negative-600'}>Выключена</span>
+                        </>
+                    )}
+                </span>
             </InformationBox>
             {!user.verified ? (
-                <InformationBox icon={faTimesCircle} iconCss={'text-yellow-500'}>
-                    <span onClick={verify} className={'cursor-pointer text-blue-400 pointer-events-auto'}>
+                <InformationBox icon={faTimesCircle} iconCss={'text-warning-500'}>
+                    <span onClick={verify} className={'cursor-pointer text-negative-400 pointer-events-auto'}>
                         Подтвердите свой аккаунт
                     </span>
                 </InformationBox>
             ) : (
                 <InformationBox icon={faScroll}>
-                    {activity ? (
-                        <>
-                            <span className={'text-neutral-400'}>
-                                <Translate
-                                    ns={'activity'}
-                                    values={properties}
-                                    i18nKey={activity.event.replace(':', '.')}
-                                />
-                            </span>
-                            {' - '}
-                            {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
-                        </>
-                    ) : (
-                        'Невозможно получить журнал активности.'
-                    )}
+                    <span className={'text-gray-50'}>
+                        {activity ? (
+                            <>
+                                <span className={'text-inert-400'}>
+                                    <Translate
+                                        ns={'activity'}
+                                        values={properties}
+                                        i18nKey={activity.event.replace(':', '.')}
+                                    />
+                                </span>
+                                {' - '}
+                                {formatDistanceToNowStrict(activity.timestamp, { addSuffix: true, locale: ru })}
+                            </>
+                        ) : (
+                            'Невозможно получить журнал активности.'
+                        )}
+                    </span>
                 </InformationBox>
             )}
         </>

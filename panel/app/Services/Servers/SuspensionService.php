@@ -2,10 +2,11 @@
 
 namespace Jexactyl\Services\Servers;
 
+use Illuminate\Support\Carbon;
 use Jexactyl\Models\Server;
-use Webmozart\Assert\Assert;
 use Jexactyl\Repositories\Wings\DaemonServerRepository;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Webmozart\Assert\Assert;
 
 class SuspensionService
 {
@@ -45,6 +46,7 @@ class SuspensionService
         // Update the server's suspension status.
         $server->update([
             'status' => $isSuspending ? Server::STATUS_SUSPENDED : null,
+            'suspended_at' => $isSuspending ? Carbon::now() : null,
         ]);
 
         try {
@@ -54,6 +56,7 @@ class SuspensionService
             // Rollback the server's suspension status if wings fails to sync the server.
             $server->update([
                 'status' => $isSuspending ? null : Server::STATUS_SUSPENDED,
+                'suspended_at' => null,
             ]);
             throw $exception;
         }

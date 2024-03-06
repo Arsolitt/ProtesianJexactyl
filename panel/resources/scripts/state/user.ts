@@ -15,6 +15,8 @@ export interface UserData {
     createdAt: Date;
     updatedAt: Date;
     discount: number;
+    credits: number;
+    reward: number;
 }
 
 export interface UserStore {

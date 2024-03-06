@@ -22,16 +22,16 @@ export default () => {
         <>
             {discordId ? (
                 <>
-                    <p className={'text-gray-400'}>Your account is currently linked to the Discord: {discordId}</p>
-                    <Button.Success className={'mt-4'} onClick={() => unlink()}>
-                        Unlink Discord Account
-                    </Button.Success>
+                    <p className={'text-gray-400'}>Твой аккаунт связан с Discord: {discordId}</p>
+                    <Button.Danger className={'mt-4'} onClick={() => unlink()}>
+                        Отвязать Discord
+                    </Button.Danger>
                 </>
             ) : (
                 <>
-                    <p className={'text-gray-400'}>Your account is not linked to Discord.</p>
+                    <p className={'text-gray-400'}>Твой аккаунт не связан с Discord.</p>
                     <Button.Success className={'mt-4'} onClick={() => link()}>
-                        Link Discord Account
+                        Привязать Discord
                     </Button.Success>
                 </>
             )}

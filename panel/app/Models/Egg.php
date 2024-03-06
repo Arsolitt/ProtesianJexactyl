@@ -2,8 +2,8 @@
 
 namespace Jexactyl\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -97,6 +97,7 @@ class Egg extends Model
         'script_entry',
         'script_container',
         'copy_script_from',
+        'private',
     ];
 
     /**
@@ -111,6 +112,7 @@ class Egg extends Model
         'features' => 'array',
         'docker_images' => 'array',
         'file_denylist' => 'array',
+        'private' => 'boolean',
     ];
 
     public static array $validationRules = [
@@ -132,6 +134,7 @@ class Egg extends Model
         'config_files' => 'required_without:config_from|nullable|json',
         'update_url' => 'sometimes|nullable|string',
         'force_outgoing_ip' => 'sometimes|boolean',
+        'private' => 'sometimes|boolean',
     ];
 
     protected $attributes = [

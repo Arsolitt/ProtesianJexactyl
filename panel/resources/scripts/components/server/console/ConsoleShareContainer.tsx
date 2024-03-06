@@ -28,7 +28,7 @@ export default () => {
                 addFlash({
                     key: 'console:share',
                     type: 'success',
-                    message: 'Your server logs have been saved to the /share folder.',
+                    message: 'Логи сервера успешно сохранены в папку /share',
                 });
             })
             .catch((error) => {

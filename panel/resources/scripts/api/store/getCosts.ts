@@ -1,21 +1,19 @@
 import http, { FractalResponseData } from '@/api/http';
 
 export interface Costs {
-    cpu: number;
     memory: number;
     disk: number;
     slots: number;
-    ports: number;
+    allocations: number;
     backups: number;
     databases: number;
 }
 
 export const rawDataToCosts = ({ attributes: data }: FractalResponseData): Costs => ({
-    cpu: data.cpu,
     memory: data.memory,
     disk: data.disk,
     slots: data.slots,
-    ports: data.ports,
+    allocations: data.allocations,
     backups: data.backups,
     databases: data.databases,
 });

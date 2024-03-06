@@ -74,9 +74,9 @@ export default ({ className }: WithClassname) => {
                     initialValues={{ url: '' }}
                     validationSchema={object().shape({
                         url: string()
-                            .required()
-                            .url()
-                            .test('unique', 'File or directory with that name already exists.', (v) => {
+                            .required('Это обязательное поле!')
+                            .url('Некорректная ссылка!')
+                            .test('unique', 'Файл или папки с таким именем уже существуют', (v) => {
                                 return (
                                     v !== undefined &&
                                     data !== undefined &&
@@ -87,7 +87,7 @@ export default ({ className }: WithClassname) => {
                 >
                     {({ resetForm, submitForm, isSubmitting: _, values }) => (
                         <Dialog
-                            title={'Pull Remote File'}
+                            title={'Загрузить файл по ссылке'}
                             open={visible}
                             onClose={() => {
                                 setVisible(false);
@@ -96,9 +96,9 @@ export default ({ className }: WithClassname) => {
                         >
                             <FlashMessageRender key={'files:pull-modal'} />
                             <Form css={tw`m-0`}>
-                                <Field type={'text'} id={'url'} name={'url'} label={'URL'} autoFocus />
+                                <Field type={'text'} id={'url'} name={'url'} label={'Ссылка'} autoFocus />
                                 <p css={tw`mt-2 text-sm md:text-base break-all`}>
-                                    <span css={tw`text-neutral-200`}>This file will be downloaded to&nbsp;</span>
+                                    <span css={tw`text-neutral-200`}>Файл будет загружен в&nbsp;</span>
                                     <Code>
                                         /home/container/
                                         <span css={tw`text-cyan-200`}>
@@ -118,10 +118,10 @@ export default ({ className }: WithClassname) => {
                                         resetForm();
                                     }}
                                 >
-                                    Cancel
+                                    Отмена
                                 </Button.Text>
                                 <Button className={'w-full sm:w-auto'} onClick={submitForm}>
-                                    Pull File
+                                    Загрузить
                                 </Button>
                             </Dialog.Footer>
                         </Dialog>
@@ -129,7 +129,7 @@ export default ({ className }: WithClassname) => {
                 </Formik>
             </Portal>
             <Button.Text onClick={() => setVisible(true)} className={className}>
-                Pull Remote File
+                Загрузить файл по ссылке
             </Button.Text>
         </>
     );

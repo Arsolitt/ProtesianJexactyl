@@ -11,19 +11,24 @@ import { Button } from '@/components/elements/button/index';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import LoginFormContainer from '@/components/auth/LoginFormContainer';
+import Cookies from 'js-cookie';
 
 interface Values {
     username: string;
     email: string;
     password: string;
+    referral_code: string;
 }
 
 const RegisterContainer = ({ history }: RouteComponentProps) => {
     const ref = useRef<Reaptcha>(null);
     const [token, setToken] = useState('');
+    const referrals = useStoreState((state) => state.storefront.data!.referrals.enabled);
 
     const { clearFlashes, clearAndAddHttpError, addFlash } = useFlash();
     const { enabled: recaptchaEnabled, siteKey } = useStoreState((state) => state.settings.data!.recaptcha);
+
+    const referralCode = Cookies.get('referral_code');
 
     useEffect(() => {
         clearFlashes();
@@ -52,7 +57,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                     addFlash({
                         key: 'auth:register',
                         type: 'success',
-                        message: 'Account has been successfully created.',
+                        message: 'Аккаунт успешно создан!',
                     });
                     return;
                 }
@@ -69,38 +74,49 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                 clearAndAddHttpError({ error });
             });
     };
-
+    // TODO: ловить реф код из гет запроса и сохранять в кук или локал сторедж.
     return (
         <Formik
             onSubmit={onSubmit}
-            initialValues={{ username: '', email: '', password: '' }}
+            initialValues={{ username: '', email: '', password: '', referral_code: '' }}
             validationSchema={object().shape({
-                username: string().min(3).required(),
-                email: string().email().required(),
-                password: string().min(8).required(),
+                username: string().min(3, 'Минимальная длина никнейма - 3 символа').required('Никнейм обязателен!'),
+                email: string().email('Некорректный Email').required('Email обязателен!'),
+                password: string().min(8, 'Минимальная длина пароля - 8 символов').required('Пароль обязателен!'),
+                referral_code: string().length(16, 'Код пригласившего должен быть 16 символов длиной!').optional(),
             })}
         >
             {({ isSubmitting, setSubmitting, submitForm }) => (
-                <LoginFormContainer title={'Create an Account'} css={tw`w-full flex`}>
+                <LoginFormContainer title={'Создать аккаунт'} css={tw`w-full flex`}>
                     <FlashMessageRender byKey={'auth:register'} css={tw`my-3`} />
-                    <Field type={'text'} label={'Username'} name={'username'} css={tw`my-3`} disabled={isSubmitting} />
-                    <Field
-                        type={'email'}
-                        label={'Email Address'}
-                        name={'email'}
-                        css={tw`my-3`}
-                        disabled={isSubmitting}
-                    />
+                    <Field type={'text'} label={'Никнейм'} name={'username'} css={tw`my-3`} disabled={isSubmitting} />
+                    <Field type={'email'} label={'Email'} name={'email'} css={tw`my-3`} disabled={isSubmitting} />
                     <Field
                         type={'password'}
-                        label={'Password'}
+                        label={'Пароль'}
                         name={'password'}
                         css={tw`my-3`}
                         disabled={isSubmitting}
                     />
-                    <Button type={'submit'} css={tw`my-6 w-full`} size={Button.Sizes.Large} disabled={isSubmitting}>
-                        Register
-                    </Button>
+                    {referrals && (
+                        <Field
+                            type={'text'}
+                            label={'Код пригласившего'}
+                            name={'referral_code'}
+                            css={tw`my-3`}
+                            disabled={isSubmitting}
+                            placeholder={'Необязательно'}
+                            value={referralCode}
+                        />
+                    )}
+                    <Button.Success
+                        type={'submit'}
+                        css={tw`my-6 w-full`}
+                        size={Button.Sizes.Large}
+                        disabled={isSubmitting}
+                    >
+                        Зарегистрироваться
+                    </Button.Success>
                     {recaptchaEnabled && (
                         <Reaptcha
                             ref={ref}
@@ -121,7 +137,7 @@ const RegisterContainer = ({ history }: RouteComponentProps) => {
                             to={'/auth/login'}
                             css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
                         >
-                            Return to login
+                            На страницу входа
                         </Link>
                     </div>
                 </LoginFormContainer>

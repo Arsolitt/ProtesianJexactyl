@@ -15,15 +15,15 @@ class ServerStateConflictException extends ConflictHttpException
     {
         $message = 'This server is currently in an unsupported state, please try again later.';
         if ($server->isSuspended()) {
-            $message = 'This server is currently suspended and the functionality requested is unavailable.';
+            $message = 'Сервер заморожен за неуплату!';
         } elseif ($server->node->isUnderMaintenance()) {
-            $message = 'The node of this server is currently under maintenance and the functionality requested is unavailable.';
+            $message = 'Узел, на котором находится сервер в режиме технического обслуживания!';
         } elseif (!$server->isInstalled()) {
-            $message = 'This server has not yet completed its installation process, please try again later.';
+            $message = 'Сервер в процессе установки!';
         } elseif ($server->status === Server::STATUS_RESTORING_BACKUP) {
-            $message = 'This server is currently restoring from a backup, please try again later.';
+            $message = 'Сервер восстанавливается из бэкапа!';
         } elseif (!is_null($server->transfer)) {
-            $message = 'This server is currently being transferred to a new machine, please try again later.';
+            $message = 'Сервер в процессе переноса на другой узел!';
         }
 
         parent::__construct($message, $previous);

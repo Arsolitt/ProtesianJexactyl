@@ -118,12 +118,12 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
             <Dialog.Confirm
                 open={showConfirmation}
                 onClose={() => setShowConfirmation(false)}
-                title={`Delete ${file.isFile ? 'File' : 'Directory'}`}
-                confirm={'Delete'}
+                title={`Удалить ${file.isFile ? 'Файл' : 'Папку'}`}
+                confirm={'Удалить'}
                 onConfirmed={doDeletion}
             >
-                You will not be able to recover the contents of&nbsp;
-                <span className={'font-semibold text-gray-50'}>{file.name}</span> once deleted.
+                Ты не сможешь восстановить содержимое&nbsp;
+                <span className={'font-semibold text-gray-50'}>{file.name}</span> после удаления.
             </Dialog.Confirm>
             <DropdownMenu
                 ref={onClickRef}
@@ -153,27 +153,27 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                 )}
             >
                 <Can action={'file.update'}>
-                    <Row onClick={() => setModal('rename')} title={'Rename'} />
-                    <Row onClick={() => setModal('move')} title={'Move'} />
-                    <Row onClick={() => setModal('chmod')} title={'Permissions'} />
+                    <Row onClick={() => setModal('rename')} title={'Переименовать'} />
+                    <Row onClick={() => setModal('move')} title={'Переместить'} />
+                    <Row onClick={() => setModal('chmod')} title={'Права доступа'} />
                 </Can>
                 {file.isFile && (
                     <Can action={'file.create'}>
-                        <Row onClick={doCopy} title={'Copy'} />
+                        <Row onClick={doCopy} title={'Скопировать'} />
                     </Can>
                 )}
                 {file.isArchiveType() ? (
                     <Can action={'file.create'}>
-                        <Row onClick={doUnarchive} title={'Unarchive'} />
+                        <Row onClick={doUnarchive} title={'Разархивировать'} />
                     </Can>
                 ) : (
                     <Can action={'file.archive'}>
-                        <Row onClick={doArchive} title={'Archive'} />
+                        <Row onClick={doArchive} title={'Архивировать'} />
                     </Can>
                 )}
-                {file.isFile && <Row onClick={doDownload} title={'Download'} />}
+                {file.isFile && <Row onClick={doDownload} title={'Скачать'} />}
                 <Can action={'file.delete'}>
-                    <Row onClick={() => setShowConfirmation(true)} title={'Delete'} $danger />
+                    <Row onClick={() => setShowConfirmation(true)} title={'Удалить'} $danger />
                 </Can>
             </DropdownMenu>
         </>

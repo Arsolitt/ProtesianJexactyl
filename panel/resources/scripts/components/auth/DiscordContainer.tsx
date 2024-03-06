@@ -16,7 +16,7 @@ const DiscordContainer = () => {
 
         discordLogin()
             .then((data) => {
-                if (!data) return clearAndAddHttpError({ error: 'Discord auth failed. Please try again.' });
+                if (!data) return clearAndAddHttpError({ error: 'Вход через Discord не удался :(' });
                 window.location.href = data;
             })
             .then(() => setLoading(false))
@@ -30,16 +30,16 @@ const DiscordContainer = () => {
         <DiscordFormContainer css={tw`w-full flex`}>
             <div css={tw`flex flex-col md:h-full`}>
                 <div css={tw`mt-6`}>
-                    <Button type={'button'} css={tw`w-full`} onClick={() => login()} disabled={loading}>
-                        Connect with Discord
-                    </Button>
+                    <Button.Success type={'button'} css={tw`w-full`} onClick={() => login()} disabled={loading}>
+                        Вход через Discord
+                    </Button.Success>
                 </div>
                 <div css={tw`mt-6 text-center`}>
                     <Link
                         to={'/auth/login'}
                         css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
                     >
-                        Return to login
+                        На страницу входа
                     </Link>
                 </div>
             </div>

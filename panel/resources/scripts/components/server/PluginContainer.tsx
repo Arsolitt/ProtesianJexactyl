@@ -21,11 +21,10 @@ export default () => {
     const [open, setOpen] = useState(false);
     const { clearFlashes, addFlash, clearAndAddHttpError } = useFlash();
     const [pluginId, setPluginId] = useState<number>(0);
+    const [pluginName, setPluginName] = useState<string>('');
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const { data, error } = useSWR<Plugin>([uuid, query, '/plugins'], (uuid, query) => getPlugins(uuid, query));
-
-    console.log(data);
 
     useEffect(() => {
         if (!error) {
@@ -40,15 +39,15 @@ export default () => {
         setSubmitting(false);
     };
 
-    const doDownload = (id: number) => {
+    const doDownload = (id: number, name: string) => {
         console.log('Installing plugin with ID ' + id);
-        installPlugin(uuid, id)
+        installPlugin(uuid, id, name)
             .then(() => setOpen(false))
             .then(() =>
                 addFlash({
                     key: 'server:plugins',
                     type: 'success',
-                    message: 'Plugin installed successfully.',
+                    message: 'Плагин успешно установлен',
                 })
             )
             .catch((error) => clearAndAddHttpError(error));
@@ -56,8 +55,8 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Plugins'}
-            description={'Search and download Spigot plugins.'}
+            title={'Плагины'}
+            description={'Устанавливай плагины для Spigot/Spigot-based ядер!'}
             showFlashKey={'server:plugins'}
         >
             <Formik
@@ -72,32 +71,33 @@ export default () => {
                         <div className={'col-span-11 mr-4'}>
                             <Field
                                 name={'query'}
-                                placeholder={'Type to search...'}
+                                placeholder={'Введи название для поиска...'}
                                 className={'p-3 text-sm w-full bg-gray-800 rounded'}
                             />
                         </div>
-                        <Button type={'submit'}>
-                            Search <Icon.Search size={18} className={'ml-1'} />
-                        </Button>
+                        <Button.Success type={'submit'}>
+                            Поиск <Icon.Search size={18} className={'ml-1'} />
+                        </Button.Success>
                     </div>
                 </Form>
             </Formik>
             <Dialog.Confirm
                 open={open}
                 onClose={() => setOpen(false)}
-                title={'Plugin Installation'}
-                onConfirmed={() => doDownload(pluginId)}
+                title={'Установка плагина'}
+                confirm={'Установить'}
+                onConfirmed={() => doDownload(pluginId, pluginName)}
             >
-                Are you sure you wish to download this plugin?
+                Ты уверен, что хочешь установить этот плагин?
             </Dialog.Confirm>
             {!data ? null : (
                 <>
                     {!data.plugins ? (
-                        <p className={'text-gray-400 text-center'}>Waiting for a search query to be provided...</p>
+                        <p className={'text-gray-400 text-center'}>Жду, пока ты введёшь поисковый запрос...</p>
                     ) : (
                         <>
                             {data.plugins.length < 1 ? (
-                                <p>Couldn&apos;t find any plugins.</p>
+                                <p>Не могу найти плагины по твоему запросу :(</p>
                             ) : (
                                 <div className={'lg:grid lg:grid-cols-3 p-2'}>
                                     {data.plugins.map((plugin, key) => (
@@ -116,20 +116,25 @@ export default () => {
                                                                 <Icon.DownloadCloud size={18} />
                                                             </Button.Text>
                                                         ) : (
-                                                            <Button
+                                                            <Button.Success
                                                                 className={'m-1'}
                                                                 onClick={() => {
                                                                     setPluginId(plugin.id);
+                                                                    setPluginName(plugin.name);
                                                                     setOpen(true);
                                                                 }}
                                                             >
                                                                 <Icon.DownloadCloud size={18} />
-                                                            </Button>
+                                                            </Button.Success>
                                                         )}
-                                                        <a href={`https://api.spiget.org/v2/resources/${plugin.id}/go`}>
-                                                            <Button className={'m-1'}>
+                                                        <a
+                                                            target={'_blank'}
+                                                            href={`https://api.spiget.org/v2/resources/${plugin.id}/go`}
+                                                            rel='noreferrer'
+                                                        >
+                                                            <Button.Text className={'m-1'}>
                                                                 <Icon.ExternalLink size={18} />
-                                                            </Button>
+                                                            </Button.Text>
                                                         </a>
                                                     </div>
                                                 </div>

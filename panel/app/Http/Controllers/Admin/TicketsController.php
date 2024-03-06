@@ -2,17 +2,17 @@
 
 namespace Jexactyl\Http\Controllers\Admin;
 
-use Illuminate\View\View;
-use Jexactyl\Models\Ticket;
-use Illuminate\View\Factory;
-use Jexactyl\Models\TicketMessage;
 use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
+use Illuminate\View\Factory;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Http\Controllers\Controller;
+use Jexactyl\Http\Requests\Admin\Tickets\TicketMessageRequest;
 use Jexactyl\Http\Requests\Admin\Tickets\TicketStatusRequest;
 use Jexactyl\Http\Requests\Admin\Tickets\TicketToggleRequest;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Jexactyl\Http\Requests\Admin\Tickets\TicketMessageRequest;
+use Jexactyl\Models\Ticket;
+use Jexactyl\Models\TicketMessage;
+use Prologue\Alerts\AlertsMessageBag;
 
 class TicketsController extends Controller
 {
@@ -30,8 +30,8 @@ class TicketsController extends Controller
     {
         return $this->view->make('admin.tickets.index', [
             'tickets' => Ticket::all(),
-            'enabled' => $this->settings->get('jexactyl::tickets:enabled', false),
-            'max' => $this->settings->get('jexactyl::tickets:max', 3),
+            'enabled' => $this->settings->get('tickets:enabled', false),
+            'max' => $this->settings->get('tickets:max', 3),
         ]);
     }
 
@@ -52,7 +52,7 @@ class TicketsController extends Controller
     public function toggle(TicketToggleRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::tickets:' . $key, $value);
+            $this->settings->set('tickets:' . $key, $value);
         }
 
         return redirect()->route('admin.tickets.index');
@@ -68,10 +68,21 @@ class TicketsController extends Controller
         TicketMessage::create([
             'user_id' => 0,
             'ticket_id' => $id,
-            'content' => 'Ticket status has been set to ' . $request->input('status'),
+            'content' => 'Обращение переведено в статус: ' . $this->getTextStatus($request->input('status')),
         ]);
 
         return redirect()->route('admin.tickets.view', $id);
+    }
+
+    private function getTextStatus(string $status)
+    {
+        return match ($status) {
+            'pending' => 'В ожидании',
+            'in-progress' => 'В процессе',
+            'resolved' => 'Решено',
+            'unresolved' => 'Не решено',
+            default => 'Неизвестно :('
+        };
     }
 
     /**

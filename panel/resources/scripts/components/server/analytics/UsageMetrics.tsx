@@ -6,35 +6,43 @@ import ContentBox from '@/components/elements/ContentBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from '@/components/server/console/style.module.css';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
-import { faClock, faMicrochip, faMemory, faHdd } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faHdd, faMemory, faMicrochip } from '@fortawesome/free-solid-svg-icons';
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime', number>;
 
 const getColorFromStatus = (status: string): string => {
     switch (status) {
         case 'offline':
-            return 'text-red-500';
+            return 'text-negative-500';
         case 'starting':
-            return 'text-yellow-500';
+            return 'text-warning-500';
         case 'stopping':
-            return 'text-yellow-500';
+            return 'text-warning-500';
         case 'running':
-            return 'text-green-500';
+            return 'text-main-500';
         default:
             return 'text-gray-500';
     }
 };
 
+const getColorFromUsage = (usage: number): string => {
+    if (usage <= 40) return 'text-main-500';
+    if (usage > 40 && usage < 80) return 'text-warning-500';
+    if (usage >= 80) return 'text-negative-500';
+    else return 'text-gray-500';
+};
+
 const getStatusFromUsage = (usage: number): string => {
-    if (usage <= 0) return 'N/A';
-    if (usage <= 25) return 'low';
-    if (usage >= 80) return 'high';
-    else return 'normal';
+    if (usage <= 40) return 'Низкое';
+    if (usage > 40 && usage < 80) return 'Нормальное';
+    if (usage >= 80) return 'Высокое';
+    else return 'Неизвестно';
 };
 
 export default () => {
     const status = ServerContext.useStoreState((state) => state.status.value);
     const [stats, setStats] = useState<Stats>({ memory: 0, cpu: 0, disk: 0, uptime: 0 });
+    const [textStatus, setTextStatus] = useState<string>('');
 
     const instance = ServerContext.useStoreState((state) => state.socket.instance);
     const connected = ServerContext.useStoreState((state) => state.socket.connected);
@@ -74,13 +82,30 @@ export default () => {
         };
     }, [instance, connected]);
 
+    useEffect(() => {
+        setTextStatus(() => {
+            switch (status) {
+                case 'offline':
+                    return 'Выключен';
+                case 'starting':
+                    return 'Запускается';
+                case 'stopping':
+                    return 'Выключается';
+                case 'running':
+                    return 'Работает';
+                default:
+                    return 'Неизвестно';
+            }
+        });
+    }, [status]);
+
     return (
         <div className={classNames(styles.chart_container, 'group')}>
             <div className={'flex items-center justify-between px-4 py-2'}>
                 <h3
                     className={'font-header transition-colors duration-100 group-hover:text-gray-50 font-semibold mb-2'}
                 >
-                    Current Status
+                    Текущий статус
                 </h3>
             </div>
             <div className={'grid grid-cols-2 gap-3 mx-4'}>
@@ -89,13 +114,13 @@ export default () => {
                         <p className={'font-bold text-xl'}>
                             <FontAwesomeIcon icon={faClock} size={'1x'} />
                             <br />
-                            Server is <span className={getColorFromStatus(status ?? 'offline')}>{status}</span>
+                            Сервер: <span className={getColorFromStatus(status ?? 'offline')}>{textStatus}</span>
                         </p>
                         <p className={'font-semibold text-sm text-gray-400 mt-1'}>
                             {status === 'running' ? (
                                 <UptimeDuration uptime={stats.uptime / 1000} />
                             ) : (
-                                <>Unable to fetch uptime</>
+                                <>Не можем получить данные :(</>
                             )}
                         </p>
                     </div>
@@ -105,9 +130,12 @@ export default () => {
                         <p className={'font-bold text-xl'}>
                             <FontAwesomeIcon icon={faMicrochip} size={'1x'} />
                             <br />
-                            CPU usage is {getStatusFromUsage(parseInt(cpuUsed))}
+                            CPU:{' '}
+                            <span className={getColorFromUsage(parseFloat(cpuUsed))}>
+                                {getStatusFromUsage(parseFloat(cpuUsed))}
+                            </span>
                         </p>
-                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Using {cpuUsed}%</p>
+                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Используется: {cpuUsed}%</p>
                     </div>
                 </ContentBox>
                 <ContentBox isLight>
@@ -115,9 +143,12 @@ export default () => {
                         <p className={'font-bold text-xl'}>
                             <FontAwesomeIcon icon={faMemory} size={'1x'} />
                             <br />
-                            RAM usage is {getStatusFromUsage(parseInt(memoryUsed))}
+                            ОЗУ:{' '}
+                            <span className={getColorFromUsage(parseInt(memoryUsed))}>
+                                {getStatusFromUsage(parseInt(memoryUsed))}
+                            </span>
                         </p>
-                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Using {memoryUsed}%</p>
+                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Используется: {memoryUsed}%</p>
                     </div>
                 </ContentBox>
                 <ContentBox isLight>
@@ -125,9 +156,12 @@ export default () => {
                         <p className={'font-bold text-xl'}>
                             <FontAwesomeIcon icon={faHdd} size={'1x'} />
                             <br />
-                            Disk usage is {getStatusFromUsage(parseInt(diskUsed))}
+                            Диск:{' '}
+                            <span className={getColorFromUsage(parseInt(diskUsed))}>
+                                {getStatusFromUsage(parseInt(diskUsed))}
+                            </span>
                         </p>
-                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Using {diskUsed}%</p>
+                        <p className={'font-semibold text-sm text-gray-400 mt-1'}>Используется: {diskUsed}%</p>
                     </div>
                 </ContentBox>
             </div>

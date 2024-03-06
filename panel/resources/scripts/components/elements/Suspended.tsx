@@ -1,7 +1,6 @@
 import tw from 'twin.macro';
 import React, { useState } from 'react';
 import useFlash from '@/plugins/useFlash';
-import { useStoreState } from '@/state/hooks';
 import Code from '@/components/elements/Code';
 import { ServerContext } from '@/state/server';
 import Input from '@/components/elements/Input';
@@ -13,6 +12,7 @@ import ServerErrorSvg from '@/assets/images/server_error.svg';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import PageContentBlock from '@/components/elements/PageContentBlock';
+// import { useStoreState } from 'easy-peasy';
 
 export default () => {
     const [name, setName] = useState('');
@@ -23,7 +23,7 @@ export default () => {
     const [confirmDialog, setConfirmDialog] = useState(false);
 
     const { clearFlashes, clearAndAddHttpError } = useFlash();
-    const store = useStoreState((state) => state.storefront.data!);
+    // const store = useStoreState((state) => state.storefront.data!);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const serverName = ServerContext.useStoreState((state) => state.server.data!.name);
 
@@ -35,7 +35,7 @@ export default () => {
             .then(() => {
                 setSubmit(false);
                 // @ts-expect-error this is valid
-                window.location = '/';
+                window.location = '/home';
             })
             .catch((error) => {
                 clearAndAddHttpError({ key: 'server:renewal', error });
@@ -54,7 +54,7 @@ export default () => {
             .then(() => {
                 setSubmit(false);
                 // @ts-expect-error this is valid
-                window.location = '/store';
+                window.location = '/home';
             })
             .catch((error) => {
                 clearAndAddHttpError({ key: 'server:renewal', error });
@@ -67,77 +67,74 @@ export default () => {
             <Dialog.Confirm
                 open={renewDialog}
                 onClose={() => setRenewDialog(false)}
-                title={'Confirm server renewal'}
-                confirm={'Continue'}
+                title={'Подтвердить разморозку'}
+                confirm={'Разморозить'}
                 onConfirmed={() => doRenewal()}
             >
                 <SpinnerOverlay visible={isSubmit} />
-                Are you sure you want to spend {store.renewals.cost} credits to renew your server?
+                Ты уверен, что хочешь разморозить сервер?
             </Dialog.Confirm>
             <Dialog.Confirm
                 open={deleteDialog}
                 onClose={() => setDeleteDialog(false)}
-                title={'Confirm server deletion'}
-                confirm={'Continue'}
+                title={'Подтвердить удаление'}
+                confirm={'Удалить'}
                 onConfirmed={() => setConfirmDialog(true)}
             >
                 <SpinnerOverlay visible={isSubmit} />
-                This action will remove your server from the system, along with all files and configurations.
+                Это действие удалит твой сервер из системы. Действие необратимо!
             </Dialog.Confirm>
             <form id={'delete-suspended-server-form'} onSubmit={doDeletion}>
-                <Dialog open={confirmDialog} title={'Confirm server deletion'} onClose={() => setConfirmDialog(false)}>
+                <Dialog open={confirmDialog} title={'Подтвердить удаление'} onClose={() => setConfirmDialog(false)}>
                     {name !== serverName && (
                         <>
                             <p className={'my-2 text-gray-400'}>
-                                Type <Code>{serverName}</Code> below.
+                                Введи <Code>{serverName}</Code> ниже.
                             </p>
                             <Input type={'text'} value={name} onChange={(n) => setName(n.target.value)} />
                         </>
                     )}
-                    <Button
+                    <Button.Danger
                         disabled={name !== serverName}
                         type={'submit'}
                         className={'mt-2'}
                         form={'delete-suspended-server-form'}
                     >
-                        Confirm
-                    </Button>
+                        Подтвердить
+                    </Button.Danger>
                 </Dialog>
             </form>
-            <PageContentBlock title={'Server Suspended'}>
+            <PageContentBlock title={'Сервер заморожен!'}>
                 <FlashMessageRender byKey={'server:renewal'} css={tw`mb-1`} />
                 <div css={tw`flex justify-center`}>
                     <div
                         css={tw`w-full sm:w-3/4 md:w-1/2 p-12 md:p-20 bg-neutral-900 rounded-lg shadow-lg text-center relative`}
                     >
                         <img src={ServerErrorSvg} css={tw`w-2/3 h-auto select-none mx-auto`} />
-                        <h2 css={tw`mt-10 font-bold text-4xl`}>Suspended</h2>
-                        {/*{true ? (*/}
-                        {/*    <>*/}
-                        {/*        <p css={tw`text-sm my-2`}>*/}
-                        {/*            Your server has been suspended due to it not being renewed on time. Please click the*/}
-                        {/*            &apos;Renew&apos; button in order to reactivate your server. If you want to delete*/}
-                        {/*            your server, the resources will automatically be added back to your account so you*/}
-                        {/*            can re-deploy a new server easily.*/}
-                        {/*        </p>*/}
-                        {/*        <Button*/}
-                        {/*            className={'mx-2 my-1'}*/}
-                        {/*            onClick={() => setRenewDialog(true)}*/}
-                        {/*            disabled={isSubmit}*/}
-                        {/*        >*/}
-                        {/*            Renew Now*/}
-                        {/*        </Button>*/}
-                        {/*        <Button.Danger*/}
-                        {/*            className={'mx-2 my-1'}*/}
-                        {/*            onClick={() => setDeleteDialog(true)}*/}
-                        {/*            disabled={isSubmit}*/}
-                        {/*        >*/}
-                        {/*            Delete Server*/}
-                        {/*        </Button.Danger>*/}
-                        {/*    </>*/}
-                        {/*) : (*/}
-                        {/*    <>This server is suspended and cannot be accessed.</>*/}
-                        {/*)}*/}
+                        <h2 css={tw`mt-10 font-bold text-4xl`}>Заморожен</h2>
+                        {
+                            <>
+                                <p css={tw`text-sm my-2`}>
+                                    Твой сервер заморожен за неуплату! Ты можешь его разморозить или удалить. Для
+                                    разморозки потребуется иметь на балансе сумму для оплаты на сутки. Но оплата будет
+                                    снята за час.
+                                </p>
+                                <Button.Success
+                                    className={'mx-2 my-1'}
+                                    onClick={() => setRenewDialog(true)}
+                                    disabled={isSubmit}
+                                >
+                                    Разморозить
+                                </Button.Success>
+                                <Button.Danger
+                                    className={'mx-2 my-1'}
+                                    onClick={() => setDeleteDialog(true)}
+                                    disabled={isSubmit}
+                                >
+                                    Удалить
+                                </Button.Danger>
+                            </>
+                        }
                     </div>
                 </div>
             </PageContentBlock>

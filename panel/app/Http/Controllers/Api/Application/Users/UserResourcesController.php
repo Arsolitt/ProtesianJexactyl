@@ -2,14 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Api\Application\Users;
 
-use Jexactyl\Models\User;
-use Illuminate\Http\Response;
-use Jexactyl\Services\Users\UserUpdateService;
 use Jexactyl\Contracts\Repository\UserRepositoryInterface;
+use Jexactyl\Http\Controllers\Api\Application\ApplicationApiController;
 use Jexactyl\Http\Requests\Api\Application\Users\GetUsersRequest;
 use Jexactyl\Http\Requests\Api\Application\Users\UpdateUserRequest;
+use Jexactyl\Models\User;
+use Jexactyl\Services\Users\UserUpdateService;
 use Jexactyl\Transformers\Api\Application\UserResourcesTransformer;
-use Jexactyl\Http\Controllers\Api\Application\ApplicationApiController;
 
 class UserResourcesController extends ApplicationApiController
 {
@@ -27,9 +26,10 @@ class UserResourcesController extends ApplicationApiController
      * UserController constructor.
      */
     public function __construct(
-        UserUpdateService $updateService,
+        UserUpdateService       $updateService,
         UserRepositoryInterface $repository
-    ) {
+    )
+    {
         parent::__construct();
 
         $this->repository = $repository;
@@ -58,7 +58,7 @@ class UserResourcesController extends ApplicationApiController
      * @throws \Jexactyl\Exceptions\Model\DataValidationException
      * @throws \Jexactyl\Exceptions\Repository\RecordNotFoundException
      */
-    public function update(UpdateUserRequest $request, User $user): array
+    public function update(UpdateUserRequest $request, User $user)
     {
         // TODO: use userUpdateService in future.
         $user->update([
@@ -74,7 +74,7 @@ class UserResourcesController extends ApplicationApiController
 
         return $this->fractal->item($user)
             > transformWith($this->getTransformer(UserResourcesTransformer::class))
-            ->toArray()
-            ->respond(201);
+                ->toArray()
+                ->respond(201);
     }
 }

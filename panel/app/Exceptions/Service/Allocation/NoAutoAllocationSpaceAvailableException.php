@@ -12,7 +12,7 @@ class NoAutoAllocationSpaceAvailableException extends DisplayException
     public function __construct()
     {
         parent::__construct(
-            'Cannot assign additional allocation: no more space available on node.'
+            'На узле недостаточно портов! Попробуй позже или напиши в поддержку.'
         );
     }
 }

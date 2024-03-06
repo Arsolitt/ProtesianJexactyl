@@ -42,11 +42,11 @@ export default ({ className }: PowerButtonProps) => {
                 open={open}
                 hideCloseIcon
                 onClose={() => setOpen(false)}
-                title={'Forcibly Stop Process'}
-                confirm={'Continue'}
+                title={'Принудительная остановка сервера'}
+                confirm={'Продолжить'}
                 onConfirmed={onButtonClick.bind(this, 'kill-confirmed')}
             >
-                Forcibly stopping a server can lead to data corruption.
+                Принудительная остановка сервера может привести к повреждению данных
             </Dialog.Confirm>
             <Can action={'control.start'}>
                 <Button.Success
@@ -68,7 +68,7 @@ export default ({ className }: PowerButtonProps) => {
                     disabled={status === 'offline'}
                     onClick={onButtonClick.bind(this, killable ? 'kill' : 'stop')}
                 >
-                    {killable ? 'Убить' : 'Остановить'}
+                    {killable ? 'Кильнуть' : 'Остановить'}
                 </Button.Danger>
             </Can>
         </div>

@@ -27,7 +27,7 @@ const ProgressCircle = ({ data }: { data: number }) => (
         <circle {...svgProps} className={'opacity-50'} />
         <circle
             {...svgProps}
-            stroke={data >= 95 ? '#ef4444' : data >= 75 ? '#eab308' : '#22C55E'}
+            stroke={data >= 80 ? '#ef4464' : data >= 40 ? '#fd7612' : '#27bfcc'}
             strokeDasharray={28 * Math.PI}
             className={'rotate-[-90deg] origin-[50%_50%] transition-[stroke-dashoffset] duration-1000'}
             style={{ strokeDashoffset: ((100 - data) / 100) * 28 * Math.PI }}
@@ -93,7 +93,7 @@ export default () => {
     }, [instance, connected]);
 
     return (
-        <ServerContentBlock title={'Server Analytics'} description={'View statistics and performance for your server.'}>
+        <ServerContentBlock title={'Аналитика'} description={'Тут предоставлена аналитика по работе твоего сервера'}>
             <div className={'grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-2'}>
                 <div className={'col-span-2 grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-4'}>
                     <UsageMetrics />
@@ -104,17 +104,25 @@ export default () => {
                         <PowerButtons className={'flex space-x-4 text-center mb-4'} />
                     </Can>
                     <ContentBox>
-                        <UsageBox progress={parseInt(cpuUsed)} title={'CPU Usage'} content={`${cpuUsed}% used`} />
+                        <UsageBox
+                            progress={parseInt(cpuUsed)}
+                            title={'Использование процессора'}
+                            content={`Используется: ${cpuUsed}%`}
+                        />
                         <UsageBox
                             progress={parseInt(memoryUsed)}
-                            title={'Memory Usage'}
-                            content={`${memoryUsed}% used`}
+                            title={'Использование ОЗУ'}
+                            content={`Используется: ${memoryUsed}%`}
                         />
-                        <UsageBox progress={parseInt(diskUsed)} title={'Disk Usage'} content={`${diskUsed}% used`} />
+                        <UsageBox
+                            progress={parseInt(diskUsed)}
+                            title={'Использование диска'}
+                            content={`Используется: ${diskUsed}%`}
+                        />
                     </ContentBox>
-                    <TitledGreyBox title={'Performance Metrics'} className={'rounded mt-4'}>
+                    <TitledGreyBox title={'Показатели производительности'} className={'rounded mt-4'}>
                         {!messages || messages.length < 1 ? (
-                            <p className={'text-gray-400 text-center'}>No metrics are currently available.</p>
+                            <p className={'text-gray-400 text-center'}>На данный момент метрик нет :(</p>
                         ) : (
                             <>
                                 {messages.slice(0, 6).map((message) => (

@@ -2,14 +2,14 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Http\Controllers\Controller;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Jexactyl\StoreFormRequest;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Prologue\Alerts\AlertsMessageBag;
 
 class StoreController extends Controller
 {
@@ -17,9 +17,10 @@ class StoreController extends Controller
      * StoreController constructor.
      */
     public function __construct(
-        private AlertsMessageBag $alert,
+        private AlertsMessageBag            $alert,
         private SettingsRepositoryInterface $settings
-    ) {
+    )
+    {
     }
 
     /**
@@ -30,33 +31,41 @@ class StoreController extends Controller
         $prefix = 'store:';
 
         $currencies = [];
-        foreach (config('store.currencies') as $key => $value) {
+        foreach (config('store.settings.currencies') as $key => $value) {
             $currencies[] = ['code' => $key, 'name' => $value];
         }
 
         return view('admin.jexactyl.store', [
             'enabled' => $this->settings->get($prefix . 'enabled', false),
-            'paypal_enabled' => $this->settings->get($prefix . 'paypal:enabled', false),
-            'stripe_enabled' => $this->settings->get($prefix . 'stripe:enabled', false),
-            'yookassa_enabled' => $this->settings->get($prefix . 'yookassa:enabled', false),
-            'lava_enabled' => $this->settings->get($prefix . 'lava:enabled', false),
+
+            'yookassa' => [
+                'name' => $this->settings->get($prefix . 'yookassa:name', 'Yookassa'),
+                'enabled' => $this->settings->get($prefix . 'yookassa:enabled', false),
+                'min' => $this->settings->get($prefix . 'yookassa:min', 10),
+                'max' => $this->settings->get($prefix . 'yookassa:max', 9999),
+            ],
+
             'selected_currency' => $this->settings->get($prefix . 'currency', 'USD'),
             'currencies' => $currencies,
 
-            'cpu' => $this->settings->get($prefix . 'cost:cpu', 50) * 100,
-            'memory' => $this->settings->get($prefix . 'cost:memory', 50) * 1024,
-            'disk' => $this->settings->get($prefix . 'cost:disk', 25) * 1024,
-            'slot' => $this->settings->get($prefix . 'cost:slot', 250),
-            'port' => $this->settings->get($prefix . 'cost:port', 20),
-            'backup' => $this->settings->get($prefix . 'cost:backup', 20),
-            'database' => $this->settings->get($prefix . 'cost:database', 20),
+            'cost_memory' => $this->settings->get($prefix . 'cost:memory', 75 / 1024) * 1024,
+            'cost_disk' => $this->settings->get($prefix . 'cost:disk', 2 / 1024) * 1024,
+            'cost_slot' => $this->settings->get($prefix . 'cost:slot', 50),
+            'cost_allocation' => $this->settings->get($prefix . 'cost:allocation', 10),
+            'cost_backup' => $this->settings->get($prefix . 'cost:backup', 10),
+            'cost_database' => $this->settings->get($prefix . 'cost:database', 10),
 
-            'limit_cpu' => $this->settings->get($prefix . 'limit:cpu', 100),
-            'limit_memory' => $this->settings->get($prefix . 'limit:memory', 1024),
-            'limit_disk' => $this->settings->get($prefix . 'limit:disk', 256),
-            'limit_port' => $this->settings->get($prefix . 'limit:port', 1),
-            'limit_backup' => $this->settings->get($prefix . 'limit:backup', 1),
-            'limit_database' => $this->settings->get($prefix . 'limit:database', 1),
+            'limit_min_memory' => $this->settings->get($prefix . 'limit:min:memory', 512),
+            'limit_min_disk' => $this->settings->get($prefix . 'limit:min:disk', 1024),
+            'limit_min_allocations' => $this->settings->get($prefix . 'limit:min:allocations', 1),
+            'limit_min_backups' => $this->settings->get($prefix . 'limit:min:backups', 0),
+            'limit_min_databases' => $this->settings->get($prefix . 'limit:min:databases', 0),
+
+            'limit_max_memory' => $this->settings->get($prefix . 'limit:max:memory', 16384),
+            'limit_max_disk' => $this->settings->get($prefix . 'limit:max:disk', 102400),
+            'limit_max_allocations' => $this->settings->get($prefix . 'limit:max:allocations', 25),
+            'limit_max_backups' => $this->settings->get($prefix . 'limit:max:backups', 25),
+            'limit_max_databases' => $this->settings->get($prefix . 'limit:max:databases', 25),
         ]);
     }
 
@@ -70,9 +79,6 @@ class StoreController extends Controller
     {
         foreach ($request->normalize() as $key => $value) {
             switch ($key) {
-                case 'store:cost:cpu':
-                    $value = $value / 100;
-                    break;
                 case 'store:cost:disk':
                 case 'store:cost:memory':
                     $value = $value / 1024;
