@@ -52,7 +52,7 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Dashboard'} css={tw`mt-4 sm:mt-10`} showFlashKey={'dashboard'}>
+        <PageContentBlock title={'Главная'} css={tw`mt-4 sm:mt-10`} showFlashKey={'dashboard'}>
             <div css={tw`mb-10 flex justify-between items-center`}>
                 {rootAdmin ? (
                     <>
