@@ -28,5 +28,7 @@ resources/lang/locales.js
 
 /public/build
 /public/hot
+/public/assets/*.json
+/public/assets/*.js
 result
 docker-compose.yaml
