@@ -330,7 +330,7 @@ class Server extends Model
     public function hourlyPrice(): float|int
     {
         return Cache::get('server_hourly_price_' . $this->id, function () {
-            Cache::set('server_hourly_price_' . $this->id, $this->monthlyPrice() / 30 / 24);
+            Cache::set('server_hourly_price_' . $this->id, $this->monthlyPrice() / 30 / 24, 86400);
             return $this->monthlyPrice() / 30 / 24;
         });
     }

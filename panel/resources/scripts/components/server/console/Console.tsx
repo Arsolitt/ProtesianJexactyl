@@ -5,7 +5,7 @@ import styles from './style.module.css';
 import { FitAddon } from 'xterm-addon-fit';
 import { theme as th } from 'twin.macro';
 import { SearchAddon } from 'xterm-addon-search';
-import { Terminal, ITerminalOptions } from 'xterm';
+import { ITerminalOptions, Terminal } from 'xterm';
 import { WebLinksAddon } from 'xterm-addon-web-links';
 import { SearchBarAddon } from 'xterm-addon-search-bar';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -16,7 +16,6 @@ import useEventListener from '@/plugins/useEventListener';
 import { debounce } from 'debounce';
 import { usePersistedState } from '@/plugins/usePersistedState';
 import { SocketEvent, SocketRequest } from '@/components/server/events';
-import 'xterm/css/xterm.css';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 
 const theme = {
@@ -52,7 +51,7 @@ const terminalProps: ITerminalOptions = {
 };
 
 export default () => {
-    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mJexactyl: \u001b[0m';
+    const TERMINAL_PRELUDE = '\u001b[1m\u001b[33mProtesiaN: \u001b[0m';
     const ref = useRef<HTMLDivElement>(null);
     const terminal = useMemo(() => new Terminal({ ...terminalProps }), []);
     const fitAddon = new FitAddon();
