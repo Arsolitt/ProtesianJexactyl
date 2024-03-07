@@ -44,7 +44,6 @@ production_restart:
 production_setup:
 	make production_down
 	make production_build
-
 	make production_up
 	docker-compose -f docker-compose.prod.yml run --rm composer install --no-dev --optimize-autoloader
 	docker-compose run --rm artisan migrate --force
