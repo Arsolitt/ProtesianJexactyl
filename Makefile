@@ -25,27 +25,31 @@ restore:
 ################ PRODUCTION COMMANDS ################
 #####################################################
 
-production_build:
+prod_build:
 	docker-compose -f docker-compose.prod.yml build
 
 # START SERVICES
-production_up:
+prod_up:
 	docker-compose -f docker-compose.prod.yml up -d
 
 # STOP SERVICES
-production_down:
+prod_down:
 	docker-compose -f docker-compose.prod.yml down
 
 # RESTART SERVICES
-production_restart:
+prod_restart:
 	docker-compose -f docker-compose.prod.yml restart
 
+# BUILD FRONTEND FILES
+prod_build_front:
+	docker-compose -f docker-compose.prod.yml run --rm yarn --fronzen-lockfile
+    docker-compose -f docker-compose.prod.yml run --rm yarn build:production
+
 # SETUP
-production_setup:
-	make production_down
-	make production_build
-	make production_up
+prod_setup:
+	make prod_down
+	make prod_build
+	make prod_up
 	docker-compose -f docker-compose.prod.yml run --rm composer install --no-dev --optimize-autoloader
 	docker-compose run --rm artisan migrate --force
-	docker-compose -f docker-compose.prod.yml run --rm yarn --fronzen-lockfile
-	docker-compose -f docker-compose.prod.yml run --rm yarn build:production
+	make prod_build_front
