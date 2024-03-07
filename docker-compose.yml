@@ -26,6 +26,8 @@ services:
       - "./panel:/var/www/panel"
       - "./docker/nginx/fullchain.pem:/etc/ssl/cert.pem"
       - "./docker/nginx/privkey.pem:/etc/ssl/key.pem"
+      - "./docker/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "./docker/nginx/configs:/etc/nginx/conf.d"
     networks:
       - panel
 
@@ -67,7 +69,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
@@ -88,7 +89,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.conf'
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -113,7 +113,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.conf'
     stdin_open: true
     tty: true
     restart: unless-stopped
@@ -138,7 +137,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
@@ -155,7 +153,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
