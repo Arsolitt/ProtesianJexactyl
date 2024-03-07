@@ -33,6 +33,7 @@ class ActualizeServersCommand extends Command
                 $server->update([
                     'cpu' => 999,
                     'monthly_price' => $server->actualPrice(),
+                    'disk' => $server->memory * 3,
                 ]);
             } catch (\Exception $e) {
                 $this->error($e->getMessage());
