@@ -40,7 +40,7 @@
                             <th>Created at</th>
                             <th>Updated at</th>
                             <th>External ID</th>
-
+                            <th>Internal ID</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,7 +59,7 @@
                                 <td>{{ $payment->created_at }}</td>
                                 <td>{{ $payment->updated_at }}</td>
                                 <td>{{ $payment->external_id }}</td>
-
+                                <td>{{ $payment->id }}</td>
                             </tr>
                         @endforeach
                     </tbody>
