@@ -5,6 +5,7 @@ namespace Jexactyl\Http\Controllers\Api\Client\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Jexactyl\Events\User\LastActivity;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Store\PurchaseResourceRequest;
@@ -34,7 +35,9 @@ class ResourceController extends ClientApiController
      */
     public function user(Request $request)
     {
-        return $this->fractal->item($request->user())
+        $user = $request->user();
+        LastActivity::dispatch($user, $request->header('CF-Connecting-IP') ?? $request->ip());
+        return $this->fractal->item($user)
             ->transformWith($this->getTransformer(UserTransformer::class))
             ->toArray();
     }
