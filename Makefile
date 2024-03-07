@@ -56,3 +56,9 @@ prod_setup:
 	make prod_up
 	make prod_migrations
 	make prod_build_front
+
+prod_update:
+	make prod_down
+	make prod_build
+	make prod_up
+	make prod_migrations
