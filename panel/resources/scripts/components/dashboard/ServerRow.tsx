@@ -74,7 +74,10 @@ export default ({ server, className }: { server: Server; className?: string }) =
 
     const alarms = { cpu: false, memory: false, disk: false };
     if (stats) {
-        alarms.cpu = server.limits.cpu === 0 ? false : stats.cpuUsagePercent >= server.limits.cpu * 0.9;
+        alarms.cpu =
+            server.limits.cpu === 0
+                ? false
+                : stats.cpuUsagePercent / (server.limits.cpu / 100) >= server.limits.cpu * 0.9;
         alarms.memory = isAlarmState(stats.memoryUsageInBytes, server.limits.memory);
     }
 
@@ -130,7 +133,7 @@ export default ({ server, className }: { server: Server; className?: string }) =
                             <div css={tw`flex justify-center text-neutral-500`}>
                                 <Icon.Cpu size={20} />
                                 <IconDescription $alarm={alarms.cpu}>
-                                    {stats.cpuUsagePercent.toFixed(2)}%
+                                    {(stats.cpuUsagePercent / (server.limits.cpu / 100)).toFixed(2)}%
                                 </IconDescription>
                             </div>
                         </div>

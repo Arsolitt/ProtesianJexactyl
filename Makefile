@@ -49,7 +49,3 @@ production_setup:
 	docker-compose run --rm artisan migrate --force
 	docker-compose -f docker-compose.prod.yml run --rm yarn --fronzen-lockfile
 	docker-compose -f docker-compose.prod.yml run --rm yarn build:production
-
-# IMPORT USERS.JSON
-production_import:
-	docker-compose run --rm artisan app:import-users-from-json

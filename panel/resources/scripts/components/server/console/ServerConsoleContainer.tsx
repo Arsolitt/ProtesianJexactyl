@@ -21,14 +21,14 @@ const ServerConsoleContainer = () => {
     const isNodeUnderMaintenance = ServerContext.useStoreState((state) => state.server.data!.isNodeUnderMaintenance);
 
     return (
-        <ServerContentBlock title={'Console'} showFlashKey={'console:share'}>
+        <ServerContentBlock title={'Консоль'} showFlashKey={'console:share'}>
             {(isNodeUnderMaintenance || isInstalling || isTransferring) && (
                 <Alert type={'warning'} className={'mb-4'}>
                     {isNodeUnderMaintenance
-                        ? 'The node of this server is currently under maintenance and all actions are unavailable.'
+                        ? 'Узел, на котором находится сервер в режиме технического обслуживания!'
                         : isInstalling
-                        ? 'This server is currently running its installation process and most actions are unavailable.'
-                        : 'This server is currently being transferred to another node and all actions are unavailable.'}
+                        ? 'Твой сервер скоро будет готов, приходи через пару минут.'
+                        : 'Твой сервер переносится на другой узел, приходи через пару минут.'}
                 </Alert>
             )}
             <div className={'grid grid-cols-4 gap-4 mb-4'}>
