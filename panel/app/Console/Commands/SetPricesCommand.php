@@ -13,7 +13,7 @@ class SetPricesCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'app:actualize-servers';
+    protected $signature = 'app:set-prices';
 
     /**
      * The console command description.
