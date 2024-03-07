@@ -62,7 +62,7 @@
                                     <div>
                                         <select class="form-control" name="recaptcha:enabled">
                                             <option value="true">Enabled</option>
-                                            <option value="false" @if(old('recaptcha:enabled', config('recaptcha.enabled')) == '0') selected @endif>Disabled</option>
+                                            <option value="false" @if(old('recaptcha:enabled', settings()->get('recaptcha:enabled')) == '0') selected @endif>Disabled</option>
                                         </select>
                                         <p class="text-muted small">If enabled, login forms and password reset forms will do a silent captcha check and display a visible captcha if needed.</p>
                                     </div>
@@ -70,13 +70,13 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Site Key</label>
                                     <div>
-                                        <input type="text" required class="form-control" name="recaptcha:website_key" value="{{ old('recaptcha:website_key', config('recaptcha.website_key')) }}">
+                                        <input type="text" required class="form-control" name="recaptcha:website_key" value="{{ old('recaptcha:website_key', settings()->get('recaptcha:website_key')) }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Secret Key</label>
                                     <div>
-                                        <input type="text" required class="form-control" name="recaptcha:secret_key" value="{{ old('recaptcha:secret_key', config('recaptcha.secret_key')) }}">
+                                        <input type="text" required class="form-control" name="recaptcha:secret_key" value="{{ old('recaptcha:secret_key', settings()->get('recaptcha:secret_key')) }}">
                                         <p class="text-muted small">Used for communication between your site and Google. Be sure to keep it a secret.</p>
                                     </div>
                                 </div>
