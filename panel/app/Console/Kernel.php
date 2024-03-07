@@ -8,6 +8,10 @@ use Jexactyl\Console\Commands\Maintenance\CleanServiceBackupFilesCommand;
 use Jexactyl\Console\Commands\Maintenance\PruneOrphanedBackupsCommand;
 use Jexactyl\Console\Commands\Schedule\AnalyticsCollectionCommand;
 use Jexactyl\Console\Commands\Schedule\AnalyticsReviewCommand;
+use Jexactyl\Console\Commands\Schedule\ChargeCreditsCommand;
+use Jexactyl\Console\Commands\Schedule\DeleteCanceledPayments;
+use Jexactyl\Console\Commands\Schedule\DeleteOpenPayments;
+use Jexactyl\Console\Commands\Schedule\DeleteSuspendedServers;
 use Jexactyl\Console\Commands\Schedule\ProcessRunnableCommand;
 
 class Kernel extends ConsoleKernel
@@ -15,7 +19,7 @@ class Kernel extends ConsoleKernel
     /**
      * Register the commands for the application.
      */
-    protected function commands()
+    protected function commands(): void
     {
         $this->load(__DIR__ . '/Commands');
     }
@@ -26,7 +30,7 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      */
-    protected function schedule(Schedule $schedule)
+    protected function schedule(Schedule $schedule): void
     {
         // Execute scheduled commands for servers every minute, as if there was a normal cron running.
         $schedule->command(ProcessRunnableCommand::class)->everyMinute()->withoutOverlapping();
@@ -41,9 +45,9 @@ class Kernel extends ConsoleKernel
         $schedule->command(AnalyticsCollectionCommand::class)->everyFifteenMinutes();
         $schedule->command(AnalyticsReviewCommand::class)->everyThreeHours();
 
-//        $schedule->command(ChargeCreditsCommand::class)->hourly();
-//        $schedule->command(DeleteOpenPayments::class)->hourly();
-//        $schedule->command(DeleteCanceledPayments::class)->daily();
-//        $schedule->command(DeleteSuspendedServers::class)->hourly();
+        $schedule->command(ChargeCreditsCommand::class)->hourly();
+        $schedule->command(DeleteOpenPayments::class)->hourly();
+        $schedule->command(DeleteCanceledPayments::class)->daily();
+        $schedule->command(DeleteSuspendedServers::class)->hourly();
     }
 }
