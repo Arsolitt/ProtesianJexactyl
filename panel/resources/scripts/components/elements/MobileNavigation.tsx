@@ -66,14 +66,14 @@ export default () => {
             >
                 <RightNavigation>
                     <SearchContainer size={20} />
-                    <NavLink to={'/'} exact>
+                    <NavLink to={'/home'} exact>
                         <Icon.Server size={20} />
                     </NavLink>
                     <NavLink to={'/account'}>
                         <Icon.User size={20} />
                     </NavLink>
                     {store && (
-                        <NavLink to={'/store'}>
+                        <NavLink to={'/store/credits'}>
                             <Icon.ShoppingCart size={20} />
                         </NavLink>
                     )}
