@@ -31,6 +31,7 @@ class ActualizeServersCommand extends Command
         foreach ($servers as $server) {
             try {
                 $server->update([
+                    'cpu' => 999,
                     'monthly_price' => $server->actualPrice(),
                 ]);
             } catch (\Exception $e) {
