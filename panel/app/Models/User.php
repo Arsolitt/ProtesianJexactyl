@@ -130,6 +130,7 @@ class User extends Model implements
         'credits' => 'sometimes|numeric|min:0',
         'server_slots' => 'sometimes|int',
         'referral_code' => 'sometimes|string',
+        'last_ip' => 'sometimes|string|nullable',
     ];
     /**
      * Level of servers to display when using access() on a user.
@@ -160,6 +161,8 @@ class User extends Model implements
         'server_slots',
         'referral_code',
         'approved',
+        'last_ip',
+        'last_activity',
     ];
     /**
      * Cast values to a correct type.
@@ -169,7 +172,9 @@ class User extends Model implements
         'use_totp' => 'boolean',
         'gravatar' => 'boolean',
         'totp_authenticated_at' => 'datetime',
-        'referral_code' => 'string'
+        'referral_code' => 'string',
+        'last_ip' => 'string',
+        'last_activity' => 'datetime',
     ];
     /**
      * The attributes excluded from the model's JSON form.
@@ -341,9 +346,7 @@ class User extends Model implements
             return null;
         }
         $referrerID = ReferralUses::where('code_used', '=', $this->referral_code)->first()?->referrer_id;
-        $referrer = User::find($referrerID);
-//        \Log::debug(var_export($referrer, true));
-        return $referrer;
+        return User::find($referrerID);
     }
 
     public function referralDiscount(): int
