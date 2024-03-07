@@ -2,8 +2,66 @@ version: "3.8"
 
 networks:
   panel:
+volumes:
+  database:
+    driver: local
+  redis:
+    driver: local
 
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    image: ${PROJECT_NAME}_nginx
+    container_name: ${PROJECT_NAME}_nginx
+    restart: unless-stopped
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
+    volumes:
+      - "./panel:/var/www/panel"
+      - "./docker/nginx/fullchain.pem:/etc/ssl/cert.pem"
+      - "./docker/nginx/privkey.pem:/etc/ssl/key.pem"
+      - "./docker/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "./docker/nginx/configs:/etc/nginx/conf.d"
+    networks:
+      - panel
+
+  database:
+    image: mariadb:11.2.2-jammy
+    container_name: ${PROJECT_NAME}_database
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "database:/var/lib/mysql"
+      - "./docker/database/init:/docker-entrypoint-initdb.d"
+    networks:
+      - panel
+    ports:
+      - "${DB_PORT}:3306"
+
+  redis:
+    image: redis:7.2.3-alpine3.19
+    container_name: ${PROJECT_NAME}_redis
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    networks:
+      - panel
+    volumes:
+      - "redis:/data"
+
   app:
     build:
       context: .
@@ -11,14 +69,14 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.prod.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_app
-    restart: always
-    ports:
-      - "${FPM_PORT}:9000"
+    depends_on:
+      - redis
+      - database
+      - nginx
     volumes:
       - "./panel:/var/www/panel"
     networks:
@@ -31,14 +89,15 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.prod.conf'
     stdin_open: true
     tty: true
+    restart: unless-stopped
     image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_scheduler
-    restart: always
     entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
+      - redis
+      - database
       - app
     environment:
       CONTAINER_ROLE: scheduler
@@ -54,14 +113,15 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.prod.conf'
     stdin_open: true
     tty: true
+    restart: unless-stopped
     image: ${PROJECT_NAME}_php
     container_name: ${PROJECT_NAME}_queue
-    restart: always
     entrypoint: [ "/home/tools/role.sh" ]
     depends_on:
+      - redis
+      - database
       - app
     environment:
       CONTAINER_ROLE: queue
@@ -77,7 +137,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.prod.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
@@ -94,7 +153,6 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-        CONF: 'www.prod.conf'
     stdin_open: true
     tty: true
     image: ${PROJECT_NAME}_php
