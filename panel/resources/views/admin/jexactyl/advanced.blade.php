@@ -124,9 +124,9 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Status</label>
                                     <div>
-                                        <select class="form-control" name="jexactyl:client_features:allocations:enabled">
+                                        <select class="form-control" name="client_features:allocations:enabled">
                                             <option value="false">Disabled</option>
-                                            <option value="true" @if(old('jexactyl:client_features:allocations:enabled', config('jexactyl.client_features.allocations.enabled'))) selected @endif>Enabled</option>
+                                            <option value="true" @if(old('client_features:allocations:enabled', settings()->get('client_features:allocations:enabled'))) selected @endif>Enabled</option>
                                         </select>
                                         <p class="text-muted small">If enabled users will have the option to automatically create new allocations for their server via the frontend.</p>
                                     </div>
@@ -134,14 +134,14 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Starting Port</label>
                                     <div>
-                                        <input type="number" class="form-control" name="jexactyl:client_features:allocations:range_start" value="{{ old('jexactyl:client_features:allocations:range_start', config('jexactyl.client_features.allocations.range_start')) }}">
+                                        <input type="number" class="form-control" name="client_features:allocations:range_start" value="{{ old('jexactyl:client_features:allocations:range_start', settings()->get('client_features:allocations:range_start')) }}">
                                         <p class="text-muted small">The starting port in the range that can be automatically allocated.</p>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Ending Port</label>
                                     <div>
-                                        <input type="number" class="form-control" name="jexactyl:client_features:allocations:range_end" value="{{ old('jexactyl:client_features:allocations:range_end', config('jexactyl.client_features.allocations.range_end')) }}">
+                                        <input type="number" class="form-control" name="client_features:allocations:range_end" value="{{ old('client_features:allocations:range_end', settings()->get('client_features:allocations:range_end')) }}">
                                         <p class="text-muted small">The ending port in the range that can be automatically allocated.</p>
                                     </div>
                                 </div>
