@@ -2,17 +2,17 @@
 
 namespace Jexactyl\Notifications;
 
-use Jexactyl\Models\User;
-use Jexactyl\Events\Event;
-use Jexactyl\Models\Server;
 use Illuminate\Bus\Queueable;
 use Illuminate\Container\Container;
-use Jexactyl\Events\Server\Installed;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Jexactyl\Contracts\Core\ReceivesEvents;
 use Illuminate\Contracts\Notifications\Dispatcher;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Jexactyl\Contracts\Core\ReceivesEvents;
+use Jexactyl\Events\Event;
+use Jexactyl\Events\Server\Installed;
+use Jexactyl\Models\Server;
+use Jexactyl\Models\User;
 
 class ServerInstalled extends Notification implements ShouldQueue, ReceivesEvents
 {
@@ -52,9 +52,9 @@ class ServerInstalled extends Notification implements ShouldQueue, ReceivesEvent
     public function toMail(): MailMessage
     {
         return (new MailMessage())
-            ->greeting('Hello ' . $this->user->username . '.')
-            ->line('Your server has finished installing and is now ready for you to use.')
-            ->line('Server Name: ' . $this->server->name)
-            ->action('Login and Begin Using', route('index'));
+            ->greeting('Привет ' . $this->user->username . '!')
+            ->line('Твой сервер установлен.')
+            ->line('Название: ' . $this->server->name)
+            ->action('Пора настраивать!', route('index'));
     }
 }
