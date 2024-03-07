@@ -43,7 +43,7 @@ prod_restart:
 # BUILD FRONTEND FILES
 prod_build_front:
 	docker-compose -f docker-compose.prod.yml run --rm yarn --fronzen-lockfile
-    docker-compose -f docker-compose.prod.yml run --rm yarn build:production
+	docker-compose -f docker-compose.prod.yml run --rm yarn build:production
 
 # SETUP
 prod_setup:
