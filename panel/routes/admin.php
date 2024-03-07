@@ -256,9 +256,9 @@ Route::group(['prefix' => 'partners'], function () {
 //
     Route::post('/new', [Admin\Partners\PartnerController::class, 'store']);
 //
-    Route::patch('/view/{user:id}', [Admin\Partners\PartnerController::class, 'update']);
+    Route::patch('/view/{partner:id}', [Admin\Partners\PartnerController::class, 'update']);
 //
-    Route::delete('/view/{user:id}', [Admin\Partners\PartnerController::class, 'destroy']);
+    Route::delete('/view/{partner:id}', [Admin\Partners\PartnerController::class, 'destroy']);
 });
 
 /*

@@ -68,10 +68,17 @@ class PartnerController extends Controller
      */
     public function show(string $id)
     {
-        $partner = Partner::with('user')
+        $partners = Partner::with('user')
             ->select('partners.*', 'users.username', 'users.email')
             ->leftJoin('users', 'users.id', '=', 'partners.user_id')
-            ->first();
+            ->get();
+
+        $partner = $partners->where('id', '=', $id)->first();
+
+
+        if (!$partner) {
+            return response('Partner not found', 404);
+        }
         return $this->view->make('admin.partners.view', [
             'partner' => $partner,
         ]);
