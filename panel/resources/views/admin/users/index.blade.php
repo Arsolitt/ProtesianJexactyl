@@ -21,7 +21,7 @@
                 <div class="box-tools search01">
                     <form action="{{ route('admin.users') }}" method="GET">
                         <div class="input-group input-group-sm">
-                            <input type="text" name="filter[email]" class="form-control pull-right" value="{{ request()->input('filter.email') }}" placeholder="Search">
+                            <input type="text" name="filter[username]" class="form-control pull-right" value="{{ request()->input('filter.email') }}" placeholder="Search">
                             <div class="input-group-btn">
                                 <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                                 <a href="{{ route('admin.users.new') }}"><button type="button" class="btn btn-sm btn-primary" style="border-radius: 0 3px 3px 0;margin-left:-1px;">Create New</button></a>
@@ -35,13 +35,14 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Email</th>
-                            <th>Client Name</th>
                             <th>Username</th>
-                            <th class="text-center">2FA</th>
-                            <th class="text-center">Approved</th>
+                            <th>Credits</th>
+                            <th class="text-center">Last Activity</th>
                             <th class="text-center"><span data-toggle="tooltip" data-placement="top" title="Servers that this user is marked as the owner of.">Servers Owned</span></th>
                             <th class="text-center"><span data-toggle="tooltip" data-placement="top" title="Servers that this user can access because they are marked as a subuser.">Can Access</span></th>
+                            <th class="text-center">2FA</th>
+                            <th>Email</th>
+{{--                            <th>Client Name</th>--}}
                             <th></th>
                         </tr>
                     </thead>
@@ -49,9 +50,17 @@
                         @foreach ($users as $user)
                             <tr class="align-middle">
                                 <td><code>{{ $user->id }}</code></td>
-                                <td><a href="{{ route('admin.users.view', $user->id) }}">{{ $user->email }}</a> @if($user->root_admin)<i class="fa fa-star text-yellow"></i>@endif</td>
-                                <td>{{ $user->name_last }}, {{ $user->name_first }}</td>
-                                <td>{{ $user->username }}</td>
+
+{{--                                <td>{{ $user->name_last }}, {{ $user->name_first }}</td>--}}
+                                <td><a href="{{ route('admin.users.view', $user->id) }}">{{ $user->username }}</a></td>
+                                <td>{{ $user->credits }}</td>
+                                <td class="text-center">
+                                    {{ $user->last_activity ? $user->last_activity->diffForHumans() : 'Never' }}
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('admin.servers', ['filter[owner_id]' => $user->id]) }}">{{ $user->servers_count }}</a>
+                                </td>
+                                <td class="text-center">{{ $user->subuser_of_count }}</td>
                                 <td class="text-center">
                                     @if($user->use_totp)
                                         <i class="fa fa-lock text-green"></i>
@@ -59,18 +68,9 @@
                                         <i class="fa fa-unlock text-red"></i>
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    @if($user->approved)
-                                        <i class="fa fa-check text-green"></i>
-                                    @else
-                                        <i class="fa fa-times text-red"></i>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('admin.servers', ['filter[owner_id]' => $user->id]) }}">{{ $user->servers_count }}</a>
-                                </td>
-                                <td class="text-center">{{ $user->subuser_of_count }}</td>
+                                <td><a href="{{ route('admin.users.view', $user->id) }}">{{ $user->email }}</a> @if($user->root_admin)<i class="fa fa-star text-yellow"></i>@endif</td>
                                 <td class="text-center"><img src="https://www.gravatar.com/avatar/{{ md5(strtolower($user->email)) }}?s=100" style="height:20px;" class="img-circle" /></td>
+
                             </tr>
                         @endforeach
                     </tbody>

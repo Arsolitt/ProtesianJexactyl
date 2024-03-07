@@ -2,13 +2,14 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client;
 
-use Jexactyl\Models\Server;
-use Jexactyl\Models\Permission;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use Jexactyl\Models\Filters\MultiFieldServerFilter;
-use Jexactyl\Transformers\Api\Client\ServerTransformer;
+use Jexactyl\Events\User\LastActivity;
 use Jexactyl\Http\Requests\Api\Client\GetServersRequest;
+use Jexactyl\Models\Filters\MultiFieldServerFilter;
+use Jexactyl\Models\Permission;
+use Jexactyl\Models\Server;
+use Jexactyl\Transformers\Api\Client\ServerTransformer;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ClientController extends ClientApiController
 {
@@ -28,6 +29,8 @@ class ClientController extends ClientApiController
     {
         $user = $request->user();
         $transformer = $this->getTransformer(ServerTransformer::class);
+
+        LastActivity::dispatch($user, $request->header('CF-Connecting-IP') ?? $request->ip());
 
         // Start the query builder and ensure we eager load any requested relationships from the request.
         $builder = QueryBuilder::for(

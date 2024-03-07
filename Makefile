@@ -45,11 +45,14 @@ prod_build_front:
 	docker-compose -f docker-compose.prod.yml run --rm yarn --fronzen-lockfile
 	docker-compose -f docker-compose.prod.yml run --rm yarn build:production
 
+# SETUP DEPS AND MIGRATIONS
+prod_migrations:
+	docker-compose -f docker-compose.prod.yml run --rm composer install --no-dev --optimize-autoloader
+	docker-compose -f docker-compose.prod.yml run --rm artisan migrate --force
 # SETUP
 prod_setup:
 	make prod_down
 	make prod_build
 	make prod_up
-	docker-compose -f docker-compose.prod.yml run --rm composer install --no-dev --optimize-autoloader
-	docker-compose run --rm artisan migrate --force
+	make prod_migrations
 	make prod_build_front
