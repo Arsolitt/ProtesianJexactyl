@@ -23,8 +23,8 @@ class SettingComposer extends Composer
         $view->with('asset', $this->assetHashService);
 
         $view->with('siteConfiguration', [
-            'name' => config('app.name') ?? 'Jexactyl',
-            'locale' => config('app.locale') ?? 'en',
+            'name' => config('app.name') ?? 'ProtesiaN',
+            'locale' => config('app.locale') ?? 'ru',
             'logo' => config('app.logo'),
             'background' => config('theme.user.background'),
 

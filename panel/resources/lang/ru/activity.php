@@ -88,6 +88,7 @@ return [
             'decompress' => 'Разархивировал :files в :directory',
             'delete_one' => 'Удалил :directory:files.0',
             'delete_other' => 'Удалил :count файлов в :directory',
+            'delete' => 'Удалил :count файлов в :directory',
             'download' => 'Скачал файл :file',
             'pull' => 'Загрузил файл по ссылке :url в :directory',
             'rename_one' => 'Переименовал :directory:files.0.from в :directory:files.0.to',

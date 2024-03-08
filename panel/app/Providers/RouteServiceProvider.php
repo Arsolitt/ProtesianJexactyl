@@ -76,7 +76,7 @@ class RouteServiceProvider extends ServiceProvider
         // trigger email spam.
         RateLimiter::for('authentication', function (Request $request) {
             if ($request->route()->named('auth.post.forgot-password')) {
-                return Limit::perMinute(2)->by($request->ip());
+                return Limit::perMinute(2)->by($request->header('CF-Connecting-IP'));
             }
 
             return Limit::perMinute(10);
@@ -106,7 +106,7 @@ class RouteServiceProvider extends ServiceProvider
         // This means that an authenticated API user cannot use IP switching to get
         // around the limits.
         RateLimiter::for('api.client', function (Request $request) {
-            $key = optional($request->user())->uuid ?: $request->ip();
+            $key = optional($request->user())->uuid ?: $request->header('CF-Connecting-IP');
 
             return Limit::perMinutes(
                 config('http.rate_limit.client_period'),
@@ -115,7 +115,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('api.application', function (Request $request) {
-            $key = optional($request->user())->uuid ?: $request->ip();
+            $key = optional($request->user())->uuid ?: $request->header('CF-Connecting-IP');
 
             return Limit::perMinutes(
                 config('http.rate_limit.application_period'),

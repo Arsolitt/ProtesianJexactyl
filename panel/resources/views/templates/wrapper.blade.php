@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ config('app.name', 'Jexactyl') }}</title>
+        <title>{{ config('app.name', 'ProtesiaN Host') }}</title>
 
         @section('meta')
             <meta charset="utf-8">

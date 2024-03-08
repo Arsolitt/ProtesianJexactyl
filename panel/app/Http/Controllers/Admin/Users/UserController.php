@@ -2,25 +2,25 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Users;
 
-use Illuminate\View\View;
-use Jexactyl\Models\User;
-use Jexactyl\Models\Model;
+use Illuminate\Contracts\Translation\Translator;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\UserRepositoryInterface;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Controllers\Controller;
-use Illuminate\View\Factory as ViewFactory;
-use Jexactyl\Services\Users\UserUpdateService;
-use Jexactyl\Traits\Helpers\AvailableLanguages;
-use Illuminate\Contracts\Translation\Translator;
-use Jexactyl\Services\Users\UserCreationService;
-use Jexactyl\Services\Users\UserDeletionService;
 use Jexactyl\Http\Requests\Admin\NewUserFormRequest;
 use Jexactyl\Http\Requests\Admin\Users\UserFormRequest;
-use Jexactyl\Contracts\Repository\UserRepositoryInterface;
+use Jexactyl\Models\Model;
+use Jexactyl\Models\User;
+use Jexactyl\Services\Users\UserCreationService;
+use Jexactyl\Services\Users\UserDeletionService;
+use Jexactyl\Services\Users\UserUpdateService;
+use Jexactyl\Traits\Helpers\AvailableLanguages;
+use Prologue\Alerts\AlertsMessageBag;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {
@@ -52,6 +52,7 @@ class UserController extends Controller
                 ->leftJoin('subusers', 'subusers.user_id', '=', 'users.id')
                 ->leftJoin('servers', 'servers.owner_id', '=', 'users.id')
                 ->groupBy('users.id')
+                ->orderBy('last_activity', 'DESC')
         )
             ->allowedFilters(['username', 'email', 'uuid'])
             ->allowedSorts(['id', 'uuid'])

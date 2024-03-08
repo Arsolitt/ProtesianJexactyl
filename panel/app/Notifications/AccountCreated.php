@@ -2,11 +2,11 @@
 
 namespace Jexactyl\Notifications;
 
-use Jexactyl\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
+use Jexactyl\Models\User;
 
 class AccountCreated extends Notification implements ShouldQueue
 {
@@ -33,13 +33,13 @@ class AccountCreated extends Notification implements ShouldQueue
     public function toMail(): MailMessage
     {
         $message = (new MailMessage())
-            ->greeting('Hello ' . $this->user->name . '!')
-            ->line('You are receiving this email because an account has been created for you on ' . config('app.name') . '.')
-            ->line('Username: ' . $this->user->username)
+            ->greeting('Привет ' . $this->user->name . '!')
+            ->line('Ты получил это письмо, потому что зарегистрировался на ' . config('app.name') . '.')
+            ->line('Имя пользователя: ' . $this->user->username)
             ->line('Email: ' . $this->user->email);
 
         if (!is_null($this->token)) {
-            return $message->action('Setup Your Account', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($this->user->email)));
+            return $message->action('Подтвердить аккаунт', url('/auth/password/reset/' . $this->token . '?email=' . urlencode($this->user->email)));
         }
 
         return $message;
