@@ -77,7 +77,6 @@ services:
     depends_on:
       - redis
       - database
-      - nginx
     volumes:
       - "./panel:/var/www/panel"
     ports:
