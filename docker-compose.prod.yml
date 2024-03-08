@@ -9,6 +9,28 @@ volumes:
     driver: local
 
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    image: ${PROJECT_NAME}_nginx
+    container_name: ${PROJECT_NAME}_nginx
+    restart: unless-stopped
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_HTTPS_PORT}:443"
+    volumes:
+      - "./panel:/var/www/panel"
+      - "/etc/ssl/cert.pem:/etc/ssl/cert.pem"
+      - "/etc/ssl/key.pem:/etc/ssl/key.pem"
+      - "/etc/ssl/client.crt:/etc/ssl/client.crt"
+      - "./docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf"
+      - "./docker/nginx/configs/production.conf:/etc/nginx/conf.d/production.conf"
+    networks:
+      - panel
   database:
     image: mariadb:11.2.2-jammy
     container_name: ${PROJECT_NAME}_database
