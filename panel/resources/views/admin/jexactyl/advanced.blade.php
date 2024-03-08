@@ -29,16 +29,16 @@
                                     <div>
                                         <div class="btn-group" data-toggle="buttons">
                                             @php
-                                                $level = old('jexactyl:auth:2fa_required', config('jexactyl.auth.2fa_required'));
+                                                $level = old('auth:2fa_required', settings()->get('auth:2fa_required'));
                                             @endphp
                                             <label class="btn btn-primary @if ($level == 0) active @endif">
-                                                <input type="radio" name="jexactyl:auth:2fa_required" autocomplete="off" value="0" @if ($level == 0) checked @endif> Not Required
+                                                <input type="radio" name="auth:2fa_required" autocomplete="off" value="0" @if ($level == 0) checked @endif> Not Required
                                             </label>
                                             <label class="btn btn-primary @if ($level == 1) active @endif">
-                                                <input type="radio" name="jexactyl:auth:2fa_required" autocomplete="off" value="1" @if ($level == 1) checked @endif> Admin Only
+                                                <input type="radio" name="auth:2fa_required" autocomplete="off" value="1" @if ($level == 1) checked @endif> Admin Only
                                             </label>
                                             <label class="btn btn-primary @if ($level == 2) active @endif">
-                                                <input type="radio" name="jexactyl:auth:2fa_required" autocomplete="off" value="2" @if ($level == 2) checked @endif> All Users
+                                                <input type="radio" name="auth:2fa_required" autocomplete="off" value="2" @if ($level == 2) checked @endif> All Users
                                             </label>
                                         </div>
                                         <p class="text-muted"><small>If enabled, any account falling into the selected grouping will be required to have 2-Factor authentication enabled to use the Panel.</small></p>
@@ -62,7 +62,7 @@
                                     <div>
                                         <select class="form-control" name="recaptcha:enabled">
                                             <option value="true">Enabled</option>
-                                            <option value="false" @if(old('recaptcha:enabled', config('recaptcha.enabled')) == '0') selected @endif>Disabled</option>
+                                            <option value="false" @if(old('recaptcha:enabled', settings()->get('recaptcha:enabled')) == '0') selected @endif>Disabled</option>
                                         </select>
                                         <p class="text-muted small">If enabled, login forms and password reset forms will do a silent captcha check and display a visible captcha if needed.</p>
                                     </div>
@@ -70,13 +70,13 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Site Key</label>
                                     <div>
-                                        <input type="text" required class="form-control" name="recaptcha:website_key" value="{{ old('recaptcha:website_key', config('recaptcha.website_key')) }}">
+                                        <input type="text" required class="form-control" name="recaptcha:website_key" value="{{ old('recaptcha:website_key', settings()->get('recaptcha:website_key')) }}">
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Secret Key</label>
                                     <div>
-                                        <input type="text" required class="form-control" name="recaptcha:secret_key" value="{{ old('recaptcha:secret_key', config('recaptcha.secret_key')) }}">
+                                        <input type="text" required class="form-control" name="recaptcha:secret_key" value="{{ old('recaptcha:secret_key', settings()->get('recaptcha:secret_key')) }}">
                                         <p class="text-muted small">Used for communication between your site and Google. Be sure to keep it a secret.</p>
                                     </div>
                                 </div>
@@ -101,14 +101,14 @@
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Connection Timeout</label>
                                     <div>
-                                        <input type="number" required class="form-control" name="jexactyl:guzzle:connect_timeout" value="{{ old('jexactyl:guzzle:connect_timeout', config('jexactyl.guzzle.connect_timeout')) }}">
+                                        <input type="number" required class="form-control" name="guzzle:connect_timeout" value="{{ old('guzzle:connect_timeout', settings()->get('guzzle:connect_timeout')) }}">
                                         <p class="text-muted small">The amount of time in seconds to wait for a connection to be opened before throwing an error.</p>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label class="control-label">Request Timeout</label>
                                     <div>
-                                        <input type="number" required class="form-control" name="jexactyl:guzzle:timeout" value="{{ old('jexactyl:guzzle:timeout', config('jexactyl.guzzle.timeout')) }}">
+                                        <input type="number" required class="form-control" name="guzzle:timeout" value="{{ old('guzzle:timeout', settings()->get('guzzle:timeout')) }}">
                                         <p class="text-muted small">The amount of time in seconds to wait for a request to be completed before throwing an error.</p>
                                     </div>
                                 </div>
@@ -124,9 +124,9 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Status</label>
                                     <div>
-                                        <select class="form-control" name="jexactyl:client_features:allocations:enabled">
+                                        <select class="form-control" name="client_features:allocations:enabled">
                                             <option value="false">Disabled</option>
-                                            <option value="true" @if(old('jexactyl:client_features:allocations:enabled', config('jexactyl.client_features.allocations.enabled'))) selected @endif>Enabled</option>
+                                            <option value="true" @if(old('client_features:allocations:enabled', settings()->get('client_features:allocations:enabled'))) selected @endif>Enabled</option>
                                         </select>
                                         <p class="text-muted small">If enabled users will have the option to automatically create new allocations for their server via the frontend.</p>
                                     </div>
@@ -134,14 +134,14 @@
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Starting Port</label>
                                     <div>
-                                        <input type="number" class="form-control" name="jexactyl:client_features:allocations:range_start" value="{{ old('jexactyl:client_features:allocations:range_start', config('jexactyl.client_features.allocations.range_start')) }}">
+                                        <input type="number" class="form-control" name="client_features:allocations:range_start" value="{{ old('client_features:allocations:range_start', settings()->get('client_features:allocations:range_start')) }}">
                                         <p class="text-muted small">The starting port in the range that can be automatically allocated.</p>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="control-label">Ending Port</label>
                                     <div>
-                                        <input type="number" class="form-control" name="jexactyl:client_features:allocations:range_end" value="{{ old('jexactyl:client_features:allocations:range_end', config('jexactyl.client_features.allocations.range_end')) }}">
+                                        <input type="number" class="form-control" name="client_features:allocations:range_end" value="{{ old('client_features:allocations:range_end', settings()->get('client_features:allocations:range_end')) }}">
                                         <p class="text-muted small">The ending port in the range that can be automatically allocated.</p>
                                     </div>
                                 </div>

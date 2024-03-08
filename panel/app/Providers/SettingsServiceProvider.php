@@ -2,13 +2,13 @@
 
 namespace Jexactyl\Providers;
 
-use Psr\Log\LoggerInterface as Log;
+use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Encryption\Encrypter;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Encryption\Encrypter;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Psr\Log\LoggerInterface as Log;
 
 class SettingsServiceProvider extends ServiceProvider
 {
@@ -25,12 +25,12 @@ class SettingsServiceProvider extends ServiceProvider
         'recaptcha:secret_key',
         'recaptcha:website_key',
         'theme:user:background',
-        'jexactyl:guzzle:timeout',
-        'jexactyl:auth:2fa_required',
-        'jexactyl:guzzle:connect_timeout',
-        'jexactyl:client_features:allocations:enabled',
-        'jexactyl:client_features:allocations:range_end',
-        'jexactyl:client_features:allocations:range_start',
+        'guzzle:timeout',
+        'auth:2fa_required',
+        'guzzle:connect_timeout',
+        'client_features:allocations:enabled',
+        'client_features:allocations:range_end',
+        'client_features:allocations:range_start',
     ];
 
     /**

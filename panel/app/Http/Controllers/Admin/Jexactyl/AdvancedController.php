@@ -2,15 +2,15 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Illuminate\Contracts\Console\Kernel;
-use Jexactyl\Http\Controllers\Controller;
-use Illuminate\View\Factory as ViewFactory;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
-use Jexactyl\Http\Requests\Admin\Jexactyl\AdvancedFormRequest;
 use Illuminate\Contracts\Config\Repository as ConfigRepository;
+use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\Factory as ViewFactory;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Http\Controllers\Controller;
+use Jexactyl\Http\Requests\Admin\Jexactyl\AdvancedFormRequest;
+use Prologue\Alerts\AlertsMessageBag;
 
 class AdvancedController extends Controller
 {
@@ -53,7 +53,7 @@ class AdvancedController extends Controller
     public function update(AdvancedFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('settings::' . $key, $value);
+            $this->settings->set($key, $value);
         }
 
         $this->kernel->call('queue:restart');

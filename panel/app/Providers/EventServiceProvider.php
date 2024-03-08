@@ -13,6 +13,7 @@ use Jexactyl\Events\Server\Updating as ServerUpdatingEvent;
 use Jexactyl\Events\Store\PaymentCanceled;
 use Jexactyl\Events\Store\PaymentPaid;
 use Jexactyl\Events\Store\ServerEdit as ServerEditEvent;
+use Jexactyl\Events\User\LastActivity;
 use Jexactyl\Events\User\RegisteredWithReferrer;
 use Jexactyl\Events\User\UpdateCredits;
 use Jexactyl\Listeners\Auth\AuthenticationListener;
@@ -27,6 +28,7 @@ use Jexactyl\Listeners\Server\DeletedListener as ServerDeletedListener;
 use Jexactyl\Listeners\Server\EditListener as ServerEditListener;
 use Jexactyl\Listeners\Server\UpdatedListener as ServerUpdatedListener;
 use Jexactyl\Listeners\Server\UpdatingListener as ServerUpdatingListener;
+use Jexactyl\Listeners\User\LastActivityListener;
 use Jexactyl\Listeners\User\UpdateCreditsListener;
 use Jexactyl\Models\EggVariable;
 use Jexactyl\Models\Server;
@@ -61,6 +63,7 @@ class EventServiceProvider extends ServiceProvider
         RegisteredWithReferrer::class => [RegisteredWithReferrerListener::class],
         // User
         UpdateCredits::class => [UpdateCreditsListener::class],
+        LastActivity::class => [LastActivityListener::class],
     ];
 
     protected $subscribe = [

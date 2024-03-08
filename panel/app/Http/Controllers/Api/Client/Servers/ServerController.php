@@ -4,6 +4,7 @@ namespace Jexactyl\Http\Controllers\Api\Client\Servers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Jexactyl\Events\User\LastActivity;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Controllers\Api\Client\ClientApiController;
 use Jexactyl\Http\Requests\Api\Client\Servers\DeleteServerRequest;
@@ -31,11 +32,13 @@ class ServerController extends ClientApiController
      */
     public function index(GetServerRequest $request, Server $server): array
     {
+        $user = $request->user();
+        LastActivity::dispatch($user, $request->header('CF-Connecting-IP') ?? $request->ip());
         return $this->fractal->item($server)
             ->transformWith($this->getTransformer(ServerTransformer::class))
             ->addMeta([
-                'is_server_owner' => $request->user()->id === $server->owner_id,
-                'user_permissions' => $this->permissionsService->handle($server, $request->user()),
+                'is_server_owner' => $user->id === $server->owner_id,
+                'user_permissions' => $this->permissionsService->handle($server, $user),
             ])
             ->toArray();
     }
