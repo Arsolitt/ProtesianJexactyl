@@ -2,14 +2,14 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Http\Controllers\Controller;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Jexactyl\AlertFormRequest;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Prologue\Alerts\AlertsMessageBag;
 
 class AlertsController extends Controller
 {
@@ -28,8 +28,8 @@ class AlertsController extends Controller
     public function index(): View
     {
         return view('admin.jexactyl.alerts', [
-            'type' => $this->settings->get('jexactyl::alert:type', 'success'),
-            'message' => $this->settings->get('jexactyl::alert:message'),
+            'type' => $this->settings->get('alert:type', 'success'),
+            'message' => $this->settings->get('alert:message'),
         ]);
     }
 
@@ -41,7 +41,7 @@ class AlertsController extends Controller
     public function update(AlertFormRequest $request): RedirectResponse
     {
         foreach ($request->normalize() as $key => $value) {
-            $this->settings->set('jexactyl::' . $key, $value);
+            $this->settings->set($key, $value);
         }
 
         $this->alert->success('Jexactyl Alert has been updated.')->flash();
@@ -54,8 +54,8 @@ class AlertsController extends Controller
      */
     public function remove(): RedirectResponse
     {
-        $this->settings->forget('jexactyl::alert:type');
-        $this->settings->forget('jexactyl::alert:message');
+        $this->settings->forget('alert:type');
+        $this->settings->forget('alert:message');
 
         $this->alert->success('Jexactyl Alert has been removed.')->flash();
 
