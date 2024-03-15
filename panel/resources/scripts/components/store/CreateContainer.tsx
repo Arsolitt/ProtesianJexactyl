@@ -160,7 +160,7 @@ export default () => {
         return Number(oldValue) - amount >= limits.min[field] ? Number(oldValue) - amount : limits.min[field];
     };
 
-    // TODO: потом это обязательно переделать почище, пока так сойдёт
+    // TODO: переделать валидацию, чтобы кнопки не ехали
 
     return (
         <PageContentBlock title={'Создать сервер'} showFlashKey={'store:create'}>
