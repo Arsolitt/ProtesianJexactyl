@@ -43,6 +43,7 @@ Route::prefix('/account')->middleware(AccountSubject::class)->group(function () 
     Route::prefix('/referrals')->group(function () {
         Route::get('/', [Client\ReferralsController::class, 'index']);
         Route::get('/activity', [Client\ReferralsController::class, 'activity']);
+        Route::get('/stats', [Client\ReferralsController::class, 'stats']);
 
         Route::post('/', [Client\ReferralsController::class, 'store']);
 //        Route::put('/use-code', [Client\ReferralsController::class, 'use']);

@@ -34,7 +34,8 @@ export default (props: Props) => {
 
                 setSubmitting(false);
                 clearFlashes('store:purchase');
-                window.location.href = data.url;
+                // window.location.href = data.url;
+                window.open(data.url, '_blank');
             })
             .catch((error) => {
                 setSubmitting(false);
