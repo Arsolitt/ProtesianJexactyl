@@ -4,13 +4,15 @@ export interface ReferralActivity {
     code: string;
     userId: number;
     userEmail: string;
+    totalPayments: number;
     createdAt: Date | null;
 }
 
 export const rawDataToReferralActivity = (data: any): ReferralActivity => ({
     code: data.code,
     userId: data.user_id,
-    userEmail: data.user_email,
+    userEmail: data.username,
+    totalPayments: data.total_payments,
     createdAt: data.created_at ? new Date(data.created_at) : null,
 });
 

@@ -578,13 +578,13 @@ export default () => {
                             >
                                 <div className={'flex w-full items-center'}>
                                     <p className={'mr-4 inline'}>
-                                        Месяц: <span className={'text-main-500'}>{prices.monthly.toFixed(2)}р.</span>
+                                        Месяц: <span className={'text-main-500'}>{prices.monthly.toFixed(2)}₽</span>
                                     </p>
                                     <p className={'mr-4 inline'}>
-                                        День: <span className={'text-main-500'}>{prices.daily.toFixed(2)}р.</span>
+                                        День: <span className={'text-main-500'}>{prices.daily.toFixed(2)}₽</span>
                                     </p>
                                     <p className={'mr-4 inline'}>
-                                        Час: <span className={'text-main-500'}>{prices.hourly.toFixed(2)}р.</span>
+                                        Час: <span className={'text-main-500'}>{prices.hourly.toFixed(2)}₽</span>
                                     </p>
 
                                     <div className={'ml-auto'}>
