@@ -12,6 +12,12 @@ module.exports = {
                 storethree:
                     "url('https://www.minecraft.net/content/dam/games/minecraft/key-art/MC-Vanilla_Block-Column-Image_Mining_800x800.jpg')",
             },
+            width: {
+                '17': '4.5rem',
+              },
+              height: {
+                '17': '4.5rem',
+              },
             colors: {
                 black: '#000',
                 // "primary" and "neutral" are deprecated.
