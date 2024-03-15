@@ -293,7 +293,7 @@ export default () => {
                                     <br />
                                     <span>Диск: 30 ГБ</span>
                                     <br />
-                                    <span>Ядро: Оптимизированный Forge</span>
+                                    <span>Ядро: CurseForge</span>
                                     <br />
                                 </div>
                                 <div
@@ -307,7 +307,7 @@ export default () => {
                                         setFieldValue('egg', 1);
                                         setFieldValue('backups', 5);
                                         setNest(1);
-                                        setEgg(16);
+                                        setEgg(4);
                                         setPreset('bigboss');
                                     }}
                                 >
