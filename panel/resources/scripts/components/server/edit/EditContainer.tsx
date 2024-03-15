@@ -322,7 +322,7 @@ export default () => {
                             <div className={'old-price flex flex-col items-center'}>
                                 <p className={'mt-2 text-gray-200 text-sm md:text-xl'}>
                                     Было:{' '}
-                                    <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р./месяц</span>
+                                    <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}₽/месяц</span>
                                 </p>
                                 <Button.Text
                                     onClick={() => {
@@ -338,7 +338,7 @@ export default () => {
                                 <p className={'mt-2 text-gray-200 text-sm md:text-xl'}>
                                     Стало:{' '}
                                     <span className={'text-sm text-gray-300'}>
-                                        {finalPrices().monthly.toFixed(2)}р./месяц
+                                        {finalPrices().monthly.toFixed(2)}₽/месяц
                                     </span>
                                 </p>
                                 <Button.Success
@@ -355,7 +355,7 @@ export default () => {
                     </Wrapper>
                     {!isEnoughCredits && (
                         <p className={'mt-1 text-xs text-red-400'}>
-                            На балансе должно быть минимум {finalPrices().daily.toFixed(2)}р.
+                            На балансе должно быть минимум {finalPrices().daily.toFixed(2)} ₽
                         </p>
                     )}
                 </TitledGreyBox>
