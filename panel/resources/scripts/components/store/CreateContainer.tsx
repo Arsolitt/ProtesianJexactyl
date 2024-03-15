@@ -161,6 +161,7 @@ export default () => {
     };
 
     // TODO: переделать валидацию, чтобы кнопки не ехали
+    // TODO: добавить пресеты
 
     return (
         <PageContentBlock title={'Создать сервер'} showFlashKey={'store:create'}>
@@ -461,7 +462,7 @@ export default () => {
                         {calcPrice('backups', values.backups)}
                         {calcPrice('databases', values.databases)}
                         {calcPrice('allocations', values.allocations)}
-                        {/*</StoreContainer>*/}
+
                         <div className={'fixed bottom-0 left-0 right-0 xl:left-36 xl:right-16'}>
                             <TitledGreyBox
                                 title={'Итог'}
@@ -481,7 +482,6 @@ export default () => {
 
                                     <div className={'ml-auto'}>
                                         <InputSpinner visible={loading}>
-                                            {/*<FlashMessageRender byKey={'store:create'} className={'my-2'} />*/}
                                             <div className={'text-center'}>
                                                 {user.discount > 0 && (
                                                     <p className={''}>
