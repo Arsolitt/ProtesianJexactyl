@@ -5,6 +5,7 @@ namespace Jexactyl\Http\Controllers\Api\Client;
 use Illuminate\Http\JsonResponse;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\ClientApiRequest;
+use Jexactyl\Models\ReferralPayment;
 use Jexactyl\Models\ReferralUses;
 use Jexactyl\Transformers\Api\Client\Referrals\ReferralActivityTransformer;
 use Jexactyl\Transformers\Api\Client\Referrals\ReferralCodeTransformer;
@@ -31,7 +32,7 @@ class ReferralsController extends ClientApiController
      */
     public function activity(ClientApiRequest $request): array
     {
-        $activity = ReferralUses::where('referrer_id', $request->user()->id)->get();
+        $activity = ReferralUses::where('referrer_id', $request->user()->id)->limit(20)->orderBy('created_at', 'desc')->get();
 
         return $this->fractal->collection($activity)
             ->transformWith($this->getTransformer(ReferralActivityTransformer::class))
@@ -48,7 +49,7 @@ class ReferralsController extends ClientApiController
         if ($request->user()->referralCodes->count() >= 5) {
             throw new DisplayException('У тебя не может быть больше 5 реферальных кодов!');
         }
-        
+
         $code = $request->user()->referralCodes()->create([
             'user_id' => $request->user()->id,
             'code' => $this->generate(),
@@ -83,5 +84,21 @@ class ReferralsController extends ClientApiController
         $chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return substr(str_shuffle($chars), 0, 16);
+    }
+
+    public function stats(ClientApiRequest $request)
+    {
+        $user = $request->user();
+        $codes = $user->referralCodes()->get();
+        $amount = 0;
+        $referrals = ReferralUses::where('referrer_id', $user->id)->count();
+        foreach ($codes as $code) {
+            $amount += ReferralPayment::where('referral_code', $code->code)->sum('reward_amount');
+        }
+
+        return [
+          'total_revenue' => $amount,
+          'total_referrals' => $referrals
+        ];
     }
 }
