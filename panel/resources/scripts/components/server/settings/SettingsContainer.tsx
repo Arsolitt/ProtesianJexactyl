@@ -83,7 +83,9 @@ export default () => {
                             <ReinstallServerBox />
                         </div>
                     </Can>
-                    <DeleteServerBox />
+                    <Can action={'*'}>
+                        <DeleteServerBox />
+                    </Can>
                 </div>
             </div>
         </ServerContentBlock>

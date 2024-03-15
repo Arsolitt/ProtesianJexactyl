@@ -18,6 +18,7 @@ import getReferralCodes, { ReferralCode } from '@/api/account/getReferralCodes';
 import getReferralActivity, { ReferralActivity } from '@/api/account/getReferralActivity';
 import { ru } from 'date-fns/locale';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import getReferralStats, { ReferralStats } from '@/api/account/getReferralStats';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -40,6 +41,7 @@ export default () => {
     const [code, setCode] = useState('');
     const [loading, setLoading] = useState(false);
     const [codes, setCodes] = useState<ReferralCode[]>([]);
+    const [stats, setStats] = useState<ReferralStats>({ totalRevenue: 0, totalReferrals: 0 });
     const [activity, setActivity] = useState<ReferralActivity[]>([]);
     const { clearFlashes, clearAndAddHttpError } = useFlashKey('referrals');
     const reward = useStoreState((state) => state.user.data?.reward);
@@ -58,6 +60,13 @@ export default () => {
         getReferralActivity()
             .then((activity) => {
                 setActivity(activity);
+                setLoading(false);
+            })
+            .catch((error) => clearAndAddHttpError(error));
+
+        getReferralStats()
+            .then((stats) => {
+                setStats(stats);
                 setLoading(false);
             })
             .catch((error) => clearAndAddHttpError(error));
@@ -128,7 +137,7 @@ export default () => {
                             >
                                 <Icon.GitBranch css={tw`text-neutral-300`} />
                                 <div css={tw`ml-4 flex-1 overflow-hidden`}>
-                                    <CopyOnClick text={'https://protesian.host/?ref=' + code.code}>
+                                    <CopyOnClick text={window.location.origin + '/?ref=' + code.code}>
                                         <p css={tw`text-sm break-words`}>{code.code}</p>
                                     </CopyOnClick>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
@@ -146,17 +155,28 @@ export default () => {
                             </GreyRowBox>
                         ))
                     )}
-                    <Button.Success onClick={() => doCreation()} className={'mt-4'}>
+                    <Button.Success onClick={() => doCreation()} className={'mt-4'} disabled={codes.length >= 5}>
                         Создать
                     </Button.Success>
                 </ContentBox>
-                <ContentBox title={'Условия программы'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
-                    <h1 css={tw`text-xl`}>
-                        Ты будешь получать <span className={'text-main-500'}>{reward}</span>% от пополнения твоих
-                        рефералов!
-                    </h1>
-                </ContentBox>
-                <ContentBox title={'Приглашённые пользователи'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                <div className={'flex flex-col gap-y-4'}>
+                    <ContentBox title={'Условия программы'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                        <h1 css={tw`text-xl`}>
+                            Ты будешь получать <span className={'text-main-500'}>{reward}</span>% от пополнения твоих
+                            рефералов!
+                        </h1>
+                    </ContentBox>
+                    <ContentBox title={'Статистика'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
+                        <h1 css={tw`text-xl`}>
+                            Ты пригласил: <span className={'text-main-500'}>{stats.totalReferrals}</span> человек
+                        </h1>
+                        <h1 css={tw`text-xl`}>
+                            Твои рефералы принесли тебе{' '}
+                            <span className={'text-main-500'}>{stats.totalRevenue.toFixed(2)}</span> ₽
+                        </h1>
+                    </ContentBox>
+                </div>
+                <ContentBox title={'Последние приглашения'} css={tw`mt-8 sm:mt-0 sm:ml-8`}>
                     <SpinnerOverlay visible={loading} />
                     {activity.length === 0 ? (
                         <p css={tw`text-center my-2`}>
@@ -165,7 +185,7 @@ export default () => {
                     ) : (
                         activity.map((act, index) => (
                             <GreyRowBox
-                                key={act.code}
+                                key={act.userEmail}
                                 css={[tw`bg-neutral-900 flex items-center`, index > 0 && tw`mt-2`]}
                             >
                                 <Icon.GitBranch css={tw`text-neutral-300`} />
@@ -181,6 +201,9 @@ export default () => {
                                     </p>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>
                                         Использованный код:&nbsp;{act.code}
+                                    </p>
+                                    <p css={tw`text-2xs text-neutral-300 uppercase`}>
+                                        Всего пополнений:&nbsp;{act.totalPayments.toFixed(2)} ₽
                                     </p>
                                 </div>
                             </GreyRowBox>

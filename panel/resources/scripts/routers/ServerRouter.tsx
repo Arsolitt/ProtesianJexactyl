@@ -77,6 +77,7 @@ export default () => {
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
     const uuid = ServerContext.useStoreState((state) => state.server.data?.uuid);
+    const isOwner = ServerContext.useStoreState((state) => state.server.data?.isOwner);
     const serverId = ServerContext.useStoreState((state) => state.server.data?.internalId);
     const getServer = ServerContext.useStoreActions((actions) => actions.server.getServer);
     const eggFeatures = ServerContext.useStoreState((state) => state.server.data?.eggFeatures);
@@ -133,7 +134,7 @@ export default () => {
                                         </div>
                                     </NavLink>
                                 </Can>
-                                {eggFeatures?.includes('eula') && (
+                                {eggFeatures?.includes('spigot') && (
                                     <Can action={'plugin.*'}>
                                         <NavLink to={`${match.url}/plugins`}>
                                             <div css={tw`flex items-center justify-between`}>
@@ -186,8 +187,8 @@ export default () => {
                                         </div>
                                     </NavLink>
                                 </Can>
-                                {editEnabled && (
-                                    <Can action={['settings.*']} matchAny>
+                                {editEnabled && isOwner && (
+                                    <Can action={['*']} matchAny>
                                         <NavLink to={`${match.url}/edit`}>
                                             <div css={tw`flex items-center justify-between`}>
                                                 Характеристики <Icon.Edit css={tw`ml-1`} size={18} />
