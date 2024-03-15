@@ -611,7 +611,7 @@ export default () => {
                                 </div>
                                 {!enough && (
                                     <p className={'mt-1 text-xs text-negative-500'}>
-                                        На балансе должно быть минимум {prices.daily.toFixed(2)}р.
+                                        На балансе должно быть минимум {prices.daily.toFixed(2)}₽
                                     </p>
                                 )}
                                 {!nest && <p className={'mt-1 text-xs text-negative-500'}>Нужно выбрать категорию!</p>}
