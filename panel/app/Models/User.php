@@ -208,7 +208,7 @@ class User extends Model implements
 
     public function payments(): HasMany
     {
-        return $this->hasMany(Payment::class, 'user', 'id');
+        return $this->hasMany(Payment::class, 'user_id', 'id');
     }
 
     /**

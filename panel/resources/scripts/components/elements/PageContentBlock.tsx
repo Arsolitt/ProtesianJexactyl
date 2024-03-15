@@ -30,7 +30,7 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({
 
     return (
         <CSSTransition timeout={150} classNames={'fade'} appear in>
-            <div css={tw`my-4`}>
+            <div className={'my-4'}>
                 <ContentContainer className={className}>
                     {alert.message && (
                         <Alert type={alert.type} className={'my-4'}>
@@ -46,12 +46,12 @@ const PageContentBlock: React.FC<PageContentBlockProps> = ({
                     )}
                     {children}
                 </ContentContainer>
-                <ContentContainer css={tw`text-sm text-center my-4 pb-8`}>
-                    <p css={tw`text-neutral-500 sm: float-left`}>
+                <ContentContainer className={'text-sm text-center my-4 pb-8'}>
+                    <p className={'text-neutral-500 sm:float-left'}>
                         &copy; <a href={'https://protesian.host'}>ProtesiaN,</a> на основе{' '}
                         <a href={'https://pterodactyl.io'}>Pterodactyl.</a>
                     </p>
-                    <p css={tw`text-neutral-500 sm: float-right`}>
+                    <p className={'text-neutral-500 sm:float-right'}>
                         2021-{new Date().getFullYear()} &bull; Все права защищены.
                     </p>
                 </ContentContainer>
