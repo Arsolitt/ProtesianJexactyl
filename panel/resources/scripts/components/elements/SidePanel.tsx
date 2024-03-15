@@ -1,13 +1,13 @@
-import React from 'react';
-import tw from 'twin.macro';
 import http from '@/api/http';
-import * as Icon from 'react-feather';
-import { useStoreState } from 'easy-peasy';
-import styled from 'styled-components/macro';
-import { Link, NavLink } from 'react-router-dom';
+import SearchContainer from '@/components/dashboard/search/SearchContainer';
 import ProgressBar from '@/components/elements/ProgressBar';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
-import SearchContainer from '@/components/dashboard/search/SearchContainer';
+import { useStoreState } from 'easy-peasy';
+import React from 'react';
+import * as Icon from 'react-feather';
+import { Link, NavLink } from 'react-router-dom';
+import styled from 'styled-components/macro';
+import tw from 'twin.macro';
 
 export default () => {
     const logo = useStoreState((state) => state.settings.data?.logo);
@@ -46,8 +46,12 @@ export default () => {
     return (
         <PanelDiv>
             <ProgressBar />
-            <Link to={'/'}>
-                <img className={'p-2'} src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'} alt={'logo'} />
+            <Link to={'/'} className='flex justify-center items-center'>
+                <img
+                    className={'p-2 w-17 h-17'}
+                    src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'}
+                    alt={'logo'}
+                />
             </Link>
             <div>
                 <div className={'navigation-link'}>
