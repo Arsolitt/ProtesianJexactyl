@@ -180,19 +180,12 @@ export default () => {
             >
                 Характеристики сервера будут изменены и спишется оплата за первый час работы.
             </Dialog.Confirm>
-            <Container
-                css={tw`lg: grid
-                    lg: grid-cols-3 gap-4 my-10`}
-            >
-                <TitledGreyBox
-                    title={'Оперативная память'}
-                    css={tw`mt-8 sm: mt-0
-                        sm: ml-8`}
-                >
+            <Container className={'md:!grid md:!grid-cols-3 gap-4 my-10'}>
+                <TitledGreyBox title={'Оперативная память'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <Icon.PieChart size={40} />
                         <Button.Text
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 decrement('memory', event.shiftKey ? 1024 : 256);
                             }}
@@ -201,7 +194,7 @@ export default () => {
                             <Icon.Minus />
                         </Button.Text>
                         <Button.Success
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 increment('memory', event.shiftKey ? 1024 : 256);
                             }}
@@ -210,20 +203,16 @@ export default () => {
                             <Icon.Plus />
                         </Button.Success>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.memory} МБ</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                    <p className={'mt-2 text-gray-200 flex justify-center'}>{resources.memory} МБ</p>
+                    <p className={'mt-1 text-gray-500 text-xs flex justify-center'}>
                         Ограничения: от {resourceMinLimits.memory} МБ до {resourceMaxLimits.memory} МБ
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox
-                    title={'Дисковое пространство'}
-                    css={tw`mt-8 sm: mt-0
-                        sm: ml-8`}
-                >
+                <TitledGreyBox title={'Дисковое пространство'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <Icon.HardDrive size={40} />
                         <Button.Text
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 decrement('disk', event.shiftKey ? 5120 : 1024);
                             }}
@@ -232,7 +221,7 @@ export default () => {
                             <Icon.Minus />
                         </Button.Text>
                         <Button.Success
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 increment('disk', event.shiftKey ? 5120 : 1024);
                             }}
@@ -241,16 +230,16 @@ export default () => {
                             <Icon.Plus />
                         </Button.Success>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.disk} МБ</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                    <p className={'mt-2 text-gray-200 flex justify-center'}>{resources.disk} МБ</p>
+                    <p className={'mt-1 text-gray-500 text-xs flex justify-center'}>
                         Ограничения: от {resourceMinLimits.disk} МБ до {resourceMaxLimits.disk} МБ
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Доступные порты'} css={tw`mt-8 sm: mt-0`}>
+                <TitledGreyBox title={'Доступные порты'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <Icon.Share2 size={40} />
                         <Button.Text
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 decrement('allocations', event.shiftKey ? 5 : 1);
                             }}
@@ -259,7 +248,7 @@ export default () => {
                             <Icon.Minus />
                         </Button.Text>
                         <Button.Success
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 increment('allocations', event.shiftKey ? 5 : 1);
                             }}
@@ -268,20 +257,16 @@ export default () => {
                             <Icon.Plus />
                         </Button.Success>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.allocations} шт.</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                    <p className={'mt-2 text-gray-200 flex justify-center'}>{resources.allocations} шт.</p>
+                    <p className={'mt-1 text-gray-500 text-xs flex justify-center'}>
                         Ограничения: от {resourceMinLimits.allocations} шт. до {resourceMaxLimits.allocations} шт.
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox
-                    title={'Количество бэкапов'}
-                    css={tw`mt-8 sm: mt-0
-                        sm: ml-8`}
-                >
+                <TitledGreyBox title={'Количество бэкапов'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <Icon.Archive size={40} />
                         <Button.Text
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 decrement('backups', event.shiftKey ? 5 : 1);
                             }}
@@ -290,7 +275,7 @@ export default () => {
                             <Icon.Minus />
                         </Button.Text>
                         <Button.Success
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 increment('backups', event.shiftKey ? 5 : 1);
                             }}
@@ -299,20 +284,16 @@ export default () => {
                             <Icon.Plus />
                         </Button.Success>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.backups} шт.</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                    <p className={'mt-2 text-gray-200 flex justify-center'}>{resources.backups} шт.</p>
+                    <p className={'mt-1 text-gray-500 text-xs flex justify-center'}>
                         Ограничения: от {resourceMinLimits.backups} шт. до {resourceMaxLimits.backups} шт.
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox
-                    title={'Количество баз данных'}
-                    css={tw`mt-8 sm: mt-0
-                        sm: ml-8`}
-                >
+                <TitledGreyBox title={'Количество баз данных'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <Icon.Database size={40} />
                         <Button.Text
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 decrement('databases', event.shiftKey ? 5 : 1);
                             }}
@@ -321,7 +302,7 @@ export default () => {
                             <Icon.Minus />
                         </Button.Text>
                         <Button.Success
-                            css={tw`ml-4`}
+                            className={'ml-4'}
                             onClick={(event) => {
                                 increment('databases', event.shiftKey ? 5 : 1);
                             }}
@@ -330,21 +311,20 @@ export default () => {
                             <Icon.Plus />
                         </Button.Success>
                     </Wrapper>
-                    <p css={tw`mt-2 text-gray-200 flex justify-center`}>{resources.databases} шт.</p>
-                    <p css={tw`mt-1 text-gray-500 text-xs flex justify-center`}>
+                    <p className={'mt-2 text-gray-200 flex justify-center'}>{resources.databases} шт.</p>
+                    <p className={'mt-1 text-gray-500 text-xs flex justify-center'}>
                         Ограничения: от {resourceMinLimits.databases} шт. до {resourceMaxLimits.databases} шт.
                     </p>
                 </TitledGreyBox>
-                <TitledGreyBox title={'Итог'} css={tw`mt-8 sm: mt-0`}>
+                <TitledGreyBox title={'Итог'} className={'mt-8 sm:mt-0'}>
                     <Wrapper>
                         <div className={'flex justify-around w-full'}>
                             <div className={'old-price flex flex-col items-center'}>
-                                <p css={tw`mt-2 text-gray-200 text-xl`}>
+                                <p className={'mt-2 text-gray-200 text-sm md:text-xl'}>
                                     Было:{' '}
-                                    <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р. / месяц</span>
+                                    <span className={'text-sm text-gray-300'}>{monthlyPrice.toFixed(2)}р./месяц</span>
                                 </p>
                                 <Button.Text
-                                    css={tw``}
                                     onClick={() => {
                                         setResources(resourcesInitialState);
                                         setTimeout(() => setIsEnoughCredits(true), 50);
@@ -355,14 +335,13 @@ export default () => {
                                 </Button.Text>
                             </div>
                             <div className={'new-price flex flex-col items-center'}>
-                                <p css={tw`mt-2 text-gray-200 text-xl`}>
+                                <p className={'mt-2 text-gray-200 text-sm md:text-xl'}>
                                     Стало:{' '}
                                     <span className={'text-sm text-gray-300'}>
-                                        {finalPrices().monthly.toFixed(2)}р. / месяц
+                                        {finalPrices().monthly.toFixed(2)}р./месяц
                                     </span>
                                 </p>
                                 <Button.Success
-                                    css={tw``}
                                     onClick={() => {
                                         setSubmitting(true);
                                     }}
