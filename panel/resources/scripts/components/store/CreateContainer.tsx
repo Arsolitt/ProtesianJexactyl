@@ -30,6 +30,7 @@ import InputSpinner from '@/components/elements/InputSpinner';
 import * as Icon from 'react-feather';
 import Select from '@/components/elements/Select';
 import tw from 'twin.macro';
+import Input from '@/components/elements/Input';
 
 interface CreateValues {
     name: string;
@@ -102,6 +103,7 @@ export default () => {
     const [eggs, setEggs] = useState<Egg[]>();
     const [nest, setNest] = useState<number>(0);
     const [nests, setNests] = useState<Nest[]>();
+    const [preset, setPreset] = useState<string>('');
 
     useEffect(() => {
         clearFlashes();
@@ -218,6 +220,119 @@ export default () => {
                         <p className={'text-sm text-gray-400 invisible lg:visible'}>
                             *Если нажать Shift, то можно более точно выбирать характеристики
                         </p>
+                        <TitledGreyBox title={'Популярные конфиги'} icon={faMemory} className={'mt-8 sm:mt-0'}>
+                            <div className={'flex flex-col lg:grid lg:grid-cols-3 gap-6'}>
+                                <div
+                                    className={
+                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                    }
+                                    onClick={() => {
+                                        setFieldValue('memory', 4096);
+                                        setFieldValue('disk', 20480);
+                                        setFieldValue('nest', 1);
+                                        setFieldValue('egg', 5);
+                                        setFieldValue('backups', 1);
+                                        setNest(1);
+                                        setEgg(5);
+                                        setPreset('vanilla');
+                                    }}
+                                >
+                                    <h4 className={'font-bold text-center text-2xl'}>
+                                        Vanilla
+                                        <Input
+                                            type={'radio'}
+                                            name={'preset'}
+                                            value={preset}
+                                            checked={preset === 'vanilla'}
+                                            className={'absolute right-2 top-2'}
+                                        />
+                                    </h4>
+
+                                    <br />
+                                    <p>Идеально подходит для небольшого ванильного сервера</p>
+                                    <br />
+                                    <span>ОЗУ: 4 ГБ</span>
+                                    <br />
+                                    <span>Диск: 20 ГБ</span>
+                                    <br />
+                                    <span>Ядро: Paper</span>
+                                    <br />
+                                </div>
+                                <div
+                                    className={
+                                        'border-main-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                    }
+                                    onClick={() => {
+                                        setFieldValue('memory', 8192);
+                                        setFieldValue('disk', 30720);
+                                        setFieldValue('nest', 1);
+                                        setFieldValue('egg', 1);
+                                        setFieldValue('backups', 3);
+                                        setNest(1);
+                                        setEgg(1);
+                                        setPreset('divine');
+                                    }}
+                                >
+                                    <h4 className={'font-bold text-center text-2xl'}>
+                                        Диван
+                                        <Input
+                                            type={'radio'}
+                                            name={'preset'}
+                                            value={preset}
+                                            checked={preset === 'divine'}
+                                            className={'absolute right-2 top-2'}
+                                        />
+                                    </h4>
+                                    <br />
+                                    <p>
+                                        Берут, чтобы играть в{' '}
+                                        <span className={'text-negative-500 whitespace-nowrap'}>Divine Journey 2</span>
+                                    </p>
+                                    <br />
+                                    <span>ОЗУ: 8 ГБ</span>
+                                    <br />
+                                    <span>Диск: 30 ГБ</span>
+                                    <br />
+                                    <span>Ядро: Оптимизированный Forge</span>
+                                    <br />
+                                </div>
+                                <div
+                                    className={
+                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                    }
+                                    onClick={() => {
+                                        setFieldValue('memory', 12288);
+                                        setFieldValue('disk', 40960);
+                                        setFieldValue('nest', 1);
+                                        setFieldValue('egg', 1);
+                                        setFieldValue('backups', 5);
+                                        setNest(1);
+                                        setEgg(1);
+                                        setPreset('bigboss');
+                                    }}
+                                >
+                                    <h4 className={'font-bold text-center text-2xl'}>
+                                        Big Boss
+                                        <Input
+                                            type={'radio'}
+                                            name={'preset'}
+                                            value={preset}
+                                            checked={preset === 'bigboss'}
+                                            className={'absolute right-2 top-2'}
+                                        />
+                                    </h4>
+                                    <br />
+                                    <p>Запускает гига-сборки на новых версиях o_O</p>
+                                    <br />
+                                    <span>ОЗУ: 12 ГБ</span>
+                                    <br />
+                                    <span>Диск: 40 ГБ</span>
+                                    <br />
+                                    <span>Ядро: Forge</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </TitledGreyBox>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Лимит ОЗУ'} icon={faMemory} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
@@ -428,12 +543,8 @@ export default () => {
                         <h3 className={'text-2xl text-neutral-500'}>Выбери ПО, которое хочешь запускать на сервере</h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Категория'} icon={faCube} className={'mt-8 sm:mt-0'}>
-                                <Select name={'nest'} onChange={(nest) => changeNest(nest)}>
-                                    {!nest && (
-                                        <option selected={true} disabled={true}>
-                                            Выбери категорию...
-                                        </option>
-                                    )}
+                                <Select name={'nest'} onChange={(nest) => changeNest(nest)} defaultValue={0}>
+                                    {!nest && <option value={0}>Выбери категорию...</option>}
                                     {nests.map((n) => (
                                         <option key={n.id} value={n.id}>
                                             {n.name}
@@ -442,12 +553,8 @@ export default () => {
                                 </Select>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Исходный образ'} icon={faEgg} className={'mt-8 sm:mt-0'}>
-                                <Select name={'egg'} onChange={(e) => setEgg(parseInt(e.target.value))}>
-                                    {!egg && (
-                                        <option selected={true} disabled={true}>
-                                            Выбери исходный образ...
-                                        </option>
-                                    )}
+                                <Select name={'egg'} onChange={(e) => setEgg(parseInt(e.target.value))} value={egg}>
+                                    {!egg && <option value={0}>Выбери исходный образ...</option>}
                                     {nest &&
                                         eggs.map((e) => (
                                             <option key={e.id} value={e.id}>
