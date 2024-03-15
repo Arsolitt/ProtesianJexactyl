@@ -19,6 +19,7 @@ import {
     faCube,
     faDatabase,
     faEgg,
+    faFire,
     faHdd,
     faList,
     faMemory,
@@ -217,14 +218,13 @@ export default () => {
                         <h3 className={'text-2xl text-neutral-500'}>
                             Выбери желаемое количество ОЗУ и дискового пространства.
                         </h3>
-                        <p className={'text-sm text-gray-400 invisible lg:visible'}>
-                            *Если нажать Shift, то можно более точно выбирать характеристики
-                        </p>
-                        <TitledGreyBox title={'Популярные конфиги'} icon={faMemory} className={'mt-8 sm:mt-0'}>
+
+                        <TitledGreyBox title={'Популярные конфиги'} icon={faFire} className={'mt-8 sm:mt-0'}>
                             <div className={'flex flex-col lg:grid lg:grid-cols-3 gap-6'}>
                                 <div
                                     className={
-                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
+                                        `${preset === 'vanilla' ? ' -translate-y-3' : ''}`
                                     }
                                     onClick={() => {
                                         setFieldValue('memory', 4096);
@@ -260,7 +260,8 @@ export default () => {
                                 </div>
                                 <div
                                     className={
-                                        'border-main-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                        'border-main-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
+                                        `${preset === 'divine' ? ' -translate-y-3' : ''}`
                                     }
                                     onClick={() => {
                                         setFieldValue('memory', 8192);
@@ -298,7 +299,8 @@ export default () => {
                                 </div>
                                 <div
                                     className={
-                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer'
+                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
+                                        `${preset === 'bigboss' ? ' -translate-y-3' : ''}`
                                     }
                                     onClick={() => {
                                         setFieldValue('memory', 12288);
@@ -373,6 +375,9 @@ export default () => {
                                         <Icon.Plus />
                                     </Button.Success>
                                 </div>
+                                <p className={'text-sm text-gray-400 invisible lg:visible'}>
+                                    *Если нажать Shift, то можно более точно выбирать характеристики
+                                </p>
                             </TitledGreyBox>
                             <TitledGreyBox title={'Лимит диска'} icon={faHdd} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>
@@ -413,8 +418,12 @@ export default () => {
                                         <Icon.Plus />
                                     </Button.Success>
                                 </div>
+                                <p className={'text-sm text-gray-400 invisible lg:visible'}>
+                                    *Если нажать Shift, то можно более точно выбирать характеристики
+                                </p>
                             </TitledGreyBox>
                         </StoreContainer>
+
                         <h1 className={'text-5xl'}>Дополнительные ништяки</h1>
                         <h3 className={'text-2xl text-neutral-500'}>Базы данных, порты, резервные копии</h3>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
