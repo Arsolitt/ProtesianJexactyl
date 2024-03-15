@@ -46,7 +46,7 @@ export default () => {
     return (
         <PanelDiv>
             <ProgressBar />
-            <Link to={'/'} className='flex justify-center items-center'>
+            <Link to={'/'} className='flex justify-center items-center '>
                 <img
                     className={'p-2 w-17 h-17'}
                     src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'}
@@ -54,19 +54,19 @@ export default () => {
                 />
             </Link>
             <div>
-                <div className={'navigation-link'}>
+                <div className={'navigation-link relative z-30'}>
                     <div className={'bg-gray-700 rounded-lg p-2 my-8'}>
                         <SearchContainer size={32} />
                     </div>
                 </div>
-                <NavLink to={'/home'} className={'navigation-link'} exact>
+                <NavLink to={'/home'} className={'navigation-link relative z-20'} exact>
                     <Tooltip placement={'bottom'} content={'Серверы'}>
                         <div className={'bg-gray-700 rounded-lg p-2 my-8'}>
                             <Icon.Server size={32} />
                         </div>
                     </Tooltip>
                 </NavLink>
-                <NavLink to={'/account'} className={'navigation-link'}>
+                <NavLink to={'/account'} className={'navigation-link relative z-10'}>
                     <Tooltip placement={'bottom'} content={'Профиль'}>
                         <div className={'bg-gray-700 rounded-lg p-2 my-8'}>
                             <Icon.User size={32} />

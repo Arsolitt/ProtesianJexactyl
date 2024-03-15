@@ -24,11 +24,13 @@ class ReferralActivityTransformer extends BaseClientTransformer
     public function transform(ReferralUses $model)
     {
         $user = User::where('id', $model->user_id)->first();
+        $payments = $user?->payments()->get()->sum('amount');
         return [
             'code' => $model->code_used,
             'user_id' => $model->user_id,
             'created_at' => $model->created_at->toIso8601String(),
-            'user_email' => $user ? $user->username : 'Неизвестно',
+            'username' => $user ? $user->username : 'Неизвестно',
+            'total_payments' => $payments ?? 0,
         ];
     }
 }
