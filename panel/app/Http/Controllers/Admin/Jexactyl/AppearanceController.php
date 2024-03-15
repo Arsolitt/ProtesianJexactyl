@@ -2,15 +2,15 @@
 
 namespace Jexactyl\Http\Controllers\Admin\Jexactyl;
 
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
-use Prologue\Alerts\AlertsMessageBag;
-use Jexactyl\Http\Controllers\Controller;
 use Illuminate\Contracts\Config\Repository;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
 use Jexactyl\Exceptions\Model\DataValidationException;
 use Jexactyl\Exceptions\Repository\RecordNotFoundException;
-use Jexactyl\Contracts\Repository\SettingsRepositoryInterface;
+use Jexactyl\Http\Controllers\Controller;
 use Jexactyl\Http\Requests\Admin\Jexactyl\AppearanceFormRequest;
+use Prologue\Alerts\AlertsMessageBag;
 
 class AppearanceController extends Controller
 {
@@ -31,7 +31,7 @@ class AppearanceController extends Controller
     {
         return view('admin.jexactyl.appearance', [
             'name' => config('app.name'),
-            'logo' => config('app.logo'),
+            'logo' => $this->settings->get('settings::app:logo', 'https://avatars.githubusercontent.com/u/91636558'),
 
             'admin' => config('theme.admin'),
             'user' => ['background' => config('theme.user.background')],
