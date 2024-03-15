@@ -128,7 +128,7 @@ export default () => {
                             >
                                 <Icon.GitBranch css={tw`text-neutral-300`} />
                                 <div css={tw`ml-4 flex-1 overflow-hidden`}>
-                                    <CopyOnClick text={'https://protesian.host/?ref=' + code.code}>
+                                    <CopyOnClick text={window.location.origin + '/?ref=' + code.code}>
                                         <p css={tw`text-sm break-words`}>{code.code}</p>
                                     </CopyOnClick>
                                     <p css={tw`text-2xs text-neutral-300 uppercase`}>

@@ -233,7 +233,7 @@ export default () => {
                                         setFieldValue('egg', 5);
                                         setFieldValue('backups', 1);
                                         setNest(1);
-                                        setEgg(5);
+                                        setEgg(2);
                                         setPreset('vanilla');
                                     }}
                                 >
@@ -269,7 +269,7 @@ export default () => {
                                         setFieldValue('egg', 1);
                                         setFieldValue('backups', 3);
                                         setNest(1);
-                                        setEgg(1);
+                                        setEgg(16);
                                         setPreset('divine');
                                     }}
                                 >
@@ -307,7 +307,7 @@ export default () => {
                                         setFieldValue('egg', 1);
                                         setFieldValue('backups', 5);
                                         setNest(1);
-                                        setEgg(1);
+                                        setEgg(16);
                                         setPreset('bigboss');
                                     }}
                                 >
