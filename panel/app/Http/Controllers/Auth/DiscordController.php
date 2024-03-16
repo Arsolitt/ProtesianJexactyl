@@ -101,8 +101,6 @@ class DiscordController extends AbstractLoginController
                 $data['referral_code'] = Cookie::get('referral_code');
             }
 
-            \Log::debug($data);
-
             try {
                 $this->creationService->handle($data);
             } catch (DataValidationException $e) {
@@ -110,8 +108,6 @@ class DiscordController extends AbstractLoginController
             }
             $user = User::where('email', $discord->email)->first();
         }
-
-        \Log::debug($user);
 
         if ($user) {
             Auth::loginUsingId($user->id, true);
