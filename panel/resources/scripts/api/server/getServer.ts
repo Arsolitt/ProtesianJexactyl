@@ -52,7 +52,7 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     id: data.identifier,
     internalId: data.internal_id,
     uuid: data.uuid,
-    isOwner: data.meta?.is_server_owner ?? false,
+    isOwner: data.server_owner,
     name: data.name,
     node: data.node,
     isNodeUnderMaintenance: data.is_node_under_maintenance,
