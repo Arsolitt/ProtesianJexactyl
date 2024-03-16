@@ -15,7 +15,6 @@ import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import Field from '@/components/elements/Field';
 import {
     faArchive,
-    faCoins,
     faCube,
     faDatabase,
     faEgg,
@@ -580,22 +579,45 @@ export default () => {
                         {calcPrice('allocations', values.allocations)}
 
                         <div className={'fixed bottom-0 left-0 right-0 xl:left-36 xl:right-16'}>
-                            <TitledGreyBox
-                                title={'Итог'}
-                                icon={faCoins}
-                                className={'mt-8 sm:mt-0 text-base md:text-lg'}
-                            >
-                                <div className={'flex w-full items-center'}>
-                                    <p className={'mr-4 inline'}>
-                                        Месяц: <span className={'text-main-500'}>{prices.monthly.toFixed(2)}₽</span>
-                                    </p>
-                                    <p className={'mr-4 inline'}>
-                                        День: <span className={'text-main-500'}>{prices.daily.toFixed(2)}₽</span>
-                                    </p>
-                                    <p className={'mr-4 inline'}>
-                                        Час: <span className={'text-main-500'}>{prices.hourly.toFixed(2)}₽</span>
-                                    </p>
-
+                            <div className={'mt-8 sm:mt-0 text-base md:text-lg'}>
+                                <div
+                                    className={
+                                        'flex w-full items-center bg-gray-800 p-2 rounded-tl-md rounded-tr-md border-gray-600 border-2 border-b-0'
+                                    }
+                                >
+                                    <div className={'flex flex-col'}>
+                                        <div className={'flex flex-col xs:flex-row'}>
+                                            <p className={'mr-4 inline whitespace-nowrap'}>
+                                                Месяц:{' '}
+                                                <span className={'text-main-500'}>{prices.monthly.toFixed(2)}₽</span>
+                                            </p>
+                                            <p className={'mr-4 inline whitespace-nowrap'}>
+                                                День:{' '}
+                                                <span className={'text-main-500'}>{prices.daily.toFixed(2)}₽</span>
+                                            </p>
+                                            <p className={'mr-4 inline whitespace-nowrap'}>
+                                                Час:{' '}
+                                                <span className={'text-main-500'}>{prices.hourly.toFixed(2)}₽</span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            {!enough && (
+                                                <p className={'mt-1 text-xs text-negative-500'}>
+                                                    На балансе должно быть минимум {prices.daily.toFixed(2)}₽
+                                                </p>
+                                            )}
+                                            {!nest && (
+                                                <p className={'mt-1 text-xs text-negative-500'}>
+                                                    Нужно выбрать категорию!
+                                                </p>
+                                            )}
+                                            {!egg && (
+                                                <p className={'mt-1 text-xs text-negative-500'}>
+                                                    Нужно выбрать стартовый образ!
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
                                     <div className={'ml-auto'}>
                                         <InputSpinner visible={loading}>
                                             <div className={'text-center'}>
@@ -618,16 +640,7 @@ export default () => {
                                         </InputSpinner>
                                     </div>
                                 </div>
-                                {!enough && (
-                                    <p className={'mt-1 text-xs text-negative-500'}>
-                                        На балансе должно быть минимум {prices.daily.toFixed(2)}₽
-                                    </p>
-                                )}
-                                {!nest && <p className={'mt-1 text-xs text-negative-500'}>Нужно выбрать категорию!</p>}
-                                {!egg && (
-                                    <p className={'mt-1 text-xs text-negative-500'}>Нужно выбрать стартовый образ!</p>
-                                )}
-                            </TitledGreyBox>
+                            </div>
                         </div>
                     </Form>
                 )}
