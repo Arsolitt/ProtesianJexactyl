@@ -32,7 +32,7 @@ services:
   #     - "./docker/nginx/configs/production.conf:/etc/nginx/conf.d/production.conf"
   #   networks:
   #     - panel
-  
+
   database:
     image: mariadb:11.2.2-jammy
     container_name: ${PROJECT_NAME}_database
@@ -49,8 +49,6 @@ services:
       - "./docker/database/init:/docker-entrypoint-initdb.d"
     networks:
       - panel
-    ports:
-      - "${DB_PORT}:3306"
 
   redis:
     image: redis:7.2.3-alpine3.19
