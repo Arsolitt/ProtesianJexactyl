@@ -2,13 +2,13 @@
 
 namespace Jexactyl\Http\Controllers\Api\Client;
 
-use Jexactyl\Models\Ticket;
 use Illuminate\Http\JsonResponse;
-use Jexactyl\Models\TicketMessage;
 use Jexactyl\Exceptions\DisplayException;
 use Jexactyl\Http\Requests\Api\Client\ClientApiRequest;
-use Jexactyl\Transformers\Api\Client\Tickets\TicketTransformer;
+use Jexactyl\Models\Ticket;
+use Jexactyl\Models\TicketMessage;
 use Jexactyl\Transformers\Api\Client\Tickets\TicketMessageTransformer;
+use Jexactyl\Transformers\Api\Client\Tickets\TicketTransformer;
 
 class TicketController extends ClientApiController
 {
@@ -62,7 +62,7 @@ class TicketController extends ClientApiController
         $description = $request->input('description');
         $total = Ticket::where('client_id', $user)->count();
 
-        if ($this->settings->get('jexactyl::tickets:max') <= $total) {
+        if ($this->settings->get('tickets:max') <= $total) {
             throw new DisplayException('You already have ' . $total . ' tickets open.');
         }
 
