@@ -1,4 +1,5 @@
 const { blue, zinc, cyan } = require('tailwindcss/colors');
+const { screens } = require('tailwindcss/lib/public/default-theme');
 
 module.exports = {
     content: ['./resources/scripts/**/*.{js,ts,tsx}'],
@@ -12,12 +13,16 @@ module.exports = {
                 storethree:
                     "url('https://www.minecraft.net/content/dam/games/minecraft/key-art/MC-Vanilla_Block-Column-Image_Mining_800x800.jpg')",
             },
+            screens: {
+                xs: '410px',
+                ...screens,
+            },
             width: {
-                '17': '4.5rem',
-              },
-              height: {
-                '17': '4.5rem',
-              },
+                17: '4.5rem',
+            },
+            height: {
+                17: '4.5rem',
+            },
             colors: {
                 black: '#000',
                 // "primary" and "neutral" are deprecated.
