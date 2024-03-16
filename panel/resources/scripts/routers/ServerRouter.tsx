@@ -188,10 +188,10 @@ export default () => {
                                     </NavLink>
                                 </Can>
                                 {editEnabled && isOwner && (
-                                    <Can action={['*']} matchAny>
+                                    <Can action={['*']}>
                                         <NavLink to={`${match.url}/edit`}>
-                                            <div css={tw`flex items-center justify-between`}>
-                                                Характеристики <Icon.Edit css={tw`ml-1`} size={18} />
+                                            <div className={'flex items-center justify-between'}>
+                                                Характеристики <Icon.Edit className={'ml-1'} size={18} />
                                             </div>
                                         </NavLink>
                                     </Can>
