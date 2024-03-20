@@ -50,7 +50,7 @@ class StoreCreationService
             'nest_id' => $nest,
             'node_id' => $node,
             'allocation_id' => $this->getAllocation($node),
-            'allocation_limit' => $request->input('ports'),
+            'allocation_limit' => $request->input('allocations'),
             'backup_limit' => $request->input('backups'),
             'database_limit' => $request->input('databases'),
             'environment' => [],
