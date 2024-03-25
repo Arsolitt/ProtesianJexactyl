@@ -21,6 +21,8 @@ class CreateServerRequest extends ClientApiRequest
             'databases' => 'nullable|int',
             'egg' => 'required|int|min:1',
             'nest' => 'required|int|min:1',
+            'project_id' => 'sometimes|nullable|string|min:1|max:255',
+            'version_id' => 'sometimes|nullable|string|min:1|max:255',
         ];
     }
 }
