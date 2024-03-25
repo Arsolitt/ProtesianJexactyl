@@ -223,7 +223,11 @@ export default () => {
                                 <div
                                     className={
                                         'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${preset === 'vanilla' ? ' -translate-y-3' : ''}`
+                                        `${
+                                            preset === 'vanilla'
+                                                ? ' -translate-y-3 border-main-500'
+                                                : ' border-inert-500'
+                                        }`
                                     }
                                     onClick={() => {
                                         setFieldValue('memory', 4096);
@@ -231,6 +235,8 @@ export default () => {
                                         setFieldValue('nest', 1);
                                         setFieldValue('egg', 5);
                                         setFieldValue('backups', 1);
+                                        setFieldValue('project_id', null);
+                                        setFieldValue('version_id', null);
                                         setNest(1);
                                         setEgg(2);
                                         setPreset('vanilla');
@@ -259,8 +265,12 @@ export default () => {
                                 </div>
                                 <div
                                     className={
-                                        'border-main-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${preset === 'divine' ? ' -translate-y-3' : ''}`
+                                        'border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
+                                        `${
+                                            preset === 'divine'
+                                                ? ' -translate-y-3 border-main-500'
+                                                : ' border-inert-500'
+                                        }`
                                     }
                                     onClick={() => {
                                         setFieldValue('memory', 8192);
@@ -268,6 +278,8 @@ export default () => {
                                         setFieldValue('nest', 1);
                                         setFieldValue('egg', 1);
                                         setFieldValue('backups', 3);
+                                        setFieldValue('project_id', 370666);
+                                        setFieldValue('version_id', null);
                                         setNest(1);
                                         setEgg(16);
                                         setPreset('divine');
@@ -284,10 +296,7 @@ export default () => {
                                         />
                                     </h4>
                                     <br />
-                                    <p>
-                                        Берут, чтобы играть в{' '}
-                                        <span className={'text-negative-500 whitespace-nowrap'}>Divine Journey 2</span>
-                                    </p>
+                                    <p>Самая популярная конфигурация для Divine Journey 2</p>
                                     <br />
                                     <span>ОЗУ: 8 ГБ</span>
                                     <br />
@@ -298,41 +307,45 @@ export default () => {
                                 </div>
                                 <div
                                     className={
-                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${preset === 'bigboss' ? ' -translate-y-3' : ''}`
+                                        'border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
+                                        `${preset === 'rotn' ? ' -translate-y-3 border-main-500' : ' border-inert-500'}`
                                     }
                                     onClick={() => {
-                                        setFieldValue('memory', 12288);
-                                        setFieldValue('disk', 40960);
+                                        setFieldValue('memory', 8192);
+                                        setFieldValue('disk', 30720);
                                         setFieldValue('nest', 1);
                                         setFieldValue('egg', 1);
-                                        setFieldValue('backups', 5);
+                                        setFieldValue('backups', 3);
+                                        setFieldValue('project_id', 338901);
+                                        setFieldValue('version_id', 5203986);
                                         setNest(1);
-                                        setEgg(4);
-                                        setPreset('bigboss');
+                                        setEgg(16);
+                                        setPreset('rotn');
                                     }}
                                 >
                                     <h4 className={'font-bold text-center text-2xl'}>
-                                        Big Boss
+                                        ROTN
                                         <Input
                                             type={'radio'}
                                             name={'preset'}
                                             value={preset}
-                                            checked={preset === 'bigboss'}
+                                            checked={preset === 'rotn'}
                                             className={'absolute right-2 top-2'}
                                         />
                                     </h4>
                                     <br />
-                                    <p>Запускает гига-сборки на новых версиях o_O</p>
+                                    <p>Сборка для любителей превозмогать 0_0</p>
                                     <br />
-                                    <span>ОЗУ: 12 ГБ</span>
+                                    <span>ОЗУ: 8 ГБ</span>
                                     <br />
-                                    <span>Диск: 40 ГБ</span>
+                                    <span>Диск: 30 ГБ</span>
                                     <br />
-                                    <span>Ядро: Forge</span>
+                                    <span>Ядро: CurseForge</span>
                                     <br />
                                 </div>
                             </div>
+                            <Field name={'project_id'} className={'text-center'} type={'hidden'} />
+                            <Field name={'version_id'} className={'text-center'} type={'hidden'} />
                         </TitledGreyBox>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Лимит ОЗУ'} icon={faMemory} className={'mt-8 sm:mt-0'}>
