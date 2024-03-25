@@ -42,18 +42,6 @@ class StoreCreationService
 
         $this->verifyService->handle($request);
 
-        $env=[];
-
-        if ($egg->id === 16) {
-            if ($request->input('project_id')) {
-                $env['PROJECT_ID'] = $request->input('project_id');
-            }
-
-            if ($request->input('version_id')) {
-                $env['VERSION_ID'] = $request->input('version_id');
-            }
-        }
-
         $data = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -65,7 +53,7 @@ class StoreCreationService
             'allocation_limit' => $request->input('allocations'),
             'backup_limit' => $request->input('backups'),
             'database_limit' => $request->input('databases'),
-            'environment' => $env,
+            'environment' => [],
             'memory' => $request->input('memory'),
             'disk' => $request->input('disk'),
             'cpu' => $request->input('cpu'),
@@ -81,7 +69,17 @@ class StoreCreationService
             $key = "v1-{$egg->id}-{$var->env_variable}";
             $data['environment'][$var->env_variable] = $request->get($key, $var->default_value);
         }
-        
+
+        if ($egg->id === 16) {
+            if ($request->input('project_id')) {
+                $data['environment']['PROJECT_ID'] = $request->input('project_id');
+            }
+
+            if ($request->input('version_id')) {
+                $data['environment']['VERSION_ID'] = $request->input('version_id');
+            }
+        }
+
         \Log::debug($data);
 
         return $this->creationService->handle($data);
