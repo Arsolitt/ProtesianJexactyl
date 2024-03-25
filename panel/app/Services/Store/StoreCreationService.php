@@ -72,11 +72,11 @@ class StoreCreationService
 
         if ($egg->id === 16) {
             if ($request->input('project_id')) {
-                $data['environment']['PROJECT_ID'] = $request->input('project_id');
+                $data['environment']['PROJECT_ID'] = (string) $request->input('project_id');
             }
 
             if ($request->input('version_id')) {
-                $data['environment']['VERSION_ID'] = $request->input('version_id');
+                $data['environment']['VERSION_ID'] = (string) $request->input('version_id');
             }
         }
 
