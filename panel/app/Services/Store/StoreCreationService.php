@@ -54,8 +54,6 @@ class StoreCreationService
             }
         }
 
-
-
         $data = [
             'name' => $request->input('name'),
             'description' => $request->input('description'),
@@ -78,10 +76,13 @@ class StoreCreationService
             'start_on_completion' => false,
         ];
 
+
         foreach (EggVariable::where('egg_id', $egg->id)->get() as $var) {
             $key = "v1-{$egg->id}-{$var->env_variable}";
             $data['environment'][$var->env_variable] = $request->get($key, $var->default_value);
         }
+        
+        \Log::debug($data);
 
         return $this->creationService->handle($data);
     }
