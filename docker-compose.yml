@@ -2,11 +2,6 @@
 
 networks:
   panel:
-volumes:
-  database:
-    driver: local
-  redis:
-    driver: local
 
 services:
   nginx:
@@ -43,7 +38,7 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - "database:/var/lib/mysql"
+      - "./docker/database/data:/var/lib/mysql"
       - "./docker/database/init:/docker-entrypoint-initdb.d"
     networks:
       - panel
@@ -60,7 +55,7 @@ services:
     networks:
       - panel
     volumes:
-      - "redis:/data"
+      - "./docker/redis/data:/data"
 
   app:
     build:
