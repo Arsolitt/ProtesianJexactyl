@@ -1,41 +1,38 @@
-version: "3.8"
+#version: "3.8"
 
 networks:
   panel:
-volumes:
-  database:
-    driver: local
-  redis:
-    driver: local
+  traefik_net:
+    external: true
 
 services:
-
-  # nginx:
-  #   build:
-  #     context: .
-  #     dockerfile: docker/nginx/Dockerfile
-  #     args:
-  #       UID: ${UID}
-  #       GID: ${GID}
-  #   image: ${PROJECT_NAME}_nginx
-  #   container_name: ${PROJECT_NAME}_nginx
-  #   restart: unless-stopped
-  #   ports:
-  #     - "${NGINX_HTTP_PORT}:80"
-  #     - "${NGINX_HTTPS_PORT}:443"
-  #   volumes:
-  #     - "./panel:/var/www/panel"
-  #     - "/etc/ssl/cert.pem:/etc/ssl/cert.pem"
-  #     - "/etc/ssl/key.pem:/etc/ssl/key.pem"
-  #     - "/etc/ssl/client.crt:/etc/ssl/client.crt"
-  #     - "./docker/nginx/nginx.prod.conf:/etc/nginx/nginx.conf"
-  #     - "./docker/nginx/configs/production.conf:/etc/nginx/conf.d/production.conf"
-  #   networks:
-  #     - panel
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    image: ${IMAGE_PREFIX}_nginx
+    container_name: ${CONTAINER_PREFIX}_nginx
+    restart: unless-stopped
+    volumes:
+      - "./panel:/var/www/panel"
+      - "./docker/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "./docker/nginx/configs/default.conf:/etc/nginx/conf.d/default.conf"
+    networks:
+      - panel
+      - traefik_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.protesian.entrypoints=https"
+      - "traefik.http.routers.protesian.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.protesian.rule=Host(`protesian.arsolitt.online`)"
+      - "traefik.http.services.protesian.loadbalancer.server.port=80"
 
   database:
     image: mariadb:11.2.2-jammy
-    container_name: ${PROJECT_NAME}_database
+    container_name: ${CONTAINER_PREFIX}_database
     restart: unless-stopped
     stdin_open: true
     tty: true
@@ -45,14 +42,16 @@ services:
       MARIADB_PASSWORD: ${DB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - "database:/var/lib/mysql"
+      - "./docker/database/data:/var/lib/mysql"
       - "./docker/database/init:/docker-entrypoint-initdb.d"
     networks:
       - panel
+    ports:
+      - "${DB_PORT}:3306"
 
   redis:
     image: redis:7.2.3-alpine3.19
-    container_name: ${PROJECT_NAME}_redis
+    container_name: ${CONTAINER_PREFIX}_redis
     restart: unless-stopped
     stdin_open: true
     tty: true
@@ -60,7 +59,7 @@ services:
     networks:
       - panel
     volumes:
-      - "redis:/data"
+      - "./docker/redis/data:/data"
 
   app:
     build:
@@ -71,15 +70,14 @@ services:
         GID: ${GID}
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_php
-    container_name: ${PROJECT_NAME}_app
+    image: ${IMAGE_PREFIX}_php
+    container_name: ${CONTAINER_PREFIX}_app
     depends_on:
       - redis
       - database
+      - nginx
     volumes:
       - "./panel:/var/www/panel"
-    ports:
-      - "${FPM_PORT}:9000"
     networks:
       - panel
 
@@ -93,9 +91,9 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
-    image: ${PROJECT_NAME}_php
-    container_name: ${PROJECT_NAME}_scheduler
-    entrypoint: [ "/home/tools/role.sh" ]
+    image: ${IMAGE_PREFIX}_php
+    container_name: ${CONTAINER_PREFIX}_scheduler
+    entrypoint: ["/home/tools/role.sh"]
     depends_on:
       - redis
       - database
@@ -117,9 +115,9 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
-    image: ${PROJECT_NAME}_php
-    container_name: ${PROJECT_NAME}_queue
-    entrypoint: [ "/home/tools/role.sh" ]
+    image: ${IMAGE_PREFIX}_php
+    container_name: ${CONTAINER_PREFIX}_queue
+    entrypoint: ["/home/tools/role.sh"]
     depends_on:
       - redis
       - database
@@ -140,8 +138,8 @@ services:
         GID: ${GID}
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_php
-    entrypoint: [ "/home/tools/composer" ]
+    image: ${IMAGE_PREFIX}_php
+    entrypoint: ["/usr/bin/composer"]
     volumes:
       - "./panel:/home/app"
     networks:
@@ -156,8 +154,8 @@ services:
         GID: ${GID}
     stdin_open: true
     tty: true
-    image: ${PROJECT_NAME}_php
-    entrypoint: [ "php", "/home/app/artisan" ]
+    image: ${IMAGE_PREFIX}_php
+    entrypoint: ["php", "/home/app/artisan"]
     volumes:
       - "./panel:/home/app"
     networks:
@@ -170,7 +168,7 @@ services:
       args:
         UID: ${UID}
         GID: ${GID}
-    image: ${PROJECT_NAME}_node
+    image: ${IMAGE_PREFIX}_node
     stdin_open: true
     tty: true
     volumes:
