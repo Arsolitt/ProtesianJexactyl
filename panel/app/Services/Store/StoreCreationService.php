@@ -80,8 +80,6 @@ class StoreCreationService
             }
         }
 
-        \Log::debug($data);
-
         return $this->creationService->handle($data);
     }
 
