@@ -1,0 +1,5 @@
+DB_DATABASE=aboba
+DB_USERNAME=aboba
+DB_PASSWORD=aboba
+REDIS_PASSWORD=redis
+IMAGE_PREFIX=arsolitt/protesian
