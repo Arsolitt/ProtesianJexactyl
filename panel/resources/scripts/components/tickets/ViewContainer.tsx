@@ -3,13 +3,13 @@ import useFlash from '@/plugins/useFlash';
 import { useRouteMatch } from 'react-router';
 import React, { useEffect, useState } from 'react';
 import { Alert } from '@/components/elements/alert';
-import Spinner from '@/components/elements/Spinner';
 import { Button } from '@/components/elements/button';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
 import PageContentBlock from '@/components/elements/PageContentBlock';
 import NewMessageDialog from '@/components/tickets/forms/NewMessageDialog';
 import { deleteTicket, getMessages, getTicket, Ticket, TicketMessage } from '@/api/account/tickets';
 import { ru } from 'date-fns/locale';
+import { NotFound } from '@/components/elements/ScreenBlock';
 
 export default () => {
     const { clearFlashes } = useFlash();
@@ -31,6 +31,7 @@ export default () => {
         clearFlashes('tickets');
 
         getTicket(id).then((data) => setTicket(data));
+
         getMessages(id).then((data) => setMessages(data));
     };
 
@@ -60,7 +61,10 @@ export default () => {
         }
     };
 
-    if (!ticket) return <Spinner centered />;
+    if (!ticket)
+        return (
+            <NotFound title={'Тикет не найден'} onBack={() => doRedirect()} message={'Кажется, тут ничего нет...'} />
+        );
 
     return (
         <PageContentBlock title={'View Ticket'} showFlashKey={'tickets'}>
