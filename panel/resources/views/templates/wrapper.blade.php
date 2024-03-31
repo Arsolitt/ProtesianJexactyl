@@ -57,7 +57,7 @@
 
         @include('layouts.scripts')
     </head>
-    <body>
+    <body @if(isset($css['body'])) class="{{ $css['body'] }}" @endif>
         @section('content')
             @yield('above-container')
             @yield('container')

@@ -5,7 +5,7 @@ import Tooltip from '@/components/elements/tooltip/Tooltip';
 import { useStoreState } from 'easy-peasy';
 import React from 'react';
 import * as Icon from 'react-feather';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 
@@ -46,13 +46,13 @@ export default () => {
     return (
         <PanelDiv>
             <ProgressBar />
-            <Link to={'/'} className='flex justify-center items-center '>
+            <a href='/' className='flex justify-center items-center '>
                 <img
                     className={'p-2 w-17 h-17'}
                     src={logo ?? 'https://avatars.githubusercontent.com/u/91636558'}
                     alt={'logo'}
                 />
-            </Link>
+            </a>
             <div>
                 <div className={'navigation-link relative z-30'}>
                     <div className={'bg-gray-700 rounded-lg p-2 my-8'}>

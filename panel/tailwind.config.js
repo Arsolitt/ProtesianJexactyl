@@ -2,7 +2,7 @@ const { blue, zinc, cyan } = require('tailwindcss/colors');
 const { screens } = require('tailwindcss/lib/public/default-theme');
 
 module.exports = {
-    content: ['./resources/scripts/**/*.{js,ts,tsx}'],
+    content: ['./resources/scripts/**/*.{js,ts,tsx}', './resources/views/**/*.{php,blade.php}'],
     theme: {
         extend: {
             backgroundImage: {
@@ -32,6 +32,19 @@ module.exports = {
                 // Use cyan / gray instead.
                 gray: zinc,
                 cyan: cyan,
+                ebony: {
+                    50: '#f0f3fd',
+                    100: '#e5e9fa',
+                    200: '#cfd7f6',
+                    300: '#b2bdef',
+                    400: '#929be7',
+                    500: '#787bdc',
+                    600: '#635dce',
+                    700: '#544db5',
+                    800: '#454192',
+                    900: '#3b3a75',
+                    950: '#151428',
+                },
                 inert: {
                     50: '#f6f7f9',
                     100: '#ebedf3',

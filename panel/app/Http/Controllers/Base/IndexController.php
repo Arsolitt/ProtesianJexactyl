@@ -35,4 +35,15 @@ class IndexController extends Controller
         }
         return $this->view->make('templates/base.core');
     }
+
+    public function welcome(Request $request): Response|View
+    {
+        $code = $request->query('ref');
+        $response = new Response();
+        $response->header('Location', '/');
+        if ($code ?? ReferralCode::where('code', '=', $code)->exists()) {
+            return $response->withCookie(Cookie::make('referral_code', $code, 60 * 24 * 365, '/', null, false, false, true, 'Lax'));
+        }
+        return $this->view->make('templates/base.welcome');
+    }
 }
