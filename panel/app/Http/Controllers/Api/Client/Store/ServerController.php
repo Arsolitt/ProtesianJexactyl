@@ -97,7 +97,7 @@ class ServerController extends ClientApiController
 
         $request->merge([
             'node' => $node_id,
-            'cpu' => 999
+            'cpu' => 500
         ]);
 
         $server = $this->creationService->handle($request);
