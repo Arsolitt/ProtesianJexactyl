@@ -1,15 +1,14 @@
-FROM node:21-bookworm
-
+FROM node:21-alpine3.17
 ARG UID
 ARG GID
 ENV NODE_OPTIONS=--openssl-legacy-provider
-RUN apt-get update && apt-get install -y nano zsh
-RUN usermod -u $UID node && \
-    groupmod -g $GID node
-
 ENV TZ=Europe/Moscow
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-USER $UID
-RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 WORKDIR /home/app
+RUN apk add shadow && \
+    usermod -u $UID node && \
+    groupmod -g $GID node && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    rm -rf /etc/apk/cache
+USER $UID
 ENTRYPOINT ["yarn"]
