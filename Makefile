@@ -4,16 +4,16 @@ include .env
 
 # ребилд без глобальных изменений
 build:
-	docker-compose -f docker-compose.dev.yml build
+	docker-compose build
 # создание образа с нуля
 rebuild:
-	docker-compose -f docker-compose.dev.yml build --no-cache
+	docker-compose build --no-cache
 # создать контейнер
 up:
-	docker-compose -f docker-compose.dev.yml up -d
+	docker-compose up -d
 # выключить контейнер
 down:
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose down
 
 backup:
 	docker exec ${PROJECT_NAME}_database mariadb-dump -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} > panel/storage/files/backup.sql && echo "Success!"

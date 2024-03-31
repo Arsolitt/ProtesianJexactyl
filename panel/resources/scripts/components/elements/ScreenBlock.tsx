@@ -49,12 +49,12 @@ const ScreenBlock = ({ title, image, message, onBack, onRetry, noContainer }: Sc
                 >
                     {(typeof onBack === 'function' || typeof onRetry === 'function') && (
                         <div css={tw`absolute left-0 top-0 ml-4 mt-4`}>
-                            <ActionButton
+                            <ActionButton.Success
                                 onClick={() => (onRetry ? onRetry() : onBack ? onBack() : null)}
                                 className={onRetry ? 'hover:spin' : undefined}
                             >
                                 {onRetry ? <Icon.RefreshCw /> : <Icon.ChevronLeft />}
-                            </ActionButton>
+                            </ActionButton.Success>
                         </div>
                     )}
                     <img src={image} css={tw`w-2/3 h-auto select-none mx-auto`} />
@@ -70,17 +70,17 @@ const ScreenBlock = ({ title, image, message, onBack, onRetry, noContainer }: Sc
                     >
                         {(typeof onBack === 'function' || typeof onRetry === 'function') && (
                             <div css={tw`absolute left-0 top-0 ml-4 mt-4`}>
-                                <ActionButton
+                                <ActionButton.Success
                                     onClick={() => (onRetry ? onRetry() : onBack ? onBack() : null)}
                                     className={onRetry ? 'hover:spin' : undefined}
                                 >
                                     {onRetry ? <Icon.RefreshCw /> : <Icon.ChevronLeft />}
-                                </ActionButton>
+                                </ActionButton.Success>
                             </div>
                         )}
                         <img src={image} css={tw`w-2/3 h-auto select-none mx-auto`} />
                         <h2 css={tw`mt-10 font-bold text-4xl`}>{title}</h2>
-                        {/*<p css={tw`text-sm text-neutral-400 mt-2`}>{message}</p>*/}
+                        <p css={tw`text-sm text-neutral-400 mt-2`}>{message}</p>
                     </div>
                 </div>
             </PageContentBlock>
