@@ -29,7 +29,7 @@ export default () => {
                 addFlash({
                     key: 'settings',
                     type: 'success',
-                    message: 'Your server has been deleted.',
+                    message: 'Твой сервер удалён',
                 });
                 // @ts-expect-error this is valid
                 window.location = '/';
@@ -69,14 +69,14 @@ export default () => {
                             <Input type={'text'} value={name} onChange={(n) => setName(n.target.value)} />
                         </>
                     )}
-                    <Button
+                    <Button.Success
                         disabled={name !== serverName}
                         type={'submit'}
                         className={'mt-2'}
                         form={'delete-server-form'}
                     >
                         Да, удалить сервер
-                    </Button>
+                    </Button.Success>
                 </Dialog>
             </form>
             <p className={'text-sm'}>
