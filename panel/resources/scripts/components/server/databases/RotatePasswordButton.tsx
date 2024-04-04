@@ -33,8 +33,8 @@ export default ({ databaseId, onUpdate }: { databaseId: string; onUpdate: (datab
     };
 
     return (
-        <Button variant={Button.Variants.Secondary} color={'primary'} css={tw`mr-2`} onClick={rotate}>
-            Rotate Password
-        </Button>
+        <Button.Text variant={Button.Variants.Secondary} color={'primary'} css={tw`mr-2`} onClick={rotate}>
+            Изменить пароль
+        </Button.Text>
     );
 };

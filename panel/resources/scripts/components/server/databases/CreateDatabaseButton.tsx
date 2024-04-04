@@ -69,44 +69,42 @@ export default () => {
                         }}
                     >
                         <FlashMessageRender byKey={'database:create'} css={tw`mb-6`} />
-                        <h2 css={tw`text-2xl mb-6`}>Create new database</h2>
+                        <h2 css={tw`text-2xl mb-6`}>Создать новую базу данных</h2>
                         <Form css={tw`m-0`}>
                             <Field
                                 type={'string'}
                                 id={'database_name'}
                                 name={'databaseName'}
-                                label={'Database Name'}
-                                description={'A descriptive name for your database instance.'}
+                                label={'Название'}
+                                description={'Описание'}
                             />
                             <div css={tw`mt-6`}>
                                 <Field
                                     type={'string'}
                                     id={'connections_from'}
                                     name={'connectionsFrom'}
-                                    label={'Connections From'}
-                                    description={
-                                        'Where connections should be allowed from. Leave blank to allow connections from anywhere.'
-                                    }
+                                    label={'Адрес подключения'}
+                                    description={'IP адрес, с которого разрешены подключения'}
                                 />
                             </div>
                             <div css={tw`flex flex-wrap justify-end mt-6`}>
-                                <Button
+                                <Button.Text
                                     type={'button'}
                                     variant={Button.Variants.Secondary}
                                     css={tw`w-full sm:w-auto sm:mr-2`}
                                     onClick={() => setVisible(false)}
                                 >
-                                    Cancel
-                                </Button>
-                                <Button css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
-                                    Create Database
-                                </Button>
+                                    Отмена
+                                </Button.Text>
+                                <Button.Success css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
+                                    Создать
+                                </Button.Success>
                             </div>
                         </Form>
                     </Modal>
                 )}
             </Formik>
-            <Button onClick={() => setVisible(true)}>New Database</Button>
+            <Button.Success onClick={() => setVisible(true)}>Создать</Button.Success>
         </>
     );
 };

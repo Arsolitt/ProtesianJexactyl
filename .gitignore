@@ -1,6 +1,7 @@
 panel/.env
 .env*
 !.env.example
+!.env.stack.example
 panel/vendor/
 panel/install.lock
 panel/public/install/logs/

@@ -37,8 +37,8 @@ export default () => {
 
     return (
         <ServerContentBlock
-            title={'Databases'}
-            description={'Create databases for your application.'}
+            title={'Базы данных'}
+            description={'Тут можно создать базу данных 0_0'}
             showFlashKey={'databases'}
         >
             {!databases.length && loading ? (
@@ -57,16 +57,15 @@ export default () => {
                         ) : (
                             <p css={tw`text-center text-sm text-neutral-300`}>
                                 {databaseLimit > 0
-                                    ? 'It looks like you have no databases.'
-                                    : 'Databases cannot be created for this server.'}
+                                    ? 'Выглядит так, будто у тебя нет ни одной базы :('
+                                    : 'Для твоего сервера нет доступных баз данных'}
                             </p>
                         )}
                         <Can action={'database.create'}>
                             <div css={tw`mt-6 flex items-center justify-end`}>
                                 {databaseLimit > 0 && databases.length > 0 && (
                                     <p css={tw`text-sm text-neutral-300 mb-4 sm:mr-6 sm:mb-0`}>
-                                        {databases.length} of {databaseLimit} databases have been allocated to this
-                                        server.
+                                        Использовано {databases.length} из {databaseLimit} доступных баз данных.
                                     </p>
                                 )}
                                 {databaseLimit > 0 && databaseLimit !== databases.length && (

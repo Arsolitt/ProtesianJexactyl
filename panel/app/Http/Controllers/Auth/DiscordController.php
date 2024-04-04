@@ -83,8 +83,6 @@ class DiscordController extends AbstractLoginController
                 return response()->json(['error' => 'Вход по дискорду отключен Администрацией!'], 403);
             }
 
-            // TODO: брать из кука реферальный код
-
             $data = [
                 'approved' => !$this->settings->get('approvals:enabled'),
                 'email' => $discord->email,
@@ -102,11 +100,11 @@ class DiscordController extends AbstractLoginController
             }
 
             try {
-                $this->creationService->handle($data);
+                $user = $this->creationService->handle($data);
+//                $user = User::where('email', $discord->email)->first();
             } catch (DataValidationException $e) {
                 return response()->json(['error' => 'Username already taken! Try to login with email and link your Discord.'], 403);
             }
-            $user = User::where('email', $discord->email)->first();
         }
 
         if ($user) {
