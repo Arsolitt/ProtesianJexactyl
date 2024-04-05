@@ -16,7 +16,7 @@ down:
 	docker-compose down
 
 backup:
-    docker exec $(shell docker ps -f name=jexactyl_database --quiet) mariadb-dump -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} > panel/storage/files/backup.sql && echo "Success!"
+        docker exec $(shell docker ps -f name=jexactyl_database --quiet) mariadb-dump -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_DATABASE} > panel/storage/files/backup.sql && echo "Success!"
 
 #####################################################
 ################ PRODUCTION COMMANDS ################
