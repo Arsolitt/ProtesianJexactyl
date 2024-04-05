@@ -24,7 +24,7 @@ services:
         - "traefik.enable=true"
         - "traefik.http.routers.protesian.entrypoints=https"
         - "traefik.http.routers.protesian.tls.certresolver=letsencrypt"
-        - "traefik.http.routers.protesian.rule=Host(`protesian.host`)"
+        - "traefik.http.routers.protesian.rule=Host(`protesian.arsolitt.ru`)"
         - "traefik.http.services.protesian.loadbalancer.server.port=80"
 
   database:
