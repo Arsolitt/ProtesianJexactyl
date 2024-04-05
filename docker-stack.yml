@@ -24,7 +24,7 @@ services:
         - "traefik.enable=true"
         - "traefik.http.routers.protesian.entrypoints=https"
         - "traefik.http.routers.protesian.tls.certresolver=letsencrypt"
-        - "traefik.http.routers.protesian.rule=Host(`protesian.arsolitt.ru`)"
+        - "traefik.http.routers.protesian.rule=Host(`protesian.host`)"
         - "traefik.http.services.protesian.loadbalancer.server.port=80"
 
   database:
@@ -112,50 +112,6 @@ services:
       - app
     environment:
       CONTAINER_ROLE: queue
-    volumes:
-      - "/opt/jexactyl/panel:/home/app"
-    networks:
-      - panel
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.labels.jexactyl==true]
-
-  composer:
-    stdin_open: true
-    tty: true
-    image: ${IMAGE_PREFIX}_php
-    entrypoint: ["/usr/bin/composer"]
-    volumes:
-      - "/opt/jexactyl/panel:/home/app"
-    networks:
-      - panel
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.labels.jexactyl==true]
-
-  artisan:
-    stdin_open: true
-    tty: true
-    image: ${IMAGE_PREFIX}_php
-    entrypoint: ["php", "/home/app/artisan"]
-    volumes:
-      - "/opt/jexactyl/panel:/home/app"
-    networks:
-      - panel
-    deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints: [node.labels.jexactyl==true]
-
-  yarn:
-    image: ${IMAGE_PREFIX}_node
-    stdin_open: true
-    tty: true
     volumes:
       - "/opt/jexactyl/panel:/home/app"
     networks:
