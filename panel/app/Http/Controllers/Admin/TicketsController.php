@@ -29,7 +29,7 @@ class TicketsController extends Controller
     public function index(): View
     {
         return $this->view->make('admin.tickets.index', [
-            'tickets' => Ticket::all(),
+            'tickets' => Ticket::orderBy('created_at', 'desc')->get(),
             'enabled' => $this->settings->get('tickets:enabled', false),
             'max' => $this->settings->get('tickets:max', 3),
         ]);
