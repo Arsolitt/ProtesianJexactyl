@@ -5,7 +5,6 @@
 @section('container')
     <main>
         <x-welcome.header></x-welcome.header>
-        <x-welcome.content></x-welcome.content>
-        <x-welcome.footer></x-welcome.footer>
+        Контакты
     </main>
 @endsection

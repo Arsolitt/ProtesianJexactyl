@@ -1,1 +1,0 @@
-<section id="faq"></section>

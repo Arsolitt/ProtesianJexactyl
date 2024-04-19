@@ -44,33 +44,21 @@ class IndexController extends Controller
         if ($code ?? ReferralCode::where('code', '=', $code)->exists()) {
             return $response->withCookie(Cookie::make('referral_code', $code, 60 * 24 * 365, '/', null, false, false, true, 'Lax'));
         }
-        return $this->view->make('templates/base.welcome')->with([
-            'presets' => [
-                [
-                    'title' => 'Vanilla',
-                    'description' => 'Идеально подходит для небольшого ванильного сервера',
-                    'memory' => 4096,
-                    'disk' => 20480,
-                    'egg' => 'Paper',
-                    'price' => 295
-                ],
-                [
-                    'title' => 'Divan',
-                    'description' => 'Самая популярная конфигурация для Divine Journey 2',
-                    'memory' => 4096,
-                    'disk' => 20480,
-                    'egg' => 'Paper',
-                    'price' => 295
-                ],
-                [
-                    'title' => 'ROTN',
-                    'description' => 'Сборка для любителей превозмогать 0_0',
-                    'memory' => 4096,
-                    'disk' => 20480,
-                    'egg' => 'Paper',
-                    'price' => 295
-                ],
-            ]
-        ]);
+        return $this->view->make('templates/base.welcome');
     }
+
+    public function tos(Request $request): Response|View
+    {
+        return $this->view->make('components.information.tos');
+    }
+
+    public function privacy(Request $request): Response|View
+    {
+        return $this->view->make('components.information.privacy');
+    }
+        public function contacts(Request $request): Response|View
+    {
+        return $this->view->make('components.information.contacts');
+    }
+
 }
