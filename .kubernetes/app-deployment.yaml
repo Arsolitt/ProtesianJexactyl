@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: jexactyl-nginx
-        image: <Image>
+        image: arsolitt/jexactyl-nginx:latest
         resources:
           limits:
             memory: "2048Mi"
@@ -25,7 +25,10 @@ spec:
         ports:
         - containerPort: 80
       - name: jexactyl-app
-        image: <Image>
+        image: arsolitt/jexactyl-app:latest
+        envFrom:
+          - secretRef:
+              name: jexactyl-env
         resources:
           limits:
             memory: "2048Mi"
