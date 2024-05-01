@@ -10,7 +10,7 @@ on:
 
 jobs:
   build-php:
-    name: Build and push artifacts to registry
+    name: Build PHP
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
           cache: true
           cache_registry: arsolitt/cache-jexactyl-php
   build-nginx:
-    name: Build and push artifacts to registry
+    name: Build NGINX
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
