@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jexactyl-scheduler
+spec:
+  selector:
+    matchLabels:
+      app: jexactyl-scheduler
+  template:
+    metadata:
+      labels:
+        app: jexactyl-scheduler
+    spec:
+      containers:
+      - name: jexactyl-scheduler
+        image: arsolitt/jexactyl-app:latest
+        command: ["php /home/app/artisan schedule:work"]
+        args: ["--verbose", "--no-interaction"]
+        resources:
+          limits:
+            memory: "2048Mi"
+            cpu: "1000m"
+          requests:
+            memory: "64Mi"
+            cpu: "100m"

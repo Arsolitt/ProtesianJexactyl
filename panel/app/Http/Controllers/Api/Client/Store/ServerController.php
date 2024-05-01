@@ -77,9 +77,9 @@ class ServerController extends ClientApiController
     {
         $user = $request->user();
 
-        if (!$user->verified) {
-            throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей!');
-        }
+        // if (!$user->verified) {
+        //     throw new DisplayException('Создание сервера недоступно для непроверенных учетных записей!');
+        // }
 
         if (Nest::find($request->input('nest'))->private ?? true) {
             throw new DisplayException('Выбранный раздел является приватным и размещение невозможно!');
