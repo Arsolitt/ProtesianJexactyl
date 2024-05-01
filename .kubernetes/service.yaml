@@ -8,5 +8,4 @@ spec:
     app: jexactyl-app
   ports:
   - protocol: TCP
-    port: 555
-    targetPort: 80
+    port: 80

@@ -27,9 +27,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
-          tag_with_latest: true
-          cache: true
-          cache_registry: arsolitt/jexactyl-cache
+          # tag_with_latest: true
+          # cache: true
+          # cache_registry: arsolitt/jexactyl-cache
   build-nginx:
     name: Build NGINX
     runs-on: ubuntu-latest
@@ -48,9 +48,9 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
-          tag_with_latest: true
-          cache: true
-          cache_registry: arsolitt/jexactyl-cache
+          # tag_with_latest: true
+          # cache: true
+          # cache_registry: arsolitt/jexactyl-cache
   # deploy:
   #   needs: [build-php, build-nginx]
   #   name: Deploy to Kubernetes
