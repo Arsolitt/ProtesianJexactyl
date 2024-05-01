@@ -16,6 +16,9 @@ spec:
         image: arsolitt/jexactyl-php:latest
         command: ["php"]
         args: ["/home/app/artisan", "migrate", "--force", "--seed"]
+        envFrom:
+          - secretRef:
+              name: jexactyl-dev-env
         resources:
           limits:
             memory: "1024Mi"
