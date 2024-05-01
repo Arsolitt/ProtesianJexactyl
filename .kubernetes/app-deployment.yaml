@@ -14,8 +14,8 @@ spec:
       initContainers:
       - name: jexactyl-migrate
         image: arsolitt/jexactyl-php:latest
-        command: ["php /home/app/artisan migrate"]
-        args: ["--force", "--seed"]
+        command: ["php"]
+        args: ["/home/app/artisan", "migrate", "--force", "--seed"]
         resources:
           limits:
             memory: "1024Mi"

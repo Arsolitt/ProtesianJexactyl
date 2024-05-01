@@ -14,8 +14,8 @@ spec:
       containers:
       - name: jexactyl-scheduler
         image: arsolitt/jexactyl-app:latest
-        command: ["php /home/app/artisan schedule:work"]
-        args: ["--verbose", "--no-interaction"]
+        command: ["php"]
+        args: ["/home/app/artisan", "schedule:work", "--verbose", "--no-interaction"]
         resources:
           limits:
             memory: "2048Mi"
