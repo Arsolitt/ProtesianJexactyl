@@ -20,6 +20,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           image: arsolitt/jexactyl-php
+          build_file: .kubernetes/php.Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
@@ -30,6 +31,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           image: arsolitt/jexactyl-nginx
+          build_file: .kubernetes/nginx.Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
