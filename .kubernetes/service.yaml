@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jexactyl-app
+  namespace: protesian
+spec:
+  type: ClusterIP
+  selector:
+    app: jexactyl-app
+  ports:
+  - protocol: TCP
+    port: 555
+    targetPort: 80
