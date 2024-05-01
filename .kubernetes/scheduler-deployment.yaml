@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: jexactyl-scheduler
-        image: arsolitt/jexactyl-app:latest
+        image: arsolitt/jexactyl-php:latest
         command: ["php"]
         args: ["/home/app/artisan", "schedule:work", "--verbose", "--no-interaction"]
         envFrom:
