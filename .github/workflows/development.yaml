@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-php:
     name: Build and push artifacts to registry
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +30,16 @@ jobs:
           tag_with_latest: true
           cache: true
           cache_registry: arsolitt/cache-jexactyl-php
+  build-nginx:
+    name: Build and push artifacts to registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Short SHA
+        id: short-sha
+        uses: benjlevesque/short-sha@v3.0
+        with:
+          length: 7
       - name: Build and push nginx
         uses: aevea/action-kaniko@master
         with:
@@ -42,7 +52,7 @@ jobs:
           cache: true
           cache_registry: arsolitt/cache-jexactyl-nginx
   deploy:
-    needs: build
+    needs: [build-php, build-nginx]
     name: Deploy to Kubernetes
     runs-on: ubuntu-latest
     steps:
