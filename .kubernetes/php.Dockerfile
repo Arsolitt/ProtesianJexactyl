@@ -25,9 +25,9 @@ RUN apt-get update -y && \
 COPY --from=composer:2.6.6 /usr/bin/composer /usr/bin/composer
 COPY ./docker/www.conf /usr/local/etc/php-fpm.d/www.conf
 # COPY ./panel/composer.* .
-COPY --from=builder /home/app/public/assets /home/app/public/assets
-COPY ./panel/* /home/app/
+COPY ./panel /home/app
 RUN composer install --no-dev --optimize-autoloader
+COPY --from=builder /home/app/public/assets /home/app/public/assets
 # COPY ./panel .
 # COPY ./docker/role.sh /home/tools/role.sh
 EXPOSE 9000
