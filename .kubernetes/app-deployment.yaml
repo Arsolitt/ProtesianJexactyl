@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jexactyl-app
+  namespace: protesian
+spec:
+  selector:
+    matchLabels:
+      app: jexactyl-app
+  template:
+    metadata:
+      labels:
+        app: jexactyl-app
+    spec:
+      containers:
+      - name: jexactyl-nginx
+        image: <Image>
+        resources:
+          limits:
+            memory: "2048Mi"
+            cpu: "2000m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 80
+      - name: jexactyl-app
+        image: <Image>
+        resources:
+          limits:
+            memory: "2048Mi"
+            cpu: "2000m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        ports:
+        - containerPort: 9000
