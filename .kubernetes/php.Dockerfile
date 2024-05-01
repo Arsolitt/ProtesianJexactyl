@@ -4,7 +4,7 @@ ENV TZ=Europe/Moscow
 WORKDIR /home/app
 COPY ./panel/package.json ./panel/yarn.lock ./
 RUN ["yarn", "--frozen-lockfile"]
-COPY ./panel .
+COPY ./panel ./
 RUN ["yarn", "build:production"]
 
 FROM php:8.3.2-fpm-bookworm
@@ -26,7 +26,7 @@ COPY --from=composer:2.6.6 /usr/bin/composer /usr/bin/composer
 COPY ./docker/www.conf /usr/local/etc/php-fpm.d/www.conf
 # COPY ./panel/composer.* .
 COPY --from=builder /home/app/public/assets /home/app/public/assets
-COPY ./panel .
+COPY ./panel/* /home/app/*
 RUN composer install --no-dev --optimize-autoloader
 # COPY ./panel .
 # COPY ./docker/role.sh /home/tools/role.sh
