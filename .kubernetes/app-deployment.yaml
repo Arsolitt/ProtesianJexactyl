@@ -11,27 +11,44 @@ spec:
       labels:
         app: jexactyl-app
     spec:
-      initContainers:
-      - name: jexactyl-migrate
-        image: arsolitt/jexactyl-php:latest
-        command: ["php"]
-        args: ["/home/app/artisan", "migrate", "--force", "--seed"]
-        envFrom:
-          - secretRef:
-              name: jexactyl-dev-env
-        resources:
-          limits:
-            memory: "1024Mi"
-            cpu: "500m"
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
+      # initContainers:
+      # - name: jexactyl-migrate
+      #   image: arsolitt/jexactyl-php:latest
+      #   command: ["php"]
+      #   args: ["/home/app/artisan", "migrate", "--force", "--seed"]
+      #   envFrom:
+      #     - secretRef:
+      #         name: jexactyl-dev-env
+      #   resources:
+      #     limits:
+      #       memory: "1024Mi"
+      #       cpu: "500m"
+      #     requests:
+      #       memory: "128Mi"
+      #       cpu: "100m"
+      # - name: copy-env
+      #   image: arsolitt/jexactyl-php:latest
+      #   command: ["cp"]
+      #   args: ["-p", "/etc/secrets/environment", "/home/app/.env"]
+      #   volumeMounts:
+      #   - name: environment
+      #     mountPath: /etc/secrets
+      #   resources:
+      #     limits:
+      #       memory: "128Mi"
+      #       cpu: "100m"
+      #     requests:
+      #       memory: "10Mi"
+      #       cpu: "10m"
       containers:
       - name: jexactyl-php
         image: arsolitt/jexactyl-php:latest
-        envFrom:
-          - secretRef:
-              name: jexactyl-dev-env
+        # volumeMounts:
+        # - name: environment
+        #   mountPath: /etc/secrets
+        # envFrom:
+        #   - secretRef:
+        #       name: jexactyl-dev-env
         resources:
           limits:
             memory: "2048Mi"
@@ -52,3 +69,10 @@ spec:
             cpu: "100m"
         ports:
         - containerPort: 80
+      # volumes:
+      # - name: environment
+      #   secret:
+      #     secretName: jexactyl-dev-env
+      #     items:
+      #     - key: environment
+      #       path: environment
