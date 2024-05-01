@@ -39,7 +39,7 @@ spec:
         image: arsolitt/jexactyl-php:latest
         envFrom:
           - secretRef:
-              name: jexactyl-env
+              name: jexactyl-dev-env
         resources:
           limits:
             memory: "2048Mi"

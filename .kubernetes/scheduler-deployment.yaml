@@ -16,6 +16,9 @@ spec:
         image: arsolitt/jexactyl-app:latest
         command: ["php"]
         args: ["/home/app/artisan", "schedule:work", "--verbose", "--no-interaction"]
+        envFrom:
+          - secretRef:
+              name: jexactyl-dev-env
         resources:
           limits:
             memory: "2048Mi"
