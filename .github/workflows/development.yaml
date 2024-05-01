@@ -29,7 +29,7 @@ jobs:
           tag: ${{ steps.short-sha.outputs.sha }}
           tag_with_latest: true
           cache: true
-          cache_registry: arsolitt/cache-jexactyl-php
+          cache_registry: arsolitt/jexactyl-cache
   build-nginx:
     name: Build NGINX
     runs-on: ubuntu-latest
@@ -50,21 +50,21 @@ jobs:
           tag: ${{ steps.short-sha.outputs.sha }}
           tag_with_latest: true
           cache: true
-          cache_registry: arsolitt/cache-jexactyl-nginx
-  deploy:
-    needs: [build-php, build-nginx]
-    name: Deploy to Kubernetes
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: "apply -f .kubernetes -n protesian-dev"
-      - uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        with:
-          args: "apply -f .kubernetes -n protesian-dev"
+          cache_registry: arsolitt/jexactyl-cache
+  # deploy:
+  #   needs: [build-php, build-nginx]
+  #   name: Deploy to Kubernetes
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Deploy
+  #       uses: actions-hub/kubectl@master
+  #       env:
+  #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+  #       with:
+  #         args: "apply -f .kubernetes -n protesian-dev"
+  #     - uses: actions-hub/kubectl@master
+  #       env:
+  #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+  #       with:
+  #         args: "apply -f .kubernetes -n protesian-dev"

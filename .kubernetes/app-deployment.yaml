@@ -46,9 +46,9 @@ spec:
         # volumeMounts:
         # - name: environment
         #   mountPath: /etc/secrets
-        # envFrom:
-        #   - secretRef:
-        #       name: jexactyl-dev-env
+        envFrom:
+          - secretRef:
+              name: jexactyl-dev-env
         resources:
           limits:
             memory: "2048Mi"
