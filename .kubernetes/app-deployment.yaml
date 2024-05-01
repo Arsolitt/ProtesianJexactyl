@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: jexactyl-app
-  namespace: protesian
 spec:
   selector:
     matchLabels:
@@ -12,6 +11,18 @@ spec:
       labels:
         app: jexactyl-app
     spec:
+      initContainers:
+      - name: jexactyl-migrate
+        image: arsolitt/jexactyl-php:latest
+        command: ["php /home/app/artisan migrate"]
+        args: ["--force", "--seed"]
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
       containers:
       - name: jexactyl-nginx
         image: arsolitt/jexactyl-nginx:latest
@@ -24,8 +35,8 @@ spec:
             cpu: "100m"
         ports:
         - containerPort: 80
-      - name: jexactyl-app
-        image: arsolitt/jexactyl-app:latest
+      - name: jexactyl-php
+        image: arsolitt/jexactyl-php:latest
         envFrom:
           - secretRef:
               name: jexactyl-env
