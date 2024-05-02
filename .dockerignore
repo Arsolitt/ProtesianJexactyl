@@ -1,2 +1,2 @@
-database/*
-redis/*
+.env
+.env.example

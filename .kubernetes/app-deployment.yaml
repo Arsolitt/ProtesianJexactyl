@@ -42,7 +42,7 @@ spec:
       #       cpu: "10m"
       containers:
       - name: jexactyl-php
-        image: arsolitt/jexactyl-php:latest
+        image: arsolitt/jexactyl-php:test1
         # volumeMounts:
         # - name: environment
         #   mountPath: /etc/secrets
@@ -59,7 +59,7 @@ spec:
         ports:
         - containerPort: 9000
       - name: jexactyl-nginx
-        image: arsolitt/jexactyl-nginx:latest
+        image: arsolitt/jexactyl-nginx:test1
         resources:
           limits:
             memory: "2048Mi"
