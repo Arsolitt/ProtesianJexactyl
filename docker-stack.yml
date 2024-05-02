@@ -1,0 +1,123 @@
+version: "3.8"
+
+networks:
+  panel:
+  traefik_net:
+    external: true
+
+services:
+  nginx:
+    image: ${IMAGE_PREFIX}_nginx
+    volumes:
+      - "/opt/jexactyl/panel:/var/www/panel"
+      - "/opt/jexactyl/docker/nginx/nginx.conf:/etc/nginx/nginx.conf"
+      - "/opt/jexactyl/docker/nginx/configs/default.conf:/etc/nginx/conf.d/default.conf"
+    networks:
+      - panel
+      - traefik_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.protesian.entrypoints=https"
+        - "traefik.http.routers.protesian.tls.certresolver=letsencrypt"
+        - "traefik.http.routers.protesian.rule=Host(`protesian.arsolitt.ru`)"
+        - "traefik.http.services.protesian.loadbalancer.server.port=80"
+
+  database:
+    image: mariadb:11.2.2-jammy
+    stdin_open: true
+    tty: true
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - "/opt/jexactyl/docker/database/data:/var/lib/mysql"
+      - "/opt/jexactyl/docker/database/init:/docker-entrypoint-initdb.d"
+    networks:
+      - panel
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
+
+  redis:
+    image: redis:7.2.3-alpine3.19
+    stdin_open: true
+    tty: true
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    networks:
+      - panel
+    volumes:
+      - "/opt/jexactyl/docker/redis/data:/data"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
+
+  app:
+    stdin_open: true
+    tty: true
+    image: ${IMAGE_PREFIX}_php
+    depends_on:
+      - redis
+      - database
+      - nginx
+    volumes:
+      - "/opt/jexactyl/panel:/var/www/panel"
+    networks:
+      - panel
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
+
+  scheduler:
+    stdin_open: true
+    tty: true
+    image: ${IMAGE_PREFIX}_php
+    entrypoint: ["/home/tools/role.sh"]
+    depends_on:
+      - redis
+      - database
+      - app
+    environment:
+      CONTAINER_ROLE: scheduler
+    volumes:
+      - "/opt/jexactyl/panel:/home/app"
+    networks:
+      - panel
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
+
+  queue:
+    stdin_open: true
+    tty: true
+    image: ${IMAGE_PREFIX}_php
+    entrypoint: ["/home/tools/role.sh"]
+    depends_on:
+      - redis
+      - database
+      - app
+    environment:
+      CONTAINER_ROLE: queue
+    volumes:
+      - "/opt/jexactyl/panel:/home/app"
+    networks:
+      - panel
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.jexactyl==true]
