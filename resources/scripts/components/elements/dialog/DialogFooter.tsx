@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { DialogContext } from './';
 import { useDeepCompareEffect } from '@/plugins/useDeepCompareEffect';
+import React, { useContext } from 'react';
+import { DialogContext } from '.';
 
 export default ({ children }: { children: React.ReactNode }) => {
     const { setFooter } = useContext(DialogContext);

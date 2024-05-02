@@ -1,12 +1,29 @@
-panel/.env
-.env*
-!.env.example
-!.env.stack.example
-panel/vendor/
-panel/install.lock
-panel/public/install/logs/
-panel/public/storage
-panel/node_modules
-docker/nginx/fullchain.pem
-docker/nginx/privkey.pem
-.idea
+/vendor
+*.DS_Store*
+.env
+.vagrant/*
+.vscode/*
+/.idea
+/nbproject
+/.direnv
+
+node_modules
+*.log
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+.yarn
+
+# For local development with docker
+# Remove if we ever put the Dockerfile in the repo
+.dockerignore
+docker-compose.yml
+
+# for image related files
+misc
+.php-cs-fixer.cache
+coverage.xml
+resources/lang/locales.js
+.phpunit.result.cache
+**/secret**
+.old/
