@@ -11,3 +11,4 @@ docker/nginx/fullchain.pem
 docker/nginx/privkey.pem
 .idea
 **/secret*
+**/.env.dev
