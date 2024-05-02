@@ -16,9 +16,13 @@ spec:
         image: arsolitt/jexactyl-php:latest
         command: ["php"]
         args: ["/home/app/artisan", "schedule:work", "--verbose", "--no-interaction"]
+        volumeMounts:
+          - name: php-fpm-config
+            mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
         envFrom:
           - secretRef:
-              name: jexactyl-dev-env
+              name: jexactyl-env
         resources:
           limits:
             memory: "2048Mi"
@@ -26,3 +30,7 @@ spec:
           requests:
             memory: "64Mi"
             cpu: "100m"
+      volumes:
+        - name: php-fpm-config
+          configMap:
+            name: php-fpm-config

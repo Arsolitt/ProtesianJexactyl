@@ -12,13 +12,17 @@ spec:
         app: jexactyl-queue
     spec:
       containers:
-      - name: jexactyl-queue
+      - name: queue
         image: arsolitt/jexactyl-php:latest
         command: ["php"]
         args: ["/home/app/artisan", "queue:work", "--verbose", "--tries=3"]
+        volumeMounts:
+          - name: php-fpm-config
+            mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
         envFrom:
           - secretRef:
-              name: jexactyl-dev-env
+              name: jexactyl-env
         resources:
           limits:
             memory: "2048Mi"
@@ -26,3 +30,7 @@ spec:
           requests:
             memory: "64Mi"
             cpu: "100m"
+      volumes:
+        - name: php-fpm-config
+          configMap:
+            name: php-fpm-config
