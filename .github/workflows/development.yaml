@@ -70,7 +70,7 @@ jobs:
 
       - name: Decode var
         env:
-          TEST_VAR: ${{ vars.TEST_VAR }}
+          TEST_VAR: ${{ secrets.KUBECONFIG }}
         run: |
           echo $TEST_VAR | base64 -d > $HOME/testvar.yaml
 
