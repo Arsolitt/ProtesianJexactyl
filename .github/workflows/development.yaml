@@ -70,14 +70,12 @@ jobs:
 
       - uses: akiojin/decode-base64-github-action@v0.1.0
         with:
-          base64: ${{ secrets.KUBECONFIG }}
-          environment: KUBE_CONFIG
-      - run: |
-          echo $KUBE_CONFIG > $HOME/kubeconfig
+          base64: ${{ secrets.KUBE_CONFIG }}
+          output-path: ${{ runner.temp }}/kubeconfig
 
       - name: Test Kubeconfig
         run: |
-          kubectl --kubeconfig=$HOME/kubeconfig cluster-info
+          kubectl --kubeconfig=${{ runner.temp }}/kubeconfig cluster-info
 
       - name: Deploy with Helm
         # env:
@@ -102,7 +100,7 @@ jobs:
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }} \
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }} \
           --set-string whitelist.sources="{vars.WHITELIST}" \
-          --kubeconfig=$HOME/kubeconfig.yaml
+          --kubeconfig=${{ runner.temp }}/kubeconfig
   # deploy:
   #   name: Deploy
   #   runs-on: ubuntu-latest
