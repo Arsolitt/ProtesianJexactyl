@@ -1,7 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useStoreState } from 'easy-peasy';
-import { Button } from '@/components/elements/button';
+import { Button } from '@/components/elements/button'
+import { useStoreState } from 'easy-peasy'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
 interface Props {
     className?: string;
@@ -30,7 +30,7 @@ export default (props: Props) => {
                 </Link>
             )}
             <span className={'font-bold text-sm text-gray-400 text-center'}>
-                Не бейте админа, он не успел закончить лендинг к релизу {'>_<'}
+                Не бейте админа, пожалуйста, он не успел закончить лендинг к релизу {'>_<'}
             </span>
         </div>
     );
