@@ -1,5 +1,5 @@
 domain:
-  name: test.protesian.host
+  name: dev.protesian.host
   secret: jexactyl-dev-ssl
 
 images:
@@ -83,3 +83,9 @@ replicas:
   app: 2
   queue: 1
   scheduler: 1
+
+whitelist:
+  enabled: true
+  sources:
+    - 127.0.0.1
+    - ::1
