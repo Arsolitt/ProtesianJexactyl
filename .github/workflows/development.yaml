@@ -73,11 +73,11 @@ jobs:
           base64: ${{ secrets.KUBECONFIG }}
           environment: KUBE_CONFIG
       - run: |
-          echo $KUBE_CONFIG > $HOME/kubeconfig.yaml
+          echo $KUBE_CONFIG > $HOME/kubeconfig
 
       - name: Test Kubeconfig
         run: |
-          kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
+          kubectl --kubeconfig=$HOME/kubeconfig cluster-info
 
       - name: Deploy with Helm
         # env:
