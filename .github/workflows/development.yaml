@@ -70,14 +70,13 @@ jobs:
 
       - name: Decode Kubeconfig
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-          TEST_VAR: ${{ vars.TEST_VAR }}
+          KUBE_CONFIG: '${{ secrets.KUBE_CONFIG }}'
         run: |
-          echo $TEST_VAR > $HOME/testvar.txt && cat $HOME/testvar.txt
+          echo $KUBE_CONFIG | base64 --decode > $HOME/kubeconfig.yaml
 
       - name: Test Kubeconfig
         run: |
-          kubectl --kubeconfig=kubeconfig cluster-info
+          kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
 
       - name: Deploy with Helm
         # env:
@@ -102,7 +101,7 @@ jobs:
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }} \
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }} \
           --set-string whitelist.sources="{vars.WHITELIST}" \
-          --kubeconfig=kubeconfig
+          --kubeconfig=$HOME/kubeconfig.yaml
   # deploy:
   #   name: Deploy
   #   runs-on: ubuntu-latest
