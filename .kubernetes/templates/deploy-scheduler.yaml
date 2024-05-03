@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-scheduler
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.scheduler }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-scheduler
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-scheduler
+    spec:
+      containers:
+      - name: scheduler
+        image: {{ .Values.images.php }}
+        command: ["php"]
+        args: ["/home/app/artisan", "schedule:work", "--verbose", "--no-interaction"]
+        volumeMounts:
+          - name: {{ .Release.Name }}-php
+            mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-php
+        resources:
+          requests:
+            cpu: {{ .Values.resources.scheduler.phpContainer.requests.cpu }}
+            memory: {{ .Values.resources.scheduler.phpContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.scheduler.phpContainer.limits.cpu }}
+            memory: {{ .Values.resources.scheduler.phpContainer.limits.memory }}
+      volumes:
+        - name: {{ .Release.Name }}-php
+          configMap:
+            name: {{ .Release.Name }}-php

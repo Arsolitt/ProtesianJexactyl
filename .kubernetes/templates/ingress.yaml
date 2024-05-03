@@ -1,27 +1,27 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jexactyl
+  name: {{ .Release.Name }}-ingress
+  namespace: {{ .Release.Namespace }}
   labels:
-    name: jexactyl
+    name: {{ .Release.Name }}-ingress
   annotations:
-
     cert-manager.io/cluster-issuer: letsencrypt
     kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
   rules:
-  - host: testwings.protesian.host
+  - host: {{ .Values.domain.name }}
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: jexactyl-app
+            name: {{ .Release.Name }}-svc
             port:
-              number: 555
+              number: 80
   tls:
   - hosts:
-    - testwings.protesian.host
-    secretName: jexactyl-test-ssl
+    - {{ .Values.domain.name }}
+    secretName: {{ .Values.domain.secret }}

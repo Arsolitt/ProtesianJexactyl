@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.app }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-app
+    spec:
+      initContainers:
+      - name: shared
+        image: {{ .Values.images.php }}
+        command: [sh, -c]
+        args: ['cp -r /home/app/* /var/www/panel']
+        volumeMounts:
+          - mountPath: /var/www/panel
+            name: shared-code
+        resources:
+          requests:
+            cpu: {{ .Values.resources.app.initContainer.requests.cpu }}
+            memory: {{ .Values.resources.app.initContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.app.initContainer.limits.cpu }}
+            memory: {{ .Values.resources.app.initContainer.limits.memory }}
+      # - name: migration
+      #   image: {{ .Values.images.php }}
+      #   command: ["php"]
+      #   args: ["/home/app/artisan", "migrate", "--seed", "--force"]
+      #   envFrom:
+      #   - secretRef:
+      #       name: {{ .Release.Name }}-php
+      #   resources:
+      #     requests:
+      #       cpu: {{ .Values.resources.app.initContainer.requests.cpu }}
+      #       memory: {{ .Values.resources.app.initContainer.requests.memory }}
+      #     limits:
+      #       cpu: {{ .Values.resources.app.initContainer.limits.cpu }}
+      #       memory: {{ .Values.resources.app.initContainer.limits.memory }}
+      containers:
+      - name: php
+        image: {{ .Values.images.php }}
+        volumeMounts:
+          - name: shared-code
+            mountPath: /var/www/panel
+          - name: {{ .Release.Name }}-php
+            mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
+        envFrom:
+        - secretRef:
+            name: {{ .Release.Name }}-php
+        resources:
+          requests:
+            cpu: {{ .Values.resources.app.nginxContainer.requests.cpu }}
+            memory: {{ .Values.resources.app.nginxContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.app.nginxContainer.limits.cpu }}
+            memory: {{ .Values.resources.app.nginxContainer.limits.memory }}
+        ports:
+        - containerPort: 9000
+      - name: nginx
+        image: {{ .Values.images.nginx }}
+        volumeMounts:
+          - name: shared-code
+            mountPath: /var/www/panel
+          - name: {{ .Release.Name }}-nginx
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+        resources:
+          requests:
+            cpu: {{ .Values.resources.app.phpContainer.requests.cpu }}
+            memory: {{ .Values.resources.app.phpContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.app.phpContainer.limits.cpu }}
+            memory: {{ .Values.resources.app.phpContainer.limits.memory }}
+        ports:
+        - containerPort: 80
+      volumes:
+        - name: shared-code
+          emptyDir: {}
+        - name: {{ .Release.Name }}-nginx
+          configMap:
+            name: {{ .Release.Name }}-nginx
+        - name: {{ .Release.Name }}-php
+          configMap:
+            name: {{ .Release.Name }}-php
