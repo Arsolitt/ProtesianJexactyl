@@ -55,7 +55,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     environment: development
-    needs: [build-php, build-nginx]
+    needs: build-php
     steps:
       - uses: actions/checkout@v4
 
