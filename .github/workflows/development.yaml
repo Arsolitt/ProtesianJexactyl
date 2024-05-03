@@ -70,7 +70,7 @@ jobs:
 
       - name: Decode Kubeconfig
         env:
-          KUBE_CONFIG: ${{ secrets.CERTIFICATE_BASE64 }}
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
           echo $KUBE_CONFIG | base64 -d > kubeconfig
 
