@@ -54,7 +54,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: Development
+    environment: development
     # needs: [build-php, build-nginx]
     steps:
       - uses: actions/checkout@v4
@@ -72,6 +72,8 @@ jobs:
         with:
           base64: ${{ secrets.KUBE_CONFIG }}
           output-path: ${{ runner.temp }}/kubeconfig
+
+      - run: echo ${{ vars.WHITELIST }}
 
       - name: Deploy with Helm
         run: |
@@ -93,4 +95,5 @@ jobs:
           --set secrets.php.mail.password=${{ secrets.MAIL_PASSWORD }} \
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }} \
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }} \
-          --set-string whitelist.sources="${{ vars.WHITELIST }}"
+          --set-string whitelist.sources="${{ vars.WHITELIST }}" \
+          && echo true
