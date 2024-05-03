@@ -68,15 +68,25 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Decode Kubeconfig
+      - name: Decode var
         env:
-          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          TEST_VAR: ${{ var.TEST_VAR }}
         run: |
-          echo $KUBE_CONFIG | base64 -d > $HOME/kubeconfig.yaml
+          echo $TEST_VAR | base64 -d > $HOME/testvar.yaml
 
-      - name: Test Kubeconfig
+      - name: Print var
         run: |
-          kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
+          cat $HOME/testvar.yaml
+
+      # - name: Decode Kubeconfig
+      #   env:
+      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      #   run: |
+      #     echo $KUBE_CONFIG | base64 -d > $HOME/kubeconfig.yaml
+
+      # - name: Test Kubeconfig
+      #   run: |
+      #     kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
 
       - name: Deploy with Helm
         # env:
