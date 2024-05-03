@@ -23,4 +23,3 @@ COPY ./panel .
 RUN composer install --no-dev --optimize-autoloader
 COPY --from=builder /home/app/public/assets /home/app/public/assets
 EXPOSE 9000
-USER $UID
