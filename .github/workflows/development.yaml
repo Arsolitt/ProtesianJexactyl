@@ -68,15 +68,12 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v3
 
-      - name: Decode var
-        env:
-          TEST_VAR: ${{ vars.TEST_VAR }}
-        run: |
-          echo -n $TEST_VAR | base64 -d > $HOME/testvar.yaml
-
-      - name: Print var
-        run: |
-          cat $HOME/testvar.yaml
+      - uses: akiojin/decode-base64-github-action@v0.1.0
+        with:
+          base64: ${{ vars.TEST_VAR }}
+          environment: DECODED
+      - run: |
+          echo $DECODED
 
       # - name: Decode Kubeconfig
       #   env:
