@@ -81,7 +81,7 @@ jobs:
         # env:
         #   KUBECONFIG: ./kubeconfig
         run: |
-          helm upgrade --install jexactyl -n protesian-dev --create-namespace .kubernetes/ \
+          helm upgrade --install jexactyl -n protesian-dev --create-namespace --kubeconfig=${{ runner.temp }}/kubeconfig .kubernetes/ \
           --set images.php=arsolitt/jexactyl-php:latest
           --set images.nginx='arsolitt/jexactyl-nginx:latest
           --set secrets.php.appKey=${{ secrets.APP_KEY }} \
@@ -100,7 +100,6 @@ jobs:
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }} \
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }} \
           --set-string whitelist.sources="{vars.WHITELIST}" \
-          --kubeconfig=${{ runner.temp }}/kubeconfig
   # deploy:
   #   name: Deploy
   #   runs-on: ubuntu-latest
