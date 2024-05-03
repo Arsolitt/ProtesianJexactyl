@@ -71,9 +71,9 @@ jobs:
       - name: Decode Kubeconfig
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-          MAIL_HOST: ${{ vars.MAIL_HOST }}
+          TEST_VAR: ${{ vars.TEST_VAR }}
         run: |
-          echo $MAIL_HOST > $HOME/mailhost.txt && cat $HOME/mailhost.txt
+          echo $TEST_VAR > $HOME/testvar.txt && cat $HOME/testvar.txt
 
       - name: Test Kubeconfig
         run: |
