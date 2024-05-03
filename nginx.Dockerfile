@@ -6,8 +6,7 @@ ENV GID=1000
 ENV TZ=Europe/Moscow
 RUN addgroup -g $GID panel && \
 	adduser -u $UID -G panel -s /bin/sh -D panel && \
-    # chown -R $UID:$GID /var/www/panel && \
-    # chmod -R 755 /var/www/panel && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
     rm -rf /etc/apk/cache
+USER $UID
