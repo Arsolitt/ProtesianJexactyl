@@ -98,4 +98,3 @@ jobs:
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }}
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }}
           --set-string whitelist.sources="{${{ vars.WHITELIST }}}"
-          && echo "done"
