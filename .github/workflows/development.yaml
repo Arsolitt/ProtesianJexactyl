@@ -70,20 +70,14 @@ jobs:
 
       - uses: akiojin/decode-base64-github-action@v0.1.0
         with:
-          base64: ${{ vars.TEST_VAR }}
-          environment: DECODED
+          base64: ${{ secrets.KUBECONFIG }}
+          environment: KUBE_CONFIG
       - run: |
-          echo $DECODED
+          echo $KUBE_CONFIG > $HOME/kubeconfig.yaml
 
-      # - name: Decode Kubeconfig
-      #   env:
-      #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-      #   run: |
-      #     echo $KUBE_CONFIG | base64 -d > $HOME/kubeconfig.yaml
-
-      # - name: Test Kubeconfig
-      #   run: |
-      #     kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
+      - name: Test Kubeconfig
+        run: |
+          kubectl --kubeconfig=$HOME/kubeconfig.yaml cluster-info
 
       - name: Deploy with Helm
         # env:
