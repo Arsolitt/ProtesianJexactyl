@@ -69,14 +69,12 @@ jobs:
         uses: azure/setup-helm@v3
 
       - name: Decode Kubeconfig
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBECONFIG }}
         run: |
-          echo "${KUBE_CONFIG_DATA}" | base64 -d > kubeconfig
+          echo ${{ secrets.KUBECONFIG }} | base64 -d > kubeconfig
 
       - name: Test Kubeconfig
         run: |
-          kubectl --kubeconfig=kubeconfig cluster-info
+          kubectl --kubeconfig=./kubeconfig cluster-info
 
       - name: Deploy with Helm
         # env:
