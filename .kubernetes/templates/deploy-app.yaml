@@ -28,20 +28,20 @@ spec:
           limits:
             cpu: {{ .Values.resources.app.initContainer.limits.cpu }}
             memory: {{ .Values.resources.app.initContainer.limits.memory }}
-      # - name: migration
-      #   image: {{ .Values.images.php }}
-      #   command: ["php"]
-      #   args: ["/home/app/artisan", "migrate", "--seed", "--force"]
-      #   envFrom:
-      #   - secretRef:
-      #       name: {{ .Release.Name }}-php
-      #   resources:
-      #     requests:
-      #       cpu: {{ .Values.resources.app.initContainer.requests.cpu }}
-      #       memory: {{ .Values.resources.app.initContainer.requests.memory }}
-      #     limits:
-      #       cpu: {{ .Values.resources.app.initContainer.limits.cpu }}
-      #       memory: {{ .Values.resources.app.initContainer.limits.memory }}
+      - name: migration
+        image: {{ .Values.images.php }}
+        command: ["php"]
+        args: ["/home/app/artisan", "migrate", "--seed", "--force"]
+        envFrom:
+        - secretRef:
+            name: {{ .Release.Name }}-php
+        resources:
+          requests:
+            cpu: {{ .Values.resources.app.initContainer.requests.cpu }}
+            memory: {{ .Values.resources.app.initContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.app.initContainer.limits.cpu }}
+            memory: {{ .Values.resources.app.initContainer.limits.memory }}
       containers:
       - name: php
         image: {{ .Values.images.php }}

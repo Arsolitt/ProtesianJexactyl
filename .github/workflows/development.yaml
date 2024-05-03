@@ -9,27 +9,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  # build-php:
-  #   name: Build PHP
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Short SHA
-  #       id: short-sha
-  #       uses: benjlevesque/short-sha@v3.0
-  #       with:
-  #         length: 7
-  #     - name: Build and push php
-  #       uses: aevea/action-kaniko@master
-  #       with:
-  #         image: arsolitt/jexactyl-php
-  #         build_file: php.Dockerfile
-  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
-  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
-  #         tag: ${{ steps.short-sha.outputs.sha }}
-  #         tag_with_latest: true
-  #         cache: true
-  #         cache_registry: arsolitt/jexactyl-cache
+  build-php:
+    name: Build PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Short SHA
+        id: short-sha
+        uses: benjlevesque/short-sha@v3.0
+        with:
+          length: 7
+      - name: Build and push php
+        uses: aevea/action-kaniko@master
+        with:
+          image: arsolitt/jexactyl-php
+          build_file: php.Dockerfile
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag: ${{ steps.short-sha.outputs.sha }}
+          tag_with_latest: true
+          cache: true
+          cache_registry: arsolitt/jexactyl-cache
   build-nginx:
     name: Build NGINX
     runs-on: ubuntu-latest
@@ -76,7 +76,7 @@ jobs:
       - name: Deploy with Helm
         run: >
           helm upgrade --install jexactyl -n protesian-dev --create-namespace --kubeconfig=${{ runner.temp }}/kubeconfig .kubernetes/
-          --set images.php=arsolitt/jexactyl-php:latest
+          --set images.php=arsolitt/jexactyl-php:${{ steps.short-sha.outputs.sha }}
           --set images.nginx=arsolitt/jexactyl-nginx:${{ steps.short-sha.outputs.sha }}
           --set secrets.php.appKey=${{ secrets.APP_KEY }}
           --set secrets.php.recaptcha.key=${{ secrets.RECAPTCHA_WEBSITE_KEY }}
