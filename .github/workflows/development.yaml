@@ -72,7 +72,7 @@ jobs:
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
         run: |
-          echo $KUBE_CONFIG | base64 --decode > $HOME/kubeconfig.yaml
+          echo $KUBE_CONFIG | base64 -d > $HOME/kubeconfig.yaml
 
       - name: Test Kubeconfig
         run: |
