@@ -1,8 +1,8 @@
 name: Deploy to Development
 on:
-  # push:
-  #   branches:
-  #     - development
+  push:
+    branches:
+      - development
   pull_request:
     branches:
       - development
@@ -23,7 +23,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           image: arsolitt/jexactyl-php
-          build_file: .kubernetes/php.Dockerfile
+          build_file: php.Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
@@ -33,7 +33,6 @@ jobs:
   build-nginx:
     name: Build NGINX
     runs-on: ubuntu-latest
-    environment: Development
     steps:
       - uses: actions/checkout@v4
       - name: Short SHA
@@ -45,7 +44,7 @@ jobs:
         uses: aevea/action-kaniko@master
         with:
           image: arsolitt/jexactyl-nginx
-          build_file: .kubernetes/nginx.Dockerfile
+          build_file: nginx.Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tag: ${{ steps.short-sha.outputs.sha }}
