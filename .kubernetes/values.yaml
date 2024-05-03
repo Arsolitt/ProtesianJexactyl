@@ -80,7 +80,7 @@ resources:
         memory: 1024Mi
 
 replicas:
-  app: 2
+  app: 1
   queue: 1
   scheduler: 1
 
