@@ -1,70 +1,93 @@
-# name: Deploy to Development
-# on:
-#   # push:
-#   #   branches:
-#   #     - development
-#   # pull_request:
-#   #   branches:
-#   #     - development
-#   workflow_dispatch:
+name: Deploy to Development
+on:
+  # push:
+  #   branches:
+  #     - development
+  pull_request:
+    branches:
+      - development
+  workflow_dispatch:
 
-# jobs:
-#   build-php:
-#     name: Build PHP
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Short SHA
-#         id: short-sha
-#         uses: benjlevesque/short-sha@v3.0
-#         with:
-#           length: 7
-#       - name: Build and push php
-#         uses: aevea/action-kaniko@master
-#         with:
-#           image: arsolitt/jexactyl-php
-#           build_file: .kubernetes/php.Dockerfile
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#           tag: ${{ steps.short-sha.outputs.sha }}
-#           tag_with_latest: true
-#           cache: true
-#           cache_registry: arsolitt/jexactyl-cache
-#   build-nginx:
-#     name: Build NGINX
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#       - name: Short SHA
-#         id: short-sha
-#         uses: benjlevesque/short-sha@v3.0
-#         with:
-#           length: 7
-#       - name: Build and push nginx
-#         uses: aevea/action-kaniko@master
-#         with:
-#           image: arsolitt/jexactyl-nginx
-#           build_file: .kubernetes/nginx.Dockerfile
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-#           tag: ${{ steps.short-sha.outputs.sha }}
-#           tag_with_latest: true
-#           cache: true
-#           cache_registry: arsolitt/jexactyl-cache
-#   # deploy:
-#   #   needs: [build-php, build-nginx]
-#   #   name: Deploy to Kubernetes
-#   #   runs-on: ubuntu-latest
-#   #   steps:
-#   #     - uses: actions/checkout@v4
-#   #     - name: Deploy
-#   #       uses: actions-hub/kubectl@master
-#   #       env:
-#   #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-#   #       with:
-#   #         args: "apply -f .kubernetes -n protesian-dev"
-#   #     - uses: actions-hub/kubectl@master
-#   #       env:
-#   #         KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-#   #       with:
-#   #         args: "apply -f .kubernetes -n protesian-dev"
+jobs:
+  build-php:
+    name: Build PHP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Short SHA
+        id: short-sha
+        uses: benjlevesque/short-sha@v3.0
+        with:
+          length: 7
+      - name: Build and push php
+        uses: aevea/action-kaniko@master
+        with:
+          image: arsolitt/jexactyl-php
+          build_file: .kubernetes/php.Dockerfile
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag: ${{ steps.short-sha.outputs.sha }}
+          tag_with_latest: true
+          cache: true
+          cache_registry: arsolitt/jexactyl-cache
+  build-nginx:
+    name: Build NGINX
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - uses: actions/checkout@v4
+      - name: Short SHA
+        id: short-sha
+        uses: benjlevesque/short-sha@v3.0
+        with:
+          length: 7
+      - name: Build and push nginx
+        uses: aevea/action-kaniko@master
+        with:
+          image: arsolitt/jexactyl-nginx
+          build_file: .kubernetes/nginx.Dockerfile
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          tag: ${{ steps.short-sha.outputs.sha }}
+          tag_with_latest: true
+          cache: true
+          cache_registry: arsolitt/jexactyl-cache
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment: Development
+    needs: [build-php, build-nginx]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Short SHA
+        id: short-sha
+        uses: benjlevesque/short-sha@v3.0
+        with:
+          length: 7
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: 'jexactyl'
+          namespace: 'protesian-dev'
+          chart: '.kubernetes/'
+          values: |
+            images.php: 'arsolitt/jexactyl-php:${{ steps.short-sha.outputs.sha }}'
+            images.nginx: 'arsolitt/jexactyl-nginx:${{ steps.short-sha.outputs.sha }}'
+            secrets.php.appKey: '${{ secrets.APP_KEY }}'
+            secrets.php.recaptcha.key: '${{ secrets.RECAPTCHA_WEBSITE_KEY }}'
+            secrets.php.recaptcha.secret: '${{ secrets.RECAPTCHA_SECRET_KEY }}'
+            secrets.php.db.host: '${{ secrets.DB_HOST }}'
+            secrets.php.db.database: '${{ secrets.DB_DATABASE }}'
+            secrets.php.db.username: '${{ secrets.DB_USERNAME }}'
+            secrets.php.db.password: '${{ secrets.DB_PASSWORD }}'
+            secrets.php.redis.host: '${{ secrets.REDIS_HOST }}'
+            secrets.php.redis.password: '${{ secrets.REDIS_PASSWORD }}'
+            secrets.php.hash.salt: '${{ secrets.HASHIDS_SALT }}'
+            secrets.php.hash.len: '${{ secrets.HASHIDS_LENGTH }}'
+            secrets.php.mail.username: '${{ secrets.MAIL_USERNAME }}'
+            secrets.php.mail.password: '${{ secrets.MAIL_PASSWORD }}'
+            secrets.payment.yookassa.shopId: '${{ secrets.YOOKASSA_SHOP_ID }}'
+            secrets.payment.yookassa.secretKey: '${{ secrets.YOOKASSA_SECRET_KEY }}'\
+            whitelist.sources: '${{ vars.WHITELIST }}'
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
