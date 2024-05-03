@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-queue
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicas.queue }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-queue
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-queue
+    spec:
+      containers:
+      - name: queue
+        image: {{ .Values.images.php }}
+        command: ["php"]
+        args: ["/home/app/artisan", "queue:work", "--verbose", "--tries=3"]
+        volumeMounts:
+          - name: {{ .Release.Name }}-php
+            mountPath: /usr/local/etc/php-fpm.d/www.conf
+            subPath: www.conf
+        envFrom:
+          - secretRef:
+              name: {{ .Release.Name }}-php
+        resources:
+          requests:
+            cpu: {{ .Values.resources.queue.phpContainer.requests.cpu }}
+            memory: {{ .Values.resources.queue.phpContainer.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.queue.phpContainer.limits.cpu }}
+            memory: {{ .Values.resources.queue.phpContainer.limits.memory }}
+      volumes:
+        - name: {{ .Release.Name }}-php
+          configMap:
+            name: {{ .Release.Name }}-php

@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 database/*
 redis/*
+=======
+.env
+.env.example
+>>>>>>> development

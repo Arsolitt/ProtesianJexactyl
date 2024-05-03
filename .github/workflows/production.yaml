@@ -1,60 +1,57 @@
-name: Deploy to Development
+name: Deploy to Production
 on:
-  # push:
+  # pull_request:
   #   branches:
-  #     - development
-  pull_request:
-    branches:
-      - development
+  #     - main
   workflow_dispatch:
 
 jobs:
-  build-php:
-    name: Build PHP
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Short SHA
-        id: short-sha
-        uses: benjlevesque/short-sha@v3.0
-        with:
-          length: 7
-      - name: Build and push php
-        uses: aevea/action-kaniko@master
-        with:
-          image: arsolitt/jexactyl-php
-          build_file: php.Dockerfile
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          tag: ${{ steps.short-sha.outputs.sha }}
-          tag_with_latest: true
-          cache: true
-          cache_registry: arsolitt/jexactyl-cache
-  build-nginx:
-    name: Build NGINX
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Short SHA
-        id: short-sha
-        uses: benjlevesque/short-sha@v3.0
-        with:
-          length: 7
-      - name: Build and push nginx
-        uses: aevea/action-kaniko@master
-        with:
-          image: arsolitt/jexactyl-nginx
-          build_file: nginx.Dockerfile
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          tag: ${{ steps.short-sha.outputs.sha }}
-          tag_with_latest: true
-          cache: true
-          cache_registry: arsolitt/jexactyl-cache
+  # build-php:
+  #   name: Build PHP
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Short SHA
+  #       id: short-sha
+  #       uses: benjlevesque/short-sha@v3.0
+  #       with:
+  #         length: 7
+  #     - name: Build and push php
+  #       uses: aevea/action-kaniko@master
+  #       with:
+  #         image: arsolitt/jexactyl-php
+  #         build_file: php.Dockerfile
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #         tag: ${{ steps.short-sha.outputs.sha }}
+  #         tag_with_latest: true
+  #         cache: true
+  #         cache_registry: arsolitt/jexactyl-cache
+  # build-nginx:
+  #   name: Build NGINX
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Short SHA
+  #       id: short-sha
+  #       uses: benjlevesque/short-sha@v3.0
+  #       with:
+  #         length: 7
+  #     - name: Build and push nginx
+  #       uses: aevea/action-kaniko@master
+  #       with:
+  #         image: arsolitt/jexactyl-nginx
+  #         build_file: nginx.Dockerfile
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_PASSWORD }}
+  #         tag: ${{ steps.short-sha.outputs.sha }}
+  #         tag_with_latest: true
+  #         cache: true
+  #         cache_registry: arsolitt/jexactyl-cache
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    environment: development
+    environment: production
     needs:
     - build-php
     - build-nginx

@@ -1,0 +1,91 @@
+domain:
+  name: dev.protesian.host
+  secret: jexactyl-dev-ssl
+
+images:
+  nginx: arsolitt/jexactyl-nginx:latest
+  php: arsolitt/jexactyl-php:latest
+
+secrets:
+  php:
+    appKey:
+    recaptcha:
+      key:
+      secret:
+    db:
+      connection: mysql
+      host:
+      port: 3306
+      database:
+      username:
+      password:
+    redis:
+      host:
+      port: 6379
+      password:
+    hash:
+      salt:
+      len:
+    mail:
+      mailer: smtp
+      host: connect.smtp.bz
+      port: 587
+      username: dev@protesian.host
+      password:
+      fromAddress: dev@protesian.host
+      fromName: "ProtesiaN Dashboard"
+    payment:
+      yookassa:
+        shopId:
+        secretKey:
+
+resources:
+  app:
+    initContainer:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    phpContainer:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+    nginxContainer:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+  queue:
+    phpContainer:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+  scheduler:
+    phpContainer:
+      requests:
+        cpu: 100m
+        memory: 64Mi
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+
+replicas:
+  app: 1
+  queue: 1
+  scheduler: 1
+
+whitelist:
+  enabled: true
+  sources:
+    - 127.0.0.1
+    - ::1
