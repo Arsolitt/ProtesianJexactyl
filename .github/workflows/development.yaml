@@ -69,8 +69,10 @@ jobs:
         uses: azure/setup-helm@v3
 
       - name: Decode Kubeconfig
+        env:
+          KUBE_CONFIG: ${{ secrets.CERTIFICATE_BASE64 }}
         run: |
-          echo ${{ secrets.KUBE_CONFIG }} | base64 -d > kubeconfig
+          echo $KUBE_CONFIG | base64 -d > kubeconfig
 
       - name: Test Kubeconfig
         run: |
