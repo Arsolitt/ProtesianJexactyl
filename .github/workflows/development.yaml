@@ -81,7 +81,7 @@ jobs:
           --kubeconfig=${{ runner.temp }}/kubeconfig
           .kubernetes/
           --set images.php=arsolitt/jexactyl-php:latest
-          --set images.nginx='arsolitt/jexactyl-nginx:latest
+          --set images.nginx=arsolitt/jexactyl-nginx:latest
           --set secrets.php.appKey=${{ secrets.APP_KEY }}
           --set secrets.php.recaptcha.key=${{ secrets.RECAPTCHA_WEBSITE_KEY }}
           --set secrets.php.recaptcha.secret=${{ secrets.RECAPTCHA_SECRET_KEY }}
