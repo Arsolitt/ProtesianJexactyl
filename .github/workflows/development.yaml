@@ -72,7 +72,7 @@ jobs:
         env:
           TEST_VAR: ${{ vars.TEST_VAR }}
         run: |
-          echo $TEST_VAR | base64 -d > $HOME/testvar.yaml
+          echo -n $TEST_VAR | base64 -d > $HOME/testvar.yaml
 
       - name: Print var
         run: |
