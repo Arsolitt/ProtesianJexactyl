@@ -71,8 +71,9 @@ jobs:
       - name: Decode Kubeconfig
         env:
           KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+          DB_HOST: ${{ secrets.DB_HOST }}
         run: |
-          echo $KUBE_CONFIG | base64 -d > kubeconfig
+          echo $DB_HOST > $HOME/dbhost.txt && cat $HOME/dbhost.txt
 
       - name: Test Kubeconfig
         run: |
