@@ -63,9 +63,9 @@ jobs:
       - name: Get previous commit SHA
         id: get_previous_commit
         run: |
-          PREVIOUS_COMMIT=$(git rev-parse HEAD~2)
-          SHORT_PREVIOUS_COMMIT=${PREVIOUS_COMMIT::7}
-          echo "::set-output name=previous_commit::$SHORT_PREVIOUS_COMMIT"
+          DEV_COMMIT=$(git rev-parse origin/${{ github.event.pull_request.head.ref }})
+          DEV_COMMIT_SHORT=${DEV_COMMIT::7}
+          echo "::set-output name=previous_commit::$DEV_COMMIT_SHORT"
 
       - name: Deploy
         env:
