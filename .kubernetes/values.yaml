@@ -9,6 +9,7 @@ images:
 secrets:
   php:
     appKey:
+    appName:
     recaptcha:
       key:
       secret:
