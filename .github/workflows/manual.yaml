@@ -13,11 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - run: SHORT_SHA=${${{ github.event.inputs.commit }}::7}
+    - run: |
+        COMMIT=$(${{ github.event.inputs.commit }})
+        SHORT_SHA=${DEV_COMMIT::7}
+
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        ref: ${{ github.event.inputs.commit }}
+        ref: $COMMIT
     - name: Install Helm
       uses: azure/setup-helm@v3
 
