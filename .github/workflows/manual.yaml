@@ -13,14 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-    - run: |
-        COMMIT=$(${{ github.event.inputs.commit }})
+    - id: get_commit
+      run: |
+        COMMIT=${{ github.event.inputs.commit }}
         SHORT_SHA=${DEV_COMMIT::7}
+        echo "::set-output name=short::$SHORT_SHA"
 
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
-        ref: $COMMIT
+        ref: ${{ github.event.inputs.commit }}
     - name: Install Helm
       uses: azure/setup-helm@v3
 
@@ -32,8 +34,8 @@ jobs:
     - name: Deploy with Helm
       run: >
         helm upgrade --install jexactyl-prod -n protesian --create-namespace --kubeconfig=${{ runner.temp }}/kubeconfig .kubernetes/
-        --set images.php=arsolitt/jexactyl-php:$SHORT_SHA
-        --set images.nginx=arsolitt/jexactyl-nginx:$SHORT_SHA
+        --set images.php=arsolitt/jexactyl-php:${{ steps.get_commit.outputs.short }}
+        --set images.nginx=arsolitt/jexactyl-nginx:${{ steps.get_commit.outputs.short }}
         --set domain.name=${{ vars.DOMAIN_NAME }}
         --set domain.secret=${{ vars.DOMAIN_SECRET }}
         --set secrets.php.appKey=${{ secrets.APP_KEY }}
