@@ -1,0 +1,17 @@
+name: Manual prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        type: string
+        description: Short commit sha
+        required: true
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Deploy to Production
+      run: echo "Deploy with commit ${{ github.event.inputs.commit }}"
