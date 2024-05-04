@@ -85,7 +85,7 @@ replicas:
   scheduler: 1
 
 whitelist:
-  enabled: true
+  enabled: false
   sources:
     - 127.0.0.1
     - ::1
