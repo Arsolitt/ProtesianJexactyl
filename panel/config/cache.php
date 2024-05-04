@@ -75,7 +75,7 @@ return [
             'driver' => 'redis',
             'connection' => 'default',
             'lock_connection' => 'default',
-            'database' => 1,
+            'database' => env('REDIS_DB', 0),
         ],
 
         'sessions' => [

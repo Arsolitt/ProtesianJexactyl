@@ -47,6 +47,7 @@ jobs:
         --set secrets.php.db.username=${{ secrets.DB_USERNAME }}
         --set secrets.php.db.password=${{ secrets.DB_PASSWORD }}
         --set secrets.php.redis.host=${{ vars.REDIS_HOST }}
+        --set secrets.php.redis.db=${{ vars.REDIS_DB }}
         --set secrets.php.redis.password=${{ secrets.REDIS_PASSWORD }}
         --set secrets.php.hash.salt=${{ secrets.HASHIDS_SALT }}
         --set secrets.php.hash.len=${{ secrets.HASHIDS_LENGTH }}
