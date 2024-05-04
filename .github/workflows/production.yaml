@@ -36,7 +36,7 @@ jobs:
 
       - name: Deploy with Helm
         run: >
-          helm upgrade --install jexactyl-prod -n protesian-dev --create-namespace --kubeconfig=${{ runner.temp }}/kubeconfig .kubernetes/
+          helm upgrade --install jexactyl-prod -n protesian --create-namespace --kubeconfig=${{ runner.temp }}/kubeconfig .kubernetes/
           --set images.php=arsolitt/jexactyl-php:${{ steps.get_source_commit.outputs.source_commit }}
           --set images.nginx=arsolitt/jexactyl-nginx:${{ steps.get_source_commit.outputs.source_commit }}
           --set secrets.domain.name=${{ vars.DOMAIN_NAME }}
@@ -58,4 +58,5 @@ jobs:
           --set secrets.php.mail.password=${{ secrets.MAIL_PASSWORD }}
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }}
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }}
+          --set-string replicas.app=2
           --set-string whitelist.enabled=false
