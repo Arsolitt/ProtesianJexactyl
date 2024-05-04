@@ -36,6 +36,7 @@ jobs:
           --set images.nginx=arsolitt/jexactyl-nginx:${{ steps.get_source_commit.outputs.source_commit }}
           --set domain.name=${{ vars.DOMAIN_NAME }}
           --set domain.secret=${{ vars.DOMAIN_SECRET }}
+          --set secrets.php.appName=${{ secrets.APP_NAME }}
           --set secrets.php.appKey=${{ secrets.APP_KEY }}
           --set secrets.php.recaptcha.key=${{ secrets.RECAPTCHA_WEBSITE_KEY }}
           --set secrets.php.recaptcha.secret=${{ secrets.RECAPTCHA_SECRET_KEY }}
