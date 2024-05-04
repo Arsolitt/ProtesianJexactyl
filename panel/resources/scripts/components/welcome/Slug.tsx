@@ -30,7 +30,7 @@ export default (props: Props) => {
                 </Link>
             )}
             <span className={'font-bold text-sm text-gray-400 text-center'}>
-                Не бейте админа, пожалуйста, он не успел закончить лендинг к релизу {'>_<'}
+                Не бейте админа, он не успел закончить лендинг к релизу {'>_<'}
             </span>
         </div>
     );

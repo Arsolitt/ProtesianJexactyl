@@ -2,9 +2,22 @@ FROM node:21-alpine3.17 as builder
 ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV TZ=Europe/Moscow
 WORKDIR /home/app
-COPY ./panel/package.json ./panel/yarn.lock ./
+COPY ./panel/package.json \
+    ./panel/yarn.lock \
+    ./
 RUN ["yarn", "--frozen-lockfile"]
-COPY ./panel/ ./
+COPY ./panel/webpack.config.js \
+    ./panel/tsconfig.json \
+    ./panel/tailwind.config.js \
+    ./panel/postcss.config.js \
+    ./panel/babel.config.js \
+    ./panel/.eslintrc.js \
+    ./panel/.eslintignore \
+    ./panel/.prettierrc.json \
+    ./panel/public/assets/ \
+    ./
+COPY ./panel/public/ ./public
+COPY ./panel/resources/ ./resources
 RUN ["yarn", "build:production"]
 
 FROM php:8.3.2-fpm-bookworm
