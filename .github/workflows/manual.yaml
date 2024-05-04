@@ -16,7 +16,7 @@ jobs:
     - id: get_commit
       run: |
         COMMIT=${{ github.event.inputs.commit }}
-        SHORT_SHA=${DEV_COMMIT::7}
+        SHORT_SHA=${COMMIT::7}
         echo "::set-output name=short::$SHORT_SHA"
 
     - uses: actions/checkout@v4
