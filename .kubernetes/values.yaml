@@ -24,7 +24,7 @@ secrets:
       host:
       port: 6379
       password:
-      db:
+      database:
     hash:
       salt:
       len:
