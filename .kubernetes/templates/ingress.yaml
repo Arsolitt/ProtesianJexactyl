@@ -6,7 +6,7 @@ metadata:
   labels:
     name: {{ .Release.Name }}-ingress
   annotations:
-    {{ if .Values.whitelist.enabled "true" }}
+    {{ if .Values.whitelist.enabled }}
     {{ with .Values.whitelist.sources }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," . | quote }}
     {{ end }}
