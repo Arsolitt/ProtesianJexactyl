@@ -1,6 +1,6 @@
 domain:
-  name: dev.protesian.host
-  secret: jexactyl-dev-ssl
+  name:
+  secret:
 
 images:
   nginx: arsolitt/jexactyl-nginx:latest
@@ -28,12 +28,12 @@ secrets:
       len:
     mail:
       mailer: smtp
-      host: connect.smtp.bz
+      host:
       port: 587
-      username: dev@protesian.host
+      username:
       password:
-      fromAddress: dev@protesian.host
-      fromName: "ProtesiaN Dashboard"
+      fromAddress:
+      fromName:
     payment:
       yookassa:
         shopId:
