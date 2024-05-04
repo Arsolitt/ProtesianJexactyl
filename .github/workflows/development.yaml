@@ -99,5 +99,5 @@ jobs:
           --set secrets.php.payment.yookassa.shopId=${{ secrets.YOOKASSA_SHOP_ID }}
           --set secrets.php.payment.yookassa.secretKey=${{ secrets.YOOKASSA_SECRET_KEY }}
           --set-string replicas.app=1
-          --set-string whitelist.enabled=0
+          --set-string whitelist.enabled=true
           --set-string whitelist.sources="{${{ vars.WHITELIST }}}"

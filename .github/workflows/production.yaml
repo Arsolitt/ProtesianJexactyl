@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   deploy:
@@ -21,10 +20,6 @@ jobs:
           DEV_COMMIT=$(git rev-parse origin/${{ github.event.pull_request.head.ref }})
           DEV_COMMIT_SHORT=${DEV_COMMIT::7}
           echo "::set-output name=source_commit::$DEV_COMMIT_SHORT"
-
-      - name: Deploy
-        run: |
-          echo "Деплой с тегом ${{ steps.get_source_commit.outputs.source_commit }}"
 
       - name: Install Helm
         uses: azure/setup-helm@v3
