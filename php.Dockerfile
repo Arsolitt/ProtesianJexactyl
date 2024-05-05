@@ -14,7 +14,6 @@ COPY ./panel/webpack.config.js \
     ./panel/.eslintrc.js \
     ./panel/.eslintignore \
     ./panel/.prettierrc.json \
-    ./panel/public/assets/ \
     ./
 COPY ./panel/public/ ./public
 COPY ./panel/resources/ ./resources
