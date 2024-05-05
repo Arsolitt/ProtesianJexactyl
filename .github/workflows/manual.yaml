@@ -51,6 +51,7 @@ jobs:
         --set secrets.php.redis.password=${{ secrets.REDIS_PASSWORD }}
         --set secrets.php.hash.salt=${{ secrets.HASHIDS_SALT }}
         --set secrets.php.hash.len=${{ secrets.HASHIDS_LENGTH }}
+        --set secrets.php.mail.host=${{ vars.MAIL_HOST }}
         --set secrets.php.mail.fromAddress=${{ vars.MAIL_FROM_ADDRESS }}
         --set secrets.php.mail.fromName="${{ vars.MAIL_FROM_NAME }}"
         --set secrets.php.mail.username=${{ secrets.MAIL_USERNAME }}
