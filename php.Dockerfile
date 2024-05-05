@@ -35,6 +35,8 @@ RUN groupadd --gid $GID panel &&  \
     docker-php-ext-install intl pdo_mysql pdo mysqli zip gd bcmath pcntl && \
     apt-get -y autoremove --purge && apt-get -y clean && rm -rf /var/cache/apt apt-get
 COPY ./panel .
+RUN chown -R $UID:$GID /home/app && \
+    chmod -R 777 /home/app
 RUN composer install --no-dev --optimize-autoloader
 COPY --from=builder /home/app/public/assets /home/app/public/assets
 EXPOSE 9000
