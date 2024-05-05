@@ -22,7 +22,6 @@ class Kernel extends ConsoleKernel
     protected function commands(): void
     {
         $this->load(__DIR__ . '/Commands');
-        # aboba
     }
 
     // Refer to: https://github.com/illuminate/console/blob/master/Scheduling/ManagesFrequencies.php
