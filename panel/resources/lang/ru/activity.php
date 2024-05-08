@@ -132,7 +132,7 @@ return [
             'description' => 'Изменил описание сервера с :old на :new',
         ],
         'startup' => [
-            'edit' => 'Изменил переменную :variable с ":old" н ":new"',
+            'edit' => 'Изменил переменную :variable с ":old" на ":new"',
             'image' => 'Изменил образ для запуска сервера с :old на :new',
         ],
         'subuser' => [

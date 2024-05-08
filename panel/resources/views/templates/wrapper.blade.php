@@ -4,6 +4,11 @@
         <title>{{ config('app.name', 'ProtesiaN Host') }}</title>
 
         @section('meta')
+            <meta property="og:title" content="{{ config('app.name', 'ProtesiaN Host') }}"/>
+            <meta property="og:description" content="| Без свапа и оверсела"/>
+            <meta property="og:url" content="{{ route('welcome') }}"/>
+            <meta property="og:site_name" content="{{ config('app.name', 'ProtesiaN Host') }}"/>
+            <meta property="og:image" content="{{ asset('images/preview.webp') }}"/>
             <meta charset="utf-8">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
@@ -52,12 +57,47 @@
             @import url('//fonts.googleapis.com/css?family=Rubik:300,400,500&display=swap');
             @import url('//fonts.googleapis.com/css?family=IBM+Plex+Mono|IBM+Plex+Sans:500&display=swap');
         </style>
+        <style>
+            .info-header1 {
+                font-size: 1.875rem/* 30px */;
+                line-height: 2.25rem/* 36px */;
+                font-weight: 700;
+                text-align: center;
+            }
+            .info-header2 {
+                font-size: 1.5rem/* 24px */;
+                line-height: 2rem/* 32px */;
+                font-weight: 700;
+            }
+            .info-header3 {
+                font-size: 1.25rem/* 20px */;
+                line-height: 1.75rem/* 28px */;
+                font-weight: 700;
+            }
+            .welcome-button {
+                border: 1px transparent;
+                padding: 10px;
+                border-radius: 15px;
+                background: linear-gradient(to right, #208a9a 50%, #235c67 50%);
+                background-size: 200% 100%;
+                background-position: 0% 0%;
+                cursor: grab;
+                transition: background-position 1s;
+            }
+            .welcome-button:hover {
+                background-position: -100% 0%;
+            }
+            /*.myblur {*/
+            /*    backdrop-filter: blur(10px);*/
+            /*    background-color: rgba(255, 255, 255, 0.05);*/
+            /*}*/
+        </style>
 
         @yield('assets')
 
         @include('layouts.scripts')
     </head>
-    <body>
+    <body @if(isset($css['body'])) class="{{ $css['body'] }}" @endif>
         @section('content')
             @yield('above-container')
             @yield('container')

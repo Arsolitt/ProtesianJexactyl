@@ -21,7 +21,7 @@ services:
     container_name: ${PROJECT_NAME}_nginx
     restart: unless-stopped
     ports:
-      - "5173:80"
+      - "80:80"
     volumes:
       - "../panel:/var/www/panel"
       - "./nginx.conf:/etc/nginx/nginx.conf"

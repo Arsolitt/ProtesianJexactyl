@@ -1,7 +1,7 @@
-import { Button } from '@/components/elements/button'
-import { useStoreState } from 'easy-peasy'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Button } from '@/components/elements/button';
+import { useStoreState } from 'easy-peasy';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface Props {
     className?: string;
