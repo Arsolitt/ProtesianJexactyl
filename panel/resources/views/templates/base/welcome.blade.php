@@ -10,7 +10,7 @@
     </main>
     <style>
         .welcome-container {
-            background-image: url({{ asset('images/background.jpg') }});
+            background-image: url({{ asset('images/background.webp') }});
             background-size: cover;
             background-position: center;
             min-height: 100vh;

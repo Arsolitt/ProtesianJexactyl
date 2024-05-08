@@ -36,7 +36,7 @@
     <body class="skin-blue fixed">
         <div class="wrapper">
             <header class="main-header">
-                <a href="{{ route('index') }}" class="logo">
+                <a href="/home" class="logo">
                     <img src="{{ config('app.logo') }}" width="48" height="48" />
                 </a>
             </header>
