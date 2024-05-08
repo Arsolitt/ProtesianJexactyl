@@ -74,6 +74,23 @@
                 line-height: 1.75rem/* 28px */;
                 font-weight: 700;
             }
+            .welcome-button {
+                border: 1px transparent;
+                padding: 10px;
+                border-radius: 15px;
+                background: linear-gradient(to right, #208a9a 50%, #235c67 50%);
+                background-size: 200% 100%;
+                background-position: 0% 0%;
+                cursor: grab;
+                transition: background-position 1s;
+            }
+            .welcome-button:hover {
+                background-position: -100% 0%;
+            }
+            /*.myblur {*/
+            /*    backdrop-filter: blur(10px);*/
+            /*    background-color: rgba(255, 255, 255, 0.05);*/
+            /*}*/
         </style>
 
         @yield('assets')

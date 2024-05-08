@@ -3,9 +3,17 @@
 ])
 
 @section('container')
-    <main>
+    <main class="welcome-container flex flex-col">
         <x-welcome.header></x-welcome.header>
-        <x-welcome.content></x-welcome.content>
+        <x-welcome.content operationTime="{{ $operationTime }}"></x-welcome.content>
         <x-welcome.footer></x-welcome.footer>
     </main>
+    <style>
+        .welcome-container {
+            background-image: url({{ asset('images/background.jpg') }});
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+        }
+    </style>
 @endsection

@@ -17,6 +17,8 @@
             <span>Discord: Arsolitt</span>
             <br>
             <span>Telegram: @Arsolitt</span>
+            <br>
+            <br>
             <h2 class="info-header2">Отказ от ответственности</h2>
             <br>
             <h3 class="info-header3">Ответственность за содержание</h3>

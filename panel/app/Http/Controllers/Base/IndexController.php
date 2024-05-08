@@ -4,6 +4,7 @@ namespace Jexactyl\Http\Controllers\Base;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\View\Factory as ViewFactory;
 use Illuminate\View\View;
@@ -39,12 +40,15 @@ class IndexController extends Controller
     public function welcome(Request $request): Response|View
     {
         $code = $request->query('ref');
+        $operationTime = Carbon::now()->diffInDays(Carbon::create(2023, 7, 25));
         $response = new Response();
         $response->header('Location', '/');
         if ($code ?? ReferralCode::where('code', '=', $code)->exists()) {
             return $response->withCookie(Cookie::make('referral_code', $code, 60 * 24 * 365, '/', null, false, false, true, 'Lax'));
         }
-        return $this->view->make('templates/base.welcome');
+        return $this->view->make('templates/base.welcome')->with(
+            'operationTime', $operationTime
+        );
     }
 
     public function tos(Request $request): Response|View
