@@ -6,7 +6,7 @@
         @section('meta')
             <meta property="og:title" content="{{ config('app.name', 'ProtesiaN Host') }}"/>
             <meta property="og:description" content="| Без свапа и оверсела"/>
-            <meta property="og:url" content="{{ route('welcome') }}"/>
+            <meta property="og:url" content="{{ route('index') }}"/>
             <meta property="og:site_name" content="{{ config('app.name', 'ProtesiaN Host') }}"/>
             <meta property="og:image" content="{{ asset('images/preview.webp') }}"/>
             <meta charset="utf-8">

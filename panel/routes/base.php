@@ -5,7 +5,7 @@ use Jexactyl\Http\Controllers\Api\Webhook\WebhookController;
 use Jexactyl\Http\Controllers\Base;
 use Jexactyl\Http\Middleware\RequireTwoFactorAuthentication;
 
-Route::get('/', [Base\IndexController::class, 'welcome'])->name('welcome')->fallback();
+Route::get('/', [Base\IndexController::class, 'welcome'])->name('index')->fallback();
 
 Route::get('/information/tos', [Base\IndexController::class, 'tos'])->name('tos');
 Route::get('/information/privacy', [Base\IndexController::class, 'privacy'])->name('privacy');

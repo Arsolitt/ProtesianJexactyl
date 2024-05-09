@@ -16,7 +16,7 @@ COPY ./panel/webpack.config.js \
     ./panel/.prettierrc.json \
     ./
 COPY ./panel/public/ ./public
-COPY ./panel/resources/ ./resources
+COPY ./panel/resources/scripts/ ./resources/scripts
 RUN ["yarn", "build:production"]
 
 FROM php:8.3.2-fpm-bookworm
