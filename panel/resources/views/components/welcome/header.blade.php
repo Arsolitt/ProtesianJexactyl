@@ -1,6 +1,6 @@
 <div class="header myblur flex justify-between items-center px-5 py-2 mb-2.5">
     <a href="/"><img src="{{ config('app.logo') }}" width="48" height="48" alt="Logo" class="header_logo"></a>
-    <h1 class="header_title font-black text-center text-5xl">ProtesiaN Host</h1>
+    <h1 class="header_title text-center">ProtesiaN Host</h1>
 
     <a href="/home" class="header_button font-bold text-lg welcome-button cursor-pointer">{{ Auth::user() ? Auth::user()->username : __('Войти') }}</a>
 </div>
@@ -18,5 +18,8 @@
         -ms-text-fill-color: transparent;
         -o-background-clip: text;
         -o-text-fill-color: transparent;
+        font-weight: 900;
+        font-size: 3rem/* 48px */;
+        line-height: 1;
     }
 </style>
