@@ -3,7 +3,7 @@
 ])
 
 <div class="flex min-h-full flex-1">
-    <div class="flex flex-col md:grid md:grid-cols-3 md:grid-rows-3 text-center font-bold text-lg flex-1 content-center">
+    <div class="flex flex-col md:grid grid-cols-3 grid-rows-3 text-center font-bold text-lg flex-1 content-center">
         <div class="cell order-2 md:order-0"><p class="welcome-button">Низкий пинг из любой точки мира</p></div>
         <div class="cell order-4 md:order-0"><p class="welcome-button">Без свапа и оверсела</p></div>
         <div class="cell order-1 md:order-0"><p class="welcome-button">Админ знает толк в серверах и кубиках</p></div>
