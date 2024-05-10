@@ -17,7 +17,7 @@ COPY ./panel/webpack.config.js \
     ./
 COPY ./panel/public/ ./public
 COPY ./panel/resources/scripts/ ./resources/scripts
-RUN ["yarn", "build:dev"]
+RUN ["yarn", "build:production"]
 
 FROM php:8.3.2-fpm-bookworm
 ENV UID=1000
