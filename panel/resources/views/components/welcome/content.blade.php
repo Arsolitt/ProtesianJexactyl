@@ -10,7 +10,7 @@
 {{--        <div class="cell"><p class="welcome-button">Гибкая конфигурация</p></div>--}}
 
         <div class="cell">
-            <p class="xs:text-3xl myblur rounded-xl p-1">
+            <p class="text-3xl">
                 <span>Тут можно создать сервер майнкрафт для игры с друзьями</span>
                 <br>
                 <span>Или даже поднять свой проект 0_0</span>
