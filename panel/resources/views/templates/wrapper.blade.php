@@ -87,10 +87,6 @@
             .welcome-button:hover {
                 background-position: -100% 0%;
             }
-            /*.myblur {*/
-            /*    backdrop-filter: blur(10px);*/
-            /*    background-color: rgba(255, 255, 255, 0.05);*/
-            /*}*/
         </style>
 
         @yield('assets')
