@@ -7,17 +7,18 @@
 
 <style>
     .header_title {
-        background: linear-gradient(to left, #85163a, #cb2049);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-        -moz-background-clip: text;
-        -moz-text-fill-color: transparent;
-        -ms-background-clip: text;
-        -ms-text-fill-color: transparent;
-        -o-background-clip: text;
-        -o-text-fill-color: transparent;
+        /*background: linear-gradient(to left, #85163a, #cb2049);*/
+        /*-webkit-background-clip: text;*/
+        /*-webkit-text-fill-color: transparent;*/
+        /*background-clip: text;*/
+        /*text-fill-color: transparent;*/
+        /*-moz-background-clip: text;*/
+        /*-moz-text-fill-color: transparent;*/
+        /*-ms-background-clip: text;*/
+        /*-ms-text-fill-color: transparent;*/
+        /*-o-background-clip: text;*/
+        /*-o-text-fill-color: transparent;*/
+        color: #27bfcc;
         font-weight: 900;
         font-size: 3rem/* 48px */;
         line-height: 1;
