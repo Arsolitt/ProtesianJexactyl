@@ -3,7 +3,12 @@
 ])
 
 @section('container')
-    <main>
+    <style>
+        .text-lg {     font-size: 1.125rem/* 18px */;     line-height: 1.75rem/* 28px */; }
+        .w-5\/12 {     width: 41.666667%; }
+        .mx-auto {     margin-left: auto;     margin-right: auto; }
+    </style>
+    <main style="background-color: #151428; color: white">
         <x-welcome.header></x-welcome.header>
         <div class="text-lg w-5/12 mx-auto">
             <h1 class="info-header1">Пользовательское соглашение ProtesiaN Host</h1>
