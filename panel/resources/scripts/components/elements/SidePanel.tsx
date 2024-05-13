@@ -83,7 +83,7 @@ export default () => {
                                         'absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-main-500 whitespace-nowrap bg-gray-700 rounded-lg px-1'
                                     }
                                 >
-                                    {credits} ₽
+                                    {credits.toFixed(2)} ₽
                                 </span>
                             </div>
                         </Tooltip>

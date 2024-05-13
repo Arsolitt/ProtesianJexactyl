@@ -34,7 +34,7 @@ export default () => {
         <PageContentBlock title={'Биллинг'} description={'Пополнение баланса. Тут можно отдать свои денюжки.'}>
             <Container className={'lg:grid lg:grid-cols-2 my-10'}>
                 <ContentBox title={'Текущий баланс'} showFlashes={'account:balance'} css={tw`sm: mt-0`}>
-                    <h1 css={tw`text-7xl flex justify-center items-center`}>{user.credits} ₽</h1>
+                    <h1 css={tw`text-7xl flex justify-center items-center`}>{user.credits.toFixed(2)} ₽</h1>
                 </ContentBox>
                 <ContentBox
                     title={'Пополнение баланса'}
