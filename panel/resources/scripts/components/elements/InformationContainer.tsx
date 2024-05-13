@@ -41,7 +41,7 @@ export default () => {
             {/*)}*/}
             <InformationBox icon={faCoins}>
                 <span className={'text-gray-50'}>
-                    Баланс: <span className={'text-main-500'}>{user.credits}₽</span>
+                    Баланс: <span className={'text-main-500'}>{user.credits.toFixed(2)}₽</span>
                 </span>
             </InformationBox>
             <InformationBox icon={faUserLock}>
