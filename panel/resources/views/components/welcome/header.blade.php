@@ -22,5 +22,7 @@
         font-weight: 900;
         font-size: 3rem/* 48px */;
         line-height: 1;
+        text-shadow: 2px 0 #111, -2px 0 #111, 0 2px #111, 0 -2px #111,
+             1px 1px #111, -1px -1px #111, 1px -1px #111, -1px 1px #111;
     }
 </style>
