@@ -49,6 +49,11 @@ export default ({ className }: { className?: string }) => {
 
         return !match ? 'n/a' : `${match.alias || ip(match.ip)}:${match.port}`;
     });
+    const allocation2 = ServerContext.useStoreState((state) => {
+        const match = state.server.data!.allocations.find((allocation) => allocation.isDefault);
+
+        return !match ? 'n/a' : `79.137.196.214:${match.port}`;
+    });
 
     useEffect(() => {
         if (!connected || !instance) {
@@ -89,8 +94,11 @@ export default ({ className }: { className?: string }) => {
                     capitalize(status)
                 )}
             </StatBlock>
-            <StatBlock icon={faWifi} title={'Адрес'} copyOnClick={allocation}>
+            <StatBlock icon={faWifi} title={'IP Москва'} copyOnClick={allocation}>
                 {allocation}
+            </StatBlock>
+            <StatBlock icon={faWifi} title={'IP Амстердам'} copyOnClick={allocation}>
+                {allocation2}
             </StatBlock>
             <StatBlock icon={faMicrochip} title={'Процессор'}>
                 {status === 'offline' ? (
