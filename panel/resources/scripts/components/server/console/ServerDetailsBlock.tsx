@@ -97,7 +97,7 @@ export default ({ className }: { className?: string }) => {
             <StatBlock icon={faWifi} title={'IP Москва'} copyOnClick={allocation}>
                 {allocation}
             </StatBlock>
-            <StatBlock icon={faWifi} title={'IP Амстердам'} copyOnClick={allocation}>
+            <StatBlock icon={faWifi} title={'IP Амстердам'} copyOnClick={allocation2}>
                 {allocation2}
             </StatBlock>
             <StatBlock icon={faMicrochip} title={'Процессор'}>
