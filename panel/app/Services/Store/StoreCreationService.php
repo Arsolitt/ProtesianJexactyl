@@ -57,7 +57,7 @@ class StoreCreationService
             'memory' => $request->input('memory'),
             'disk' => $request->input('disk'),
             'cpu' => $request->input('cpu'),
-            'swap' => 0,
+            'swap' => -1,
             'io' => 500,
             'image' => array_values($egg->docker_images)[0],
             'startup' => $egg->startup,
