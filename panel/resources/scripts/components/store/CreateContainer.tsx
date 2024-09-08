@@ -1,36 +1,34 @@
-import { Form, Formik } from 'formik';
-import useFlash from '@/plugins/useFlash';
-import { useStoreState } from 'easy-peasy';
-import { number, object, string } from 'yup';
-import { Egg, getEggs } from '@/api/store/getEggs';
 import createServer from '@/api/store/createServer';
-import Spinner from '@/components/elements/Spinner';
-import { getNests, Nest } from '@/api/store/getNests';
 import { Costs, getCosts } from '@/api/store/getCosts';
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import PageContentBlock from '@/components/elements/PageContentBlock';
+import { Egg, getEggs } from '@/api/store/getEggs';
 import { getLimits, Limits } from '@/api/store/getLimits';
+import { getNests, Nest } from '@/api/store/getNests';
+import { Button } from '@/components/elements/button';
+import Field from '@/components/elements/Field';
+import InputSpinner from '@/components/elements/InputSpinner';
+import PageContentBlock from '@/components/elements/PageContentBlock';
+import Select from '@/components/elements/Select';
+import Spinner from '@/components/elements/Spinner';
 import StoreContainer from '@/components/elements/StoreContainer';
 import TitledGreyBox from '@/components/elements/TitledGreyBox';
-import Field from '@/components/elements/Field';
+import useFlash from '@/plugins/useFlash';
 import {
     faArchive,
     faCube,
     faDatabase,
     faEgg,
-    faFire,
     faHdd,
     faList,
     faMemory,
     faNetworkWired,
-    faStickyNote,
+    faStickyNote
 } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '@/components/elements/button';
-import InputSpinner from '@/components/elements/InputSpinner';
+import { useStoreState } from 'easy-peasy';
+import { Form, Formik } from 'formik';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
-import Select from '@/components/elements/Select';
 import tw from 'twin.macro';
-import Input from '@/components/elements/Input';
+import { number, object, string } from 'yup';
 
 interface CreateValues {
     name: string;
@@ -217,136 +215,6 @@ export default () => {
                         <h3 className={'text-2xl text-neutral-500'}>
                             Выбери желаемое количество ОЗУ и дискового пространства.
                         </h3>
-
-                        <TitledGreyBox title={'Популярные конфиги'} icon={faFire} className={'mt-8 sm:mt-0'}>
-                            <div className={'flex flex-col lg:grid lg:grid-cols-3 gap-6'}>
-                                <div
-                                    className={
-                                        'border-inert-500 border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${
-                                            preset === 'vanilla'
-                                                ? ' -translate-y-3 border-main-500'
-                                                : ' border-inert-500'
-                                        }`
-                                    }
-                                    onClick={() => {
-                                        setFieldValue('memory', 4096);
-                                        setFieldValue('disk', 20480);
-                                        setFieldValue('nest', 1);
-                                        setFieldValue('egg', 5);
-                                        setFieldValue('backups', 1);
-                                        setFieldValue('project_id', null);
-                                        setFieldValue('version_id', null);
-                                        setNest(1);
-                                        setEgg(2);
-                                        setPreset('vanilla');
-                                    }}
-                                >
-                                    <h4 className={'font-bold text-center text-2xl'}>
-                                        Vanilla
-                                        <Input
-                                            type={'radio'}
-                                            name={'preset'}
-                                            value={preset}
-                                            checked={preset === 'vanilla'}
-                                            className={'absolute right-2 top-2'}
-                                        />
-                                    </h4>
-
-                                    <br />
-                                    <p>Идеально подходит для небольшого ванильного сервера</p>
-                                    <br />
-                                    <span>ОЗУ: 4 ГБ</span>
-                                    <br />
-                                    <span>Диск: 20 ГБ</span>
-                                    <br />
-                                    <span>Ядро: Paper</span>
-                                    <br />
-                                </div>
-                                <div
-                                    className={
-                                        'border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${
-                                            preset === 'divine'
-                                                ? ' -translate-y-3 border-main-500'
-                                                : ' border-inert-500'
-                                        }`
-                                    }
-                                    onClick={() => {
-                                        setFieldValue('memory', 8192);
-                                        setFieldValue('disk', 30720);
-                                        setFieldValue('nest', 1);
-                                        setFieldValue('egg', 1);
-                                        setFieldValue('backups', 3);
-                                        setFieldValue('project_id', 370666);
-                                        setFieldValue('version_id', null);
-                                        setNest(1);
-                                        setEgg(16);
-                                        setPreset('divine');
-                                    }}
-                                >
-                                    <h4 className={'font-bold text-center text-2xl'}>
-                                        Диван
-                                        <Input
-                                            type={'radio'}
-                                            name={'preset'}
-                                            value={preset}
-                                            checked={preset === 'divine'}
-                                            className={'absolute right-2 top-2'}
-                                        />
-                                    </h4>
-                                    <br />
-                                    <p>Самая популярная конфигурация для Divine Journey 2</p>
-                                    <br />
-                                    <span>ОЗУ: 8 ГБ</span>
-                                    <br />
-                                    <span>Диск: 30 ГБ</span>
-                                    <br />
-                                    <span>Ядро: CurseForge</span>
-                                    <br />
-                                </div>
-                                <div
-                                    className={
-                                        'border-4 inline-block rounded-lg p-4 relative cursor-pointer transition duration-300' +
-                                        `${preset === 'rotn' ? ' -translate-y-3 border-main-500' : ' border-inert-500'}`
-                                    }
-                                    onClick={() => {
-                                        setFieldValue('memory', 8192);
-                                        setFieldValue('disk', 30720);
-                                        setFieldValue('nest', 1);
-                                        setFieldValue('egg', 1);
-                                        setFieldValue('backups', 3);
-                                        setFieldValue('project_id', 338901);
-                                        setFieldValue('version_id', 5203986);
-                                        setNest(1);
-                                        setEgg(16);
-                                        setPreset('rotn');
-                                    }}
-                                >
-                                    <h4 className={'font-bold text-center text-2xl'}>
-                                        ROTN
-                                        <Input
-                                            type={'radio'}
-                                            name={'preset'}
-                                            value={preset}
-                                            checked={preset === 'rotn'}
-                                            className={'absolute right-2 top-2'}
-                                        />
-                                    </h4>
-                                    <br />
-                                    <p>Сборка для любителей превозмогать 0_0</p>
-                                    <br />
-                                    <span>ОЗУ: 8 ГБ</span>
-                                    <br />
-                                    <span>Диск: 30 ГБ</span>
-                                    <br />
-                                    <span>Ядро: CurseForge</span>
-                                    <br />
-                                </div>
-                            </div>
-                            <Field name={'project_id'} className={'text-center'} type={'hidden'} />
-                            <Field name={'version_id'} className={'text-center'} type={'hidden'} />
-                        </TitledGreyBox>
                         <StoreContainer className={'lg:grid lg:grid-cols-3 my-10 gap-4'}>
                             <TitledGreyBox title={'Лимит ОЗУ'} icon={faMemory} className={'mt-8 sm:mt-0'}>
                                 <div className={'flex'}>

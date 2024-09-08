@@ -1,44 +1,43 @@
-import tw from 'twin.macro';
-import * as Icon from 'react-feather';
-import { useLocation } from 'react-router';
-import { useStoreState } from 'easy-peasy';
-import Can from '@/components/elements/Can';
 import { httpErrorToHuman } from '@/api/http';
-import { ServerContext } from '@/state/server';
-import TransitionRouter from '@/TransitionRouter';
-import React, { useEffect, useState } from 'react';
-import Spinner from '@/components/elements/Spinner';
-import { CSSTransition } from 'react-transition-group';
-import SidePanel from '@/components/elements/SidePanel';
-import Suspended from '@/components/elements/Suspended';
-import useWindowDimensions from '@/plugins/useWindowDimensions';
-import SubNavigation from '@/components/elements/SubNavigation';
-import ErrorBoundary from '@/components/elements/ErrorBoundary';
-import ExternalConsole from '@/components/server/ExternalConsole';
-import InstallListener from '@/components/server/InstallListener';
-import ServerRestoreSvg from '@/assets/images/server_restore.svg';
-import PluginContainer from '@/components/server/PluginContainer';
-import EditContainer from '@/components/server/edit/EditContainer';
-import TransferListener from '@/components/server/TransferListener';
-import WebsocketHandler from '@/components/server/WebsocketHandler';
-import RequireServerPermission from '@/hoc/RequireServerPermission';
 import ServerInstallSvg from '@/assets/images/server_installing.svg';
+import ServerRestoreSvg from '@/assets/images/server_restore.svg';
+import Can from '@/components/elements/Can';
+import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import MobileNavigation from '@/components/elements/MobileNavigation';
-import UsersContainer from '@/components/server/users/UsersContainer';
-import { NavLink, Route, Switch, useRouteMatch } from 'react-router-dom';
-import BackupContainer from '@/components/server/backups/BackupContainer';
-import FileEditContainer from '@/components/server/files/FileEditContainer';
-import NetworkContainer from '@/components/server/network/NetworkContainer';
-import StartupContainer from '@/components/server/startup/StartupContainer';
-import SettingsContainer from '@/components/server/settings/SettingsContainer';
-import ScheduleContainer from '@/components/server/schedules/ScheduleContainer';
-import DatabasesContainer from '@/components/server/databases/DatabasesContainer';
-import FileManagerContainer from '@/components/server/files/FileManagerContainer';
-import AnalyticsContainer from '@/components/server/analytics/AnalyticsContainer';
 import ScreenBlock, { NotFound, ServerError } from '@/components/elements/ScreenBlock';
+import SidePanel from '@/components/elements/SidePanel';
+import Spinner from '@/components/elements/Spinner';
+import SubNavigation from '@/components/elements/SubNavigation';
+import Suspended from '@/components/elements/Suspended';
+import BackupContainer from '@/components/server/backups/BackupContainer';
 import ServerConsoleContainer from '@/components/server/console/ServerConsoleContainer';
+import DatabasesContainer from '@/components/server/databases/DatabasesContainer';
+import EditContainer from '@/components/server/edit/EditContainer';
+import ExternalConsole from '@/components/server/ExternalConsole';
+import FileEditContainer from '@/components/server/files/FileEditContainer';
+import FileManagerContainer from '@/components/server/files/FileManagerContainer';
+import InstallListener from '@/components/server/InstallListener';
+import NetworkContainer from '@/components/server/network/NetworkContainer';
+import PluginContainer from '@/components/server/PluginContainer';
+import ScheduleContainer from '@/components/server/schedules/ScheduleContainer';
 import ScheduleEditContainer from '@/components/server/schedules/ScheduleEditContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
+import SettingsContainer from '@/components/server/settings/SettingsContainer';
+import StartupContainer from '@/components/server/startup/StartupContainer';
+import TransferListener from '@/components/server/TransferListener';
+import UsersContainer from '@/components/server/users/UsersContainer';
+import WebsocketHandler from '@/components/server/WebsocketHandler';
+import RequireServerPermission from '@/hoc/RequireServerPermission';
+import useWindowDimensions from '@/plugins/useWindowDimensions';
+import { ServerContext } from '@/state/server';
+import TransitionRouter from '@/TransitionRouter';
+import { useStoreState } from 'easy-peasy';
+import React, { useEffect, useState } from 'react';
+import * as Icon from 'react-feather';
+import { useLocation } from 'react-router';
+import { NavLink, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { CSSTransition } from 'react-transition-group';
+import tw from 'twin.macro';
 
 const ConflictStateRenderer = () => {
     const status = ServerContext.useStoreState((state) => state.server.data?.status || null);
@@ -73,6 +72,7 @@ export default () => {
     const [error, setError] = useState('');
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const databasesEnabled = useStoreState((state) => state.settings.data!.databases);
+    const databaseLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.databases);
     const editEnabled = useStoreState((state) => state.storefront.data!.editing.enabled);
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
@@ -150,7 +150,7 @@ export default () => {
                                         </div>
                                     </NavLink>
                                 </Can>
-                                {databasesEnabled && (
+                                {(databasesEnabled && databaseLimit > 0) && (
                                     <Can action={'database.*'}>
                                         <NavLink to={`${match.url}/databases`}>
                                             <div css={tw`flex items-center justify-between`}>
@@ -196,11 +196,11 @@ export default () => {
                                         </NavLink>
                                     </Can>
                                 )}
-                                <NavLink to={`${match.url}/analytics`} exact>
+                                {/* <NavLink to={`${match.url}/analytics`} exact>
                                     <div css={tw`flex items-center justify-between`}>
                                         Аналитика <Icon.BarChart css={tw`ml-1`} size={18} />
                                     </div>
-                                </NavLink>
+                                </NavLink> */}
                                 <Can action={'activity.*'}>
                                     <NavLink to={`${match.url}/activity`}>
                                         <div css={tw`flex items-center justify-between`}>
@@ -229,7 +229,7 @@ export default () => {
                                 <Switch location={location}>
                                     <Route path={`${match.path}`} component={ServerConsoleContainer} exact />
                                     <Route path={`${match.path}/console`} component={ExternalConsole} exact />
-                                    <Route path={`${match.path}/analytics`} component={AnalyticsContainer} exact />
+                                    {/* <Route path={`${match.path}/analytics`} component={AnalyticsContainer} exact /> */}
                                     <Route path={`${match.path}/activity`} exact>
                                         <RequireServerPermission permissions={'activity.*'}>
                                             <ServerActivityLogContainer />
@@ -252,7 +252,7 @@ export default () => {
                                             <FileEditContainer />
                                         </Spinner.Suspense>
                                     </Route>
-                                    {databasesEnabled && (
+                                    {(databasesEnabled && databaseLimit > 0) && (
                                         <Route path={`${match.path}/databases`} exact>
                                             <RequireServerPermission permissions={'database.*'}>
                                                 <DatabasesContainer />
