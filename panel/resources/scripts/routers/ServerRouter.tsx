@@ -72,7 +72,7 @@ export default () => {
     const [error, setError] = useState('');
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const databasesEnabled = useStoreState((state) => state.settings.data!.databases);
-    const databaseLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.databases);
+
     const editEnabled = useStoreState((state) => state.storefront.data!.editing.enabled);
 
     const id = ServerContext.useStoreState((state) => state.server.data?.id);
@@ -83,6 +83,7 @@ export default () => {
     const eggFeatures = ServerContext.useStoreState((state) => state.server.data?.eggFeatures);
     const inConflictState = ServerContext.useStoreState((state) => state.server.inConflictState);
     const clearServerState = ServerContext.useStoreActions((actions) => actions.clearServerState);
+    const databaseLimit = ServerContext.useStoreState((state) => state.server.data?.featureLimits?.databases) || 0;
 
     useEffect(() => {
         clearServerState();
