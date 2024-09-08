@@ -83,7 +83,7 @@ export default () => {
     const eggFeatures = ServerContext.useStoreState((state) => state.server.data?.eggFeatures);
     const inConflictState = ServerContext.useStoreState((state) => state.server.inConflictState);
     const clearServerState = ServerContext.useStoreActions((actions) => actions.clearServerState);
-    const databaseLimit = ServerContext.useStoreState((state) => state.server.data?.featureLimits?.databases) || 0;
+    const databaseLimit = ServerContext.useStoreState((state) => state.server.data?.featureLimits?.databases);
 
     useEffect(() => {
         clearServerState();
